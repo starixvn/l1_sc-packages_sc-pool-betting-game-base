@@ -1,5 +1,7 @@
 import { Core } from "sc-game-base";
 
+import { PlaceBetConsumer } from "../event-consumers";
+
 export default class SocketRouter extends Core.Routers.BaseSocketRouter {
     constructor({
         definition,
@@ -16,7 +18,7 @@ export default class SocketRouter extends Core.Routers.BaseSocketRouter {
             gameData,
             userSignInConsumer,
             userDisconnectConsumer,
-            placeBetConsumer,
+            placeBetConsumer ?? new PlaceBetConsumer({ definition, gameData }),
             userSignInPublisher,
             historyQuery,
             roundQuery

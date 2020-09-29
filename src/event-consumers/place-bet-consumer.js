@@ -5,30 +5,17 @@ export default class PlaceBetConsumer extends Core.BaseEventConsumers.PlaceBetCo
         super(definition, gameData, publisher);
     }
 
-    consume(player, payload) {
-        Object.assign(payload, { amount: payload.amount >> 0 });
+    composeValidationCriteria(player, betChoice, amount, freeBet) {
+        const baseCriteria = super.composeValidationCriteria(player, betChoice, amount, freeBet);
 
-        const { amount, select } = payload;
-        const name = player.profile.name;
+        const { betTracks } = this.gameData.ingame[player.profile.name] || { betTracks: {} };
+        const criteria = [
+            {
+                failure: Object.keys(betTracks).length && !(betChoice in betTracks),
+                notice: "Chỉ được cược 1 bên.",
+            },
+        ];
 
-        if (!this.validateBetRequest(player, this.convertBetChoice(select), amount)) {
-            return;
-        }
-
-        if (!this.gameData.ingame[name]) {
-            const newPlayer = {
-                name: player.profile.name,
-                betTracks: {},
-                betQueue: [],
-            };
-
-            this.gameData.ingame[name] = newPlayer;
-        }
-
-        this.gameData.ingame[name].betQueue.push({ player, payload });
-    }
-
-    convertBetChoice(select) {
-        return select ? 1 : 2;
+        return criteria.concat(baseCriteria);
     }
 }
