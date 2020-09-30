@@ -28,7 +28,7 @@
         "sc-semantic-release": "^1.2.0"
     },
     "dependencies": {
-        "sc-game-base": "^1.13.1-beta.3"
+        "sc-game-base": "^1.13.1-beta.4"
     },
     "husky": {
         "hooks": {

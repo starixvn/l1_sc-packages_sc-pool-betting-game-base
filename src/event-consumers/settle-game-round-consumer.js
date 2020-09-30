@@ -25,9 +25,9 @@ export default class SettleGameRoundConsumer extends Core.BaseEventConsumers.Set
 
             await Promise.all(
                 settledBets.map(async (bet) => {
-                    const betResult = this.calculateBetResult(settlementResult, bet);
+                    const betResult = this.calculateBetResult(bet);
                     await this.callEndGame(bet, roundId, time, betResult);
-                    this.calculateBetResult(bet.uid, betResult);
+                    this.captureBetResult(bet.uid, betResult);
                     this.userBetResultPublisher.publish(bet.uid, betResult);
                 })
             );
@@ -36,8 +36,8 @@ export default class SettleGameRoundConsumer extends Core.BaseEventConsumers.Set
         this.roundResultPublisher.publishRoundResult(this.collectRoundResult(result, settlementResult, roundId));
     }
 
-    calculateBetResult(settlementResult, bet) {
-        const betAmount = this.calculateBetAmount(bet, settlementResult);
+    calculateBetResult(bet) {
+        const betAmount = bet.amount;
         const totalLost = betAmount - bet.tralai;
 
         return {
@@ -68,26 +68,25 @@ export default class SettleGameRoundConsumer extends Core.BaseEventConsumers.Set
     async memberPayout(ticket, roundId, settlementResult, payoutData) {
         let betWin = 0;
         let refund = 0;
-        const winningChoice = this.getWinningChoice(settlementResult);
-        const isWinTicket = this.isWinTicket(ticket, winningChoice);
+        const { choice, amount: betAmount } = ticket;
+        const isWinTicket = settlementResult[choice];
 
         ticket.thanhtoan = true;
         ticket.win = isWinTicket;
 
         if (payoutData.amount && isWinTicket) {
-            const winningBetAmount = ticket[winningChoice];
-            const odd = this.gameData.gameConfigs.odds[winningChoice];
-            if (payoutData.amount >= winningBetAmount) {
-                betWin = this.calculateBetWin(winningBetAmount, odd);
-                payoutData.amount -= winningBetAmount;
+            const odd = this.gameData.gameConfigs.odds[choice];
+            if (payoutData.amount >= betAmount) {
+                betWin = this.calculateBetWin(betAmount, odd);
+                payoutData.amount -= betAmount;
             } else {
                 betWin = this.calculateBetWin(payoutData.amount, odd);
-                refund = winningBetAmount - payoutData.amount;
+                refund = betAmount - payoutData.amount;
                 payoutData.amount = 0;
             }
             ticket.betwin = betWin;
         } else {
-            refund = this.calculateBetAmount(ticket, settlementResult);
+            refund = betAmount;
         }
 
         await ticket.save();
@@ -99,19 +98,7 @@ export default class SettleGameRoundConsumer extends Core.BaseEventConsumers.Set
             .exec();
     }
 
-    calculateBetAmount(ticket, settlementResult) {
-        return Object.keys(settlementResult).reduce((total, choice) => total + (ticket[choice] || 0), 0);
-    }
-
     calculateBetWin(betAmount, odd) {
         return betAmount * (odd - 1);
-    }
-
-    getWinningChoice(settlementResult) {
-        return Object.keys(settlementResult).find((choice) => settlementResult[choice]);
-    }
-
-    isWinTicket(ticket, winningChoice) {
-        return ticket[winningChoice];
     }
 }
