@@ -1,8 +1,8 @@
 import { Core } from "sc-game-base";
 
 export default class PlaceBetConsumer extends Core.BaseEventConsumers.PlaceBetConsumer {
-    constructor({ definition, gameData, publisher }) {
-        super(definition, gameData, publisher);
+    constructor({ gameDefinition, gameData, publisher }) {
+        super(gameDefinition, gameData, publisher);
     }
 
     composeValidationCriteria(player, betChoice, amount, freeBet) {

@@ -47,12 +47,12 @@ export default class SettleGameRoundConsumer extends Core.BaseEventConsumers.Set
         };
     }
 
-    async queryBets(roundId) {
-        return await this.gameDefinition.betLogRepository.find({ phien: roundId }, null, { sort: { _id: 1 } }).exec();
+    queryBets(roundId) {
+        return this.gameDefinition.betLogRepository.find({ phien: roundId }, null, { sort: { _id: 1 } }).exec();
     }
 
-    async querySettledBets(roundId) {
-        return await this.gameDefinition.betRepository.find({ phien: roundId, thanhtoan: true }).exec();
+    querySettledBets(roundId) {
+        return this.gameDefinition.betRepository.find({ phien: roundId, thanhtoan: true }).exec();
     }
 
     settleBetsByGroup(tickets, roundId, settlementResult, totalBets) {
@@ -60,8 +60,8 @@ export default class SettleGameRoundConsumer extends Core.BaseEventConsumers.Set
             amount: Math.min(...Object.values(totalBets)),
         };
 
-        return tickets.map(async (ticket) => {
-            return await this.memberPayout(ticket, roundId, settlementResult, payoutData);
+        return tickets.map((ticket) => {
+            this.memberPayout(ticket, roundId, settlementResult, payoutData);
         });
     }
 
@@ -90,7 +90,7 @@ export default class SettleGameRoundConsumer extends Core.BaseEventConsumers.Set
         }
 
         await ticket.save();
-        return await this.gameDefinition.betRepository
+        await this.gameDefinition.betRepository
             .updateOne(
                 { uid: obj.uid, phien: roundId },
                 { $set: { win: isWinTicket, thanhtoan: true, time: new Date() }, $inc: { tralai: refund, betwin: betWin } }
