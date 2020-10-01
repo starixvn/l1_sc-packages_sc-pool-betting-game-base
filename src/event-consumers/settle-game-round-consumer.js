@@ -2,8 +2,8 @@ import { userInfos } from "sc-base-database";
 import { Core } from "sc-game-base";
 
 export default class SettleGameRoundConsumer extends Core.BaseEventConsumers.SettleGameRoundConsumer {
-    constructor({ gameDefinition, gameData, roundResultPublisher, userBetResultPublisher }) {
-        super(gameDefinition, gameData, roundResultPublisher, userBetResultPublisher);
+    constructor({ definition, gameData, roundResultPublisher, userBetResultPublisher }) {
+        super(definition, gameData, roundResultPublisher, userBetResultPublisher);
     }
 
     async settleBets({ result, settlementResult, roundId, time }) {
@@ -48,11 +48,11 @@ export default class SettleGameRoundConsumer extends Core.BaseEventConsumers.Set
     }
 
     queryBets(roundId) {
-        return this.gameDefinition.betLogRepository.find({ phien: roundId }, null, { sort: { _id: 1 } }).exec();
+        return this.definition.betLogRepository.find({ phien: roundId }, null, { sort: { _id: 1 } }).exec();
     }
 
     querySettledBets(roundId) {
-        return this.gameDefinition.betRepository.find({ phien: roundId, thanhtoan: true }).exec();
+        return this.definition.betRepository.find({ phien: roundId, thanhtoan: true }).exec();
     }
 
     settleBetsByGroup(tickets, roundId, settlementResult, totalBets) {
@@ -90,7 +90,7 @@ export default class SettleGameRoundConsumer extends Core.BaseEventConsumers.Set
         }
 
         await ticket.save();
-        await this.gameDefinition.betRepository
+        await this.definition.betRepository
             .updateOne(
                 { uid: obj.uid, phien: roundId },
                 { $set: { win: isWinTicket, thanhtoan: true, time: new Date() }, $inc: { tralai: refund, betwin: betWin } }

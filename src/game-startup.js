@@ -4,13 +4,13 @@ import { GameCron, ProcessBetQueue } from "./crons";
 import { SocketRouter } from "./routers";
 
 export default class GameStartUp extends Core.BaseStartup {
-    constructor({ appConfigs, gameDefinition, gameData, gameCron, processBetQueue }) {
+    constructor({ appConfigs, definition, gameData, gameCron, processBetQueue }) {
         super(
             appConfigs,
-            gameDefinition,
+            definition,
             gameData,
-            gameCron ?? new GameCron({ gameDefinition, gameData }),
-            processBetQueue ?? new ProcessBetQueue({ gameDefinition, gameData })
+            gameCron ?? new GameCron({ definition, gameData }),
+            processBetQueue ?? new ProcessBetQueue({ definition, gameData })
         );
     }
 

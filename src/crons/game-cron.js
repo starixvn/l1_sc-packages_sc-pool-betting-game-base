@@ -3,11 +3,11 @@ import { Core } from "sc-game-base";
 import { SettleGameRoundConsumer } from "../event-consumers";
 
 export default class GameCron extends Core.Cron.BaseGameCron {
-    constructor({ gameDefinition, gameData, settleGameRoundConsumer, gameStatusPublisher, runningRoundInfoPublisher }) {
+    constructor({ definition, gameData, settleGameRoundConsumer, gameStatusPublisher, runningRoundInfoPublisher }) {
         super(
-            gameDefinition,
+            definition,
             gameData,
-            settleGameRoundConsumer ?? new SettleGameRoundConsumer({ gameDefinition, gameData }),
+            settleGameRoundConsumer ?? new SettleGameRoundConsumer({ definition, gameData }),
             gameStatusPublisher,
             runningRoundInfoPublisher
         );

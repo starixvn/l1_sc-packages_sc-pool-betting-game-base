@@ -1,8 +1,8 @@
 import { Core } from "sc-game-base";
 
 export default class ProcessBetQueue extends Core.Cron.ProcessBetQueue {
-    constructor({ gameDefinition, gameData, publisher }) {
-        super(gameDefinition, gameData, publisher);
+    constructor({ definition, gameData, publisher }) {
+        super(definition, gameData, publisher);
     }
 
     adjustTotalBets(player, bet) {

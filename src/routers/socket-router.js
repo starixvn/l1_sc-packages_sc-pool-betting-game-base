@@ -4,7 +4,7 @@ import { PlaceBetConsumer } from "../event-consumers";
 
 export default class SocketRouter extends Core.Routers.BaseSocketRouter {
     constructor({
-        gameDefinition,
+        definition,
         gameData,
         userSignInConsumer,
         userDisconnectConsumer,
@@ -15,12 +15,12 @@ export default class SocketRouter extends Core.Routers.BaseSocketRouter {
         roundQuery,
     }) {
         super({
-            gameDefinition,
+            definition,
             gameData,
             userSignInConsumer,
             userDisconnectConsumer,
             inGameConsumer,
-            placeBetConsumer: placeBetConsumer ?? new PlaceBetConsumer({ gameDefinition, gameData }),
+            placeBetConsumer: placeBetConsumer ?? new PlaceBetConsumer({ definition, gameData }),
             userSignInPublisher,
             historyQuery,
             roundQuery,
