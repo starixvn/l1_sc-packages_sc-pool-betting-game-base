@@ -7,19 +7,18 @@ export default class SettleGameRoundConsumer extends Core.BaseEventConsumers.Set
     }
 
     async settleBets({ result, settlementResult, roundId, time }) {
-        const tickets = this.queryBets(roundId);
+        const tickets = await this.queryBets(roundId);
 
         if (tickets && tickets.length) {
             const uusUsers = await userInfos.find({ currency: "UUS" }, "id").exec();
             const uusUserIds = uusUsers.map((user) => user.id);
 
             const realTickets = tickets.filter((bet) => !uusUserIds.includes(bet.uid));
+            const realTicketProcessors = this.settleBetsByGroup(realTickets, roundId, settlementResult, this.gameData.totalBets);
             const uusTickets = tickets.filter((bet) => uusUserIds.includes(bet.uid));
+            const uusTicketProcessors = this.settleBetsByGroup(uusTickets, roundId, settlementResult, this.gameData.totalUUSBets);
 
-            await Promise.all([
-                this.settleBetsByGroup(realTickets, roundId, settlementResult, this.gameData.totalBets),
-                this.settleBetsByGroup(uusTickets, roundId, settlementResult, this.gameData.totalUUSBets),
-            ]);
+            await Promise.all(realTicketProcessors.concat(uusTicketProcessors));
 
             const settledBets = await this.querySettledBets(roundId);
 
@@ -37,13 +36,14 @@ export default class SettleGameRoundConsumer extends Core.BaseEventConsumers.Set
     }
 
     calculateBetResult(bet) {
-        const betAmount = bet.amount;
-        const totalLost = betAmount - bet.tralai;
+        const totalLost = bet.amount - bet.tralai;
+        const winAmount = bet.win ? bet.betwin + bet.amount : totalLost;
 
         return {
-            totalBetAmount: betAmount,
-            totalWin: betItem.win ? betItem.betWin + betAmount : totalLost,
+            totalBetAmount: bet.amount,
+            totalWin: winAmount,
             totalLost: totalLost,
+            winningByChoices: { [bet.choice]: winAmount },
         };
     }
 
@@ -60,9 +60,7 @@ export default class SettleGameRoundConsumer extends Core.BaseEventConsumers.Set
             amount: Math.min(...Object.values(totalBets)),
         };
 
-        return tickets.map((ticket) => {
-            this.memberPayout(ticket, roundId, settlementResult, payoutData);
-        });
+        return tickets.map((ticket) => this.memberPayout(ticket, roundId, settlementResult, payoutData));
     }
 
     async memberPayout(ticket, roundId, settlementResult, payoutData) {
@@ -89,10 +87,11 @@ export default class SettleGameRoundConsumer extends Core.BaseEventConsumers.Set
             refund = betAmount;
         }
 
+        ticket.tralai = refund;
         await ticket.save();
         await this.definition.betRepository
             .updateOne(
-                { uid: obj.uid, phien: roundId },
+                { uid: ticket.uid, phien: roundId },
                 { $set: { win: isWinTicket, thanhtoan: true, time: new Date() }, $inc: { tralai: refund, betwin: betWin } }
             )
             .exec();
