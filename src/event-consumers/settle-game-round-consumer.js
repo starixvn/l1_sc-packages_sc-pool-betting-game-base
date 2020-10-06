@@ -7,18 +7,18 @@ export default class SettleGameRoundConsumer extends Core.BaseEventConsumers.Set
     }
 
     async settleBets({ result, settlementResult, roundId, time }) {
-        const tickets = await this.queryBets(roundId);
+        const bets = await this.queryBets(roundId);
 
-        if (tickets && tickets.length) {
+        if (bets && bets.length) {
             const uusUsers = await userInfos.find({ currency: "UUS" }, "id").exec();
             const uusUserIds = uusUsers.map((user) => user.id);
 
-            const realTickets = tickets.filter((bet) => !uusUserIds.includes(bet.uid));
-            const realTicketProcessors = this.settleBetsByGroup(realTickets, roundId, settlementResult, this.gameData.totalBets);
-            const uusTickets = tickets.filter((bet) => uusUserIds.includes(bet.uid));
-            const uusTicketProcessors = this.settleBetsByGroup(uusTickets, roundId, settlementResult, this.gameData.totalUUSBets);
+            const realBets = bets.filter((bet) => !uusUserIds.includes(bet.uid));
+            const realBetProcessors = this.settleBetsByGroup(realBets, roundId, settlementResult, this.gameData.totalBets);
+            const uusBets = bets.filter((bet) => uusUserIds.includes(bet.uid));
+            const uusBetProcessors = this.settleBetsByGroup(uusBets, roundId, settlementResult, this.gameData.totalUUSBets);
 
-            await Promise.all(realTicketProcessors.concat(uusTicketProcessors));
+            await Promise.all(realBetProcessors.concat(uusBetProcessors));
 
             const settledBets = await this.querySettledBets(roundId);
 
@@ -36,7 +36,7 @@ export default class SettleGameRoundConsumer extends Core.BaseEventConsumers.Set
     }
 
     calculateBetResult(bet) {
-        const totalLost = bet.amount - bet.tralai;
+        const totalLost = bet.amount - bet.refund;
         const winAmount = bet.win ? bet.betwin + bet.amount : totalLost;
 
         return {
@@ -55,46 +55,44 @@ export default class SettleGameRoundConsumer extends Core.BaseEventConsumers.Set
         return this.definition.betRepository.find({ phien: roundId, thanhtoan: true }).exec();
     }
 
-    settleBetsByGroup(tickets, roundId, settlementResult, totalBets) {
-        const payoutData = {
+    settleBetsByGroup(bets, roundId, settlementResult, totalBets) {
+        const payout = {
             amount: Math.min(...Object.values(totalBets)),
         };
 
-        return tickets.map((ticket) => this.memberPayout(ticket, roundId, settlementResult, payoutData));
+        return bets.map((bet) => this.settleBet(bet, roundId, settlementResult, payout));
     }
 
-    async memberPayout(ticket, roundId, settlementResult, payoutData) {
+    async settleBet(bet, roundId, settlementResult, payout) {
         let betWin = 0;
         let refund = 0;
-        const { choice, amount: betAmount } = ticket;
-        const isWinTicket = settlementResult[choice];
+        const { choice, amount: betAmount } = bet;
+        const isWinningBet = settlementResult[choice];
 
-        ticket.thanhtoan = true;
-        ticket.win = isWinTicket;
+        bet.thanhtoan = true;
+        bet.win = isWinningBet;
 
-        if (payoutData.amount && isWinTicket) {
+        if (payout.amount && isWinningBet) {
             const odd = this.gameData.gameConfigs.odds[choice];
-            if (payoutData.amount >= betAmount) {
+            if (payout.amount >= betAmount) {
                 betWin = this.calculateBetWin(betAmount, odd);
-                payoutData.amount -= betAmount;
+                payout.amount -= betAmount;
             } else {
-                betWin = this.calculateBetWin(payoutData.amount, odd);
-                refund = betAmount - payoutData.amount;
-                payoutData.amount = 0;
+                betWin = this.calculateBetWin(payout.amount, odd);
+                refund = betAmount - payout.amount;
+                payout.amount = 0;
             }
-            ticket.betwin = betWin;
+            bet.betwin = betWin;
         } else {
             refund = betAmount;
         }
 
-        ticket.tralai = refund;
-        await ticket.save();
-        await this.definition.betRepository
-            .updateOne(
-                { uid: ticket.uid, phien: roundId },
-                { $set: { win: isWinTicket, thanhtoan: true, time: new Date() }, $inc: { tralai: refund, betwin: betWin } }
-            )
-            .exec();
+        bet.refund = refund;
+        await bet.save();
+        await this.definition.betRepository.updateOne(
+            { uid: bet.uid, phien: roundId },
+            { $set: { win: isWinningBet, thanhtoan: true, time: new Date() }, $inc: { refund, betwin: betWin } }
+        );
     }
 
     calculateBetWin(betAmount, odd) {
