@@ -8,7 +8,7 @@ export default class GameCron extends Core.Cron.BaseGameCron {
             definition,
             gameData,
             apiSettings,
-            settleGameRoundConsumer ?? new SettleGameRoundConsumer({ definition, gameData }),
+            settleGameRoundConsumer ?? new SettleGameRoundConsumer({ definition, gameData, apiSettings }),
             gameStatusPublisher,
             runningRoundInfoPublisher
         );
