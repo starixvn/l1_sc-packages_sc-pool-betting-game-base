@@ -9,7 +9,7 @@ export default class GameStartUp extends Core.BaseStartup {
             appConfigs,
             definition,
             gameData,
-            gameCron ?? new GameCron({ definition, gameData, apiSettings: appConfigs.mainServerApiSettings }),
+            gameCron ?? new GameCron({ definition, gameData, mainServerApiSettings: appConfigs.mainServerApiSettings }),
             processBetQueue ?? new ProcessBetQueue({ definition, gameData })
         );
     }

@@ -2,8 +2,8 @@ import { userInfos } from "sc-base-database";
 import { Core } from "sc-game-base";
 
 export default class SettleGameRoundConsumer extends Core.BaseEventConsumers.SettleGameRoundConsumer {
-    constructor({ definition, gameData, apiSettings, roundResultPublisher, userBetResultPublisher }) {
-        super(definition, gameData, apiSettings, roundResultPublisher, userBetResultPublisher);
+    constructor({ definition, gameData, mainServerApiSettings, roundResultPublisher, userBetResultPublisher }) {
+        super(definition, gameData, mainServerApiSettings, roundResultPublisher, userBetResultPublisher);
     }
 
     async settleBets({ result, settlementResult, roundId, time }) {
