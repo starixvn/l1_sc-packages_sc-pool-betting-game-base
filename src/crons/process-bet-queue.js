@@ -32,6 +32,8 @@ export default class ProcessBetQueue extends Core.Cron.ProcessBetQueue {
                 { $inc: existingBetIncrement, $setOnInsert: newBet },
                 { upsert: true, setDefaultsOnInsert: true }
             );
+
+            this.gameData.betCount[bet.betChoice] = (this.gameData.betCount[betChoice] ?? 0) + 1;
         }
     }
 

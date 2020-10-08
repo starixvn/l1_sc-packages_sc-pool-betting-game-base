@@ -5,5 +5,6 @@ export default class GameData extends Core.GameData {
         super(remainingTime);
         this.betList = [];
         this.totalUUSBets = {};
+        this.betCount = {};
     }
 }
