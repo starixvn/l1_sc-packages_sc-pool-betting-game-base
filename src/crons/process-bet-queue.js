@@ -5,8 +5,8 @@ export default class ProcessBetQueue extends Core.Cron.ProcessBetQueue {
         super(definition, gameData, publisher);
     }
 
-    async upsertBet(player, bet) {
-        const existingBetFilter = { uid: player.UID, phien: this.gameData.roundId };
+    async upsertBet(player, roundId, bet) {
+        const existingBetFilter = { uid: player.UID, phien: roundId };
         const existingBet = await this.definition.betRepository.findOne(existingBetFilter).exec();
 
         if (existingBet) {
