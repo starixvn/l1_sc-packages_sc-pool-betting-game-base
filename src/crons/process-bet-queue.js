@@ -33,7 +33,7 @@ export default class ProcessBetQueue extends Core.Cron.ProcessBetQueue {
                 { upsert: true, setDefaultsOnInsert: true }
             );
 
-            this.gameData.betCount[bet.betChoice] = (this.gameData.betCount[betChoice] ?? 0) + 1;
+            this.gameData.betCount[bet.betChoice] = (this.gameData.betCount[bet.betChoice] ?? 0) + 1;
         }
     }
 
