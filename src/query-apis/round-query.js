@@ -6,7 +6,7 @@ export default class RoundQuery extends Core.QueryApis.RoundQuery {
         const round = await super.getOne(id, projections);
         const uusUsers = await userInfos.find({ currency: "UUS" }, "id").exec();
         const uusUserIds = uusUsers.map((user) => user.id);
-        const betLogs = await this.definition.betLogsRepository.find({ phien: id }, { _id: false }, { sort: { _id: 1 } }).exec();
+        const betLogs = await this.definition.betLogRepository.find({ phien: id }, { _id: false }, { sort: { _id: 1 } }).exec();
 
         const betLogGroups = betLogs
             .filter((betLog) => !uusUserIds.includes(betLog.uid))
