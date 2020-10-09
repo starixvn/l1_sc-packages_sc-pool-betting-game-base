@@ -15,18 +15,15 @@ export default class RoundQuery extends Core.QueryApis.RoundQuery {
                 return accumulator;
             }, {});
 
-        const total = Object.entries(betLogGroups).reduce(
-            (result, [choice, logs]) => {
-                const totalAmount = logs.reduce((amount, log) => amount + log.amount, 0);
-                result.betAmount[choice] = (result.betAmount[choice] || 0) + totalAmount;
+        const total = {};
+        Object.keys(betLogGroups).forEach((choice) => {
+            total[choice] = betLogGroups[choice].reduce((result, log) => {
+                result.betAmount = (result.betAmount || 0) + log.amount;
+                result.refund = (result.refund || 0) + log.refund;
 
                 return result;
-            },
-            {
-                betAmount: {},
-                refund: {},
-            }
-        );
+            });
+        });
 
         return {
             ...round,
