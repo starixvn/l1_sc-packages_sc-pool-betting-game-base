@@ -38,7 +38,7 @@ export default class SocketRouter extends Core.Routers.BaseSocketRouter {
         socketClient.on("getRound", this.handleGetRound.bind(this));
     }
 
-    handleGetRound(payload) {
+    async handleGetRound(payload) {
         try {
             const { roundId } = payload;
 
@@ -46,9 +46,9 @@ export default class SocketRouter extends Core.Routers.BaseSocketRouter {
                 return;
             }
 
-            const round = this.roundQuery.getOne(roundId);
+            const round = await this.roundQuery.getOne(roundId);
 
-            this.socketClient.emit(this.definition.name, round);
+            this.socketClient.emit(this.definition.name, { round });
         } catch (error) {
             logger.logError(error);
         }
