@@ -15,6 +15,7 @@ export default class Bot extends Core.BaseBot {
         this.totalSmallBotTickets = 0;
         this.totalUnroundTickets = 0;
         this.totalBotTickets = 0;
+
         this.smallTicketScale = 50;
         this.ratioOfSmallTicket = 70;
         this.ratioOfUnroundTicket = 70;
@@ -26,7 +27,7 @@ export default class Bot extends Core.BaseBot {
         if (configs?.botenabled) {
             const bots = await userInfos.find({ type: true, disabled: false }, "id name").exec();
 
-            let maxBot = Math.floor(bots.length * helpers.configHelper.getMaxBotForCurrentHour(configs));
+            const maxBot = Math.floor(bots.length * helpers.configHelper.getMaxBotForCurrentHour(configs));
             this.botList = this.chance.shuffle(bots).slice(0, maxBot);
             this.totalBotTickets = 0;
             this.totalUnroundTickets = 0;
@@ -41,27 +42,31 @@ export default class Bot extends Core.BaseBot {
             const { remainingTime, totalBets } = this.gameData;
             const { durations, choices } = this.definition;
 
-            const maxBotRandom =
-                remainingTime < durations.balancingBetTime
-                    ? (this.botList.length - (this.botList.length * this.botBufferRatio) / 100) / remainingTime
-                    : this.botList.length / (remainingTime - durations.lockingBet);
-
-            const maxTickets =
-                remainingTime < durations.balancingBetTime
-                    ? Math.floor(maxBotRandom)
-                    : this.chance.integer({ min: (maxBotRandom * 2) / 3, max: maxBotRandom });
-
             const isNeedToBalance =
                 (totalBets[choices[0]] || 0) / (totalBets[choices[1]] || 0) > this.ratioToStartBalancing ||
                 (totalBets[choices[1]] || 0) / (totalBets[choices[0]] || 0) > this.ratioToStartBalancing;
 
-            const betChoices = remainingTime < durations.balancingBetTime || isNeedToBalance ? this.generateBetChoices(maxTickets) : [];
+            const maxTickets = this.getMaxTicketsToBet(remainingTime, durations);
+
+            const betChoices =
+                remainingTime < durations.balancingBetTime || isNeedToBalance ? this.generateBetChoicesToBalance(maxTickets) : [];
 
             this.getBotsAndPlaceBet(maxTickets, betChoices);
         }
     }
 
-    generateBetChoices(maxTickets) {
+    getMaxTicketsToBet(remainingTime, durations) {
+        const maxBotRandom =
+            remainingTime < durations.balancingBetTime
+                ? (this.botList.length - (this.botList.length * this.botBufferRatio) / 100) / remainingTime
+                : this.botList.length / (remainingTime - durations.lockingBet);
+
+        return remainingTime < durations.balancingBetTime
+            ? Math.floor(maxBotRandom)
+            : this.chance.integer({ min: (maxBotRandom * 2) / 3, max: maxBotRandom });
+    }
+
+    generateBetChoicesToBalance(maxTickets) {
         let choices = [];
         const { totalBets } = this.gameData;
 
@@ -79,29 +84,22 @@ export default class Bot extends Core.BaseBot {
     }
 
     getBotsAndPlaceBet(maxTickets, choices) {
-        const maxBet = this.gameData.gameConfigs?.bot_maxbet ?? 10;
-        const minBet = this.getMinBet();
         for (let index = 0; index < maxTickets; index++) {
             const bot = this.botList[index];
             if (bot) {
-                this.placeBet(bot, maxBet, minBet, choices[index] ?? this.definition.choices[Math.floor(Math.random() * 2)]);
+                this.placeBet(bot, this.getBetChoice(index, choices));
             }
         }
 
         this.botList.splice(0, maxTickets);
     }
 
-    async placeBet(bot, maxBet, minBet, choice) {
-        const isSmallTicket =
-            this.totalBotTickets == 0 ? true : (this.totalSmallBotTickets * 100) / this.totalBotTickets < this.ratioOfSmallTicket;
+    async placeBet(bot, choice) {
+        const minBet = this.getMinBet();
         const isUnround =
             this.totalBotTickets == 0 ? false : (this.totalUnroundTickets * 100) / this.totalBotTickets < this.ratioOfUnroundTicket;
 
-        if (isSmallTicket) {
-            let maxBetOfSmallTicket = Math.min(minBet * this.smallTicketScale, maxBet * 0.3);
-            maxBet = Math.min(maxBetOfSmallTicket, maxBet);
-        }
-
+        const maxBet = this.getMaxBet(bot, null);
         const betAmount = this.getRandomAmount(minBet, maxBet, isUnround);
         this.gameData.totalBets[choice] = (this.gameData.totalBets[choice] || 0) + betAmount;
         this.gameData.betCount[choice] = (this.gameData.totalBets[choice] || 0) + 1;
@@ -125,20 +123,38 @@ export default class Bot extends Core.BaseBot {
             { upsert: true, setDefaultsOnInsert: true }
         );
 
-        this.totalBotTickets++;
-
-        if (isSmallTicket) {
+        if (this.isSmallTicket()) {
             this.totalSmallBotTickets++;
         }
 
         if (isUnround) {
             this.totalUnroundTickets++;
         }
+
+        this.totalBotTickets++;
     }
 
     getRandomAmount(min, max, isUnround) {
-        if (isUnround) return Math.floor(Math.random() * max) + min;
+        return isUnround ? this.chance.integer({ min, max }) : helpers.numberHelper.getRandomNumberStep5(min, max, true);
+    }
 
-        return helpers.numberHelper.getRandomNumberStep5(min, max, true);
+    getMaxBet(bot, choice) {
+        const maxBet = this.gameData.gameConfigs?.bot_maxbet ?? 10;
+        const minBet = this.getMinBet();
+
+        if (this.isSmallTicket()) {
+            let maxBetOfSmallTicket = Math.min(minBet * this.smallTicketScale, maxBet * 0.3);
+            return Math.min(maxBetOfSmallTicket, maxBet);
+        }
+
+        return maxBet;
+    }
+
+    getBetChoice(index, choices) {
+        return choices[index] ?? this.definition.choices[this.chance.integer({ min: 0, max: 1 })];
+    }
+
+    isSmallTicket() {
+        return this.totalBotTickets == 0 ? true : (this.totalSmallBotTickets * 100) / this.totalBotTickets < this.ratioOfSmallTicket;
     }
 }
