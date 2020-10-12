@@ -69,8 +69,7 @@ export default class Bot extends Core.BaseBot {
     generateBetChoicesToBalance(maxTickets) {
         let choices = [];
         const { totalBets } = this.gameData;
-
-        const ticketsForSmallestChoice = (maxTickets * this.balancingRatio) / 100;
+        const ticketsForSmallestChoice = Math.round((maxTickets * this.balancingRatio) / 100);
 
         for (let index = 0; index < ticketsForSmallestChoice; index++) {
             choices.push(Object.keys(totalBets).reduce((prev, current) => (totalBets[current] < totalBets[prev] ? current : prev)));
@@ -143,7 +142,7 @@ export default class Bot extends Core.BaseBot {
         const minBet = this.getMinBet();
 
         if (this.isSmallTicket()) {
-            let maxBetOfSmallTicket = Math.min(minBet * this.smallTicketScale, maxBet * 0.3);
+            const maxBetOfSmallTicket = Math.min(minBet * this.smallTicketScale, maxBet * 0.3);
             return Math.min(maxBetOfSmallTicket, maxBet);
         }
 
