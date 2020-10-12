@@ -81,7 +81,6 @@ export default class Bot extends Core.BaseBot {
             result.push(select?choices[1]:choices[0]);
         }
 
-
         return this.chance.shuffle(result);
     }
 
@@ -107,7 +106,7 @@ export default class Bot extends Core.BaseBot {
         this.gameData.betCount[choice] = (this.gameData.totalBets[choice] || 0) + 1;
         const { roundId } = this.gameData;
 
-        await this.definition.betLogRepository({
+        await this.definition.betLogRepository.create({
             uid: bot.id,
             name: bot.name,
             phien: roundId,
