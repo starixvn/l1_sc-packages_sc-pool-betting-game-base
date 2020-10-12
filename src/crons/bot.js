@@ -16,6 +16,8 @@ export default class Bot extends Core.BaseBot {
         this.totalUnroundTickets = 0;
         this.totalBotTickets = 0;
         this.smallTicketScale = 50;
+        this.ratioOfSmallTicket = 70;
+        this.ratioOfUnroundTicket = 70;
     }
 
     async reset() {
