@@ -137,7 +137,7 @@ export default class Bot extends Core.BaseBot {
         return isUnround ? this.chance.integer({ min, max }) : helpers.numberHelper.getRandomNumberStep5(min, max, true);
     }
 
-    getMaxBet(bot, choice) {
+    getMaxBet() {
         const maxBet = this.gameData.gameConfigs?.bot_maxbet ?? 10;
         const minBet = this.getMinBet();
 
