@@ -38,10 +38,10 @@ export default class Bot extends Core.BaseBot {
     }
 
     async run() {
-        if (this.botList.length) {
-            const { remainingTime, totalBets } = this.gameData;
-            const { durations, choices } = this.definition;
+        const { remainingTime, totalBets } = this.gameData;
+        const { durations, choices } = this.definition;
 
+        if (this.botList.length && remainingTime > durations.lockingBet) {           
             const isNeedToBalance =
                 (totalBets[choices[0]] || 0) / (totalBets[choices[1]] || 0) > this.ratioToStartBalancing ||
                 (totalBets[choices[1]] || 0) / (totalBets[choices[0]] || 0) > this.ratioToStartBalancing;
@@ -67,19 +67,22 @@ export default class Bot extends Core.BaseBot {
     }
 
     generateBetChoicesToBalance(maxTickets) {
-        let choices = [];
+        let result = [];
         const { totalBets } = this.gameData;
+        const {choices}=this.definition;
         const ticketsForSmallestChoice = Math.round((maxTickets * this.balancingRatio) / 100);
+        const select = (totalBets[choices[0]] || 0) < (totalBets[choices[1]] || 0);
 
         for (let index = 0; index < ticketsForSmallestChoice; index++) {
-            choices.push(Object.keys(totalBets).reduce((prev, current) => (totalBets[current] < totalBets[prev] ? current : prev)));
+            result.push(select?choices[0]:choices[1]);
         }
 
         for (let index = ticketsForSmallestChoice; index < maxTickets; index++) {
-            choices.push(Object.keys(totalBets).reduce((prev, current) => (totalBets[current] > totalBets[prev] ? current : prev)));
+            result.push(select?choices[1]:choices[0]);
         }
 
-        return this.chance.shuffle(choices);
+
+        return this.chance.shuffle(result);
     }
 
     getBotsAndPlaceBet(maxTickets, choices) {
