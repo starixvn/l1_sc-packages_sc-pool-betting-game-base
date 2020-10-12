@@ -27,7 +27,7 @@ export default class SettleGameRoundConsumer extends Core.BaseEventConsumers.Set
                     const betResult = this.calculateBetResult(bet);
                     await this.callEndGame(bet, roundId, time, betResult);
                     this.captureBetResult(bet.uid, betResult);
-                    this.userBetResultPublisher.publish(bet.uid, betResult);
+                    bet.memberId && this.userBetResultPublisher.publish(bet.uid, betResult);
                 })
             );
         }
