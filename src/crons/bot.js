@@ -28,6 +28,9 @@ export default class Bot extends Core.BaseBot {
 
             let maxBot = Math.floor(bots.length * helpers.configHelper.getMaxBotForCurrentHour(configs));
             this.botList = this.chance.shuffle(bots).slice(0, maxBot);
+            this.totalBotTickets = 0;
+            this.totalUnroundTickets = 0;
+            this.totalBotTickets = 0;
         } else {
             this.botList = [];
         }
