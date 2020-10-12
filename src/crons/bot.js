@@ -15,6 +15,7 @@ export default class Bot extends Core.BaseBot {
         this.totalSmallBotTickets = 0;
         this.totalUnroundTickets = 0;
         this.totalBotTickets = 0;
+        this.smallTicketScale = 50;
     }
 
     async reset() {
@@ -46,8 +47,8 @@ export default class Bot extends Core.BaseBot {
                     : this.chance.integer({ min: (maxBotRandom * 2) / 3, max: maxBotRandom });
 
             const isNeedToBalance =
-                totalBets[choices[0]] / totalBets[choices[1]] > this.ratioToStartBalancing ||
-                totalBets[choices[1]] / totalBets[choices[0]] > this.ratioToStartBalancing;
+                (totalBets[choices[0]] || 0) / (totalBets[choices[1]] || 0) > this.ratioToStartBalancing ||
+                (totalBets[choices[1]] || 0) / (totalBets[choices[0]] || 0) > this.ratioToStartBalancing;
 
             const betChoices = remainingTime < durations.balancingBetTime || isNeedToBalance ? this.generateBetChoices(maxTickets) : [];
 
@@ -92,13 +93,13 @@ export default class Bot extends Core.BaseBot {
             this.totalBotTickets == 0 ? false : (this.totalUnroundTickets * 100) / this.totalBotTickets < this.ratioOfUnroundTicket;
 
         if (isSmallTicket) {
-            let maxBetOfSmallTicket = Math.min(minBet * smallTicketScale, maxBet * 0.3);
+            let maxBetOfSmallTicket = Math.min(minBet * this.smallTicketScale, maxBet * 0.3);
             maxBet = Math.min(maxBetOfSmallTicket, maxBet);
         }
 
         const betAmount = this.getRandomAmount(minBet, maxBet, isUnround);
-        this.gameData.totalBets[choice] += betAmount;
-        this.gameData.betCount[choice] += 1;
+        this.gameData.totalBets[choice] = (this.gameData.totalBets[choice] || 0) + betAmount;
+        this.gameData.betCount[choice] = (this.gameData.totalBets[choice] || 0) + 1;
         const { roundId } = this.gameData;
 
         await this.definition.betLogRepository({
@@ -114,7 +115,7 @@ export default class Bot extends Core.BaseBot {
         const create = { uid: bot.id, phien: roundId, choice: choice, time: new Date() };
 
         await this.definition.betRepository.updateOne(
-            { uid: bot.id, phien: roundId, red: true },
+            { uid: bot.id, phien: roundId },
             { $inc: update, $setOnInsert: create },
             { upsert: true, setDefaultsOnInsert: true }
         );
