@@ -56,8 +56,9 @@ export default class SettleGameRoundConsumer extends Core.BaseEventConsumers.Set
     }
 
     settleBetsByGroup(bets, roundId, settlementResult, totalBets) {
+        const { choices } = this.definition;
         const payout = {
-            amount: Math.min(...Object.values(totalBets)),
+            amount: Math.min(...[totalBets[choices[0]] || 0, totalBets[choices[1]] || 0]),
         };
 
         return bets.map((bet) => this.settleBet(bet, roundId, settlementResult, payout));
@@ -72,17 +73,19 @@ export default class SettleGameRoundConsumer extends Core.BaseEventConsumers.Set
         bet.thanhtoan = true;
         bet.win = isWinningBet;
 
-        if (payout.amount && isWinningBet) {
-            const odd = this.gameData.gameConfigs.odds[choice];
-            if (payout.amount >= betAmount) {
-                betWin = this.calculateBetWin(betAmount, odd);
-                payout.amount -= betAmount;
-            } else {
-                betWin = this.calculateBetWin(payout.amount, odd);
-                refund = betAmount - payout.amount;
-                payout.amount = 0;
+        if (payout.amount) {
+            if (isWinningBet) {
+                const odd = this.gameData.gameConfigs.odds[choice];
+                if (payout.amount >= betAmount) {
+                    betWin = this.calculateBetWin(betAmount, odd);
+                    payout.amount -= betAmount;
+                } else {
+                    betWin = this.calculateBetWin(payout.amount, odd);
+                    refund = betAmount - payout.amount;
+                    payout.amount = 0;
+                }
+                bet.betwin = betWin;
             }
-            bet.betwin = betWin;
         } else {
             refund = betAmount;
         }
