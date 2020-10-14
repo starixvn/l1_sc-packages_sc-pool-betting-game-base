@@ -1,5 +1,7 @@
 import { Core } from "sc-game-base";
 
+import notices from "./../constants/notices";
+
 export default class PlaceBetConsumer extends Core.BaseEventConsumers.PlaceBetConsumer {
     constructor({ definition, gameData, publisher }) {
         super(definition, gameData, publisher);
@@ -12,7 +14,7 @@ export default class PlaceBetConsumer extends Core.BaseEventConsumers.PlaceBetCo
         const criteria = [
             {
                 failure: Object.keys(betTracks).length && !(betChoice in betTracks),
-                notice: "Chỉ được cược 1 bên.",
+                notice: notices.oneChoiceAllowed,
             },
         ];
 

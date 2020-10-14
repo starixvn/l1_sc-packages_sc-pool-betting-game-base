@@ -1,3 +1,3 @@
-import RunningRoundInfoPublisher from "./RunningRoundInfoPublisher";
+import RunningRoundInfoPublisher from "./running-round-info-publisher";
 
 export { RunningRoundInfoPublisher };

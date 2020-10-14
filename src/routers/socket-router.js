@@ -1,8 +1,8 @@
 import { logger } from "sc-common";
 import { Core } from "sc-game-base";
 
-import { PlaceBetConsumer } from "../event-consumers";
-import { RoundQuery } from "../query-apis";
+import { PlaceBetConsumer } from "./../event-consumers";
+import { RoundQuery } from "./../query-apis";
 
 export default class SocketRouter extends Core.Routers.BaseSocketRouter {
     constructor({

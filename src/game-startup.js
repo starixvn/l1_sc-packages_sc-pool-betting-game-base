@@ -9,7 +9,7 @@ export default class GameStartUp extends Core.BaseStartup {
             appConfigs,
             definition,
             gameData,
-            gameCron ?? new GameCron({ definition, gameData, mainServerApiSettings: appConfigs.mainServerApiSettings }),
+            gameCron ?? new GameCron({ definition, gameData }),
             processBetQueue ?? new ProcessBetQueue({ definition, gameData })
         );
     }
@@ -19,6 +19,7 @@ export default class GameStartUp extends Core.BaseStartup {
      */
     initSocketRouter(socketClient) {
         const router = new SocketRouter({ definition: this.definition, gameData: this.gameData });
+
         router.init(socketClient);
     }
 }

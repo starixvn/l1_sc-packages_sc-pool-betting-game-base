@@ -25,9 +25,9 @@ export default class Bot extends Core.BaseBot {
         const configs = this.gameData.gameConfigs;
 
         if (configs?.botenabled) {
-            const bots = await userInfos.find({ type: true, disabled: false }, "id name").exec();
-
+            const bots = await userInfos.find({ type: true, disabled: false }, "id name").lean().exec();
             const maxBot = Math.floor(bots.length * helpers.configHelper.getMaxBotForCurrentHour(configs));
+
             this.botList = this.chance.shuffle(bots).slice(0, maxBot);
             this.totalBotTickets = 0;
             this.totalUnroundTickets = 0;
@@ -41,17 +41,15 @@ export default class Bot extends Core.BaseBot {
         const { remainingTime, totalBets } = this.gameData;
         const { durations, choices } = this.definition;
 
-        if (this.botList.length && remainingTime > durations.lockingBet) {           
+        if (this.botList.length && remainingTime > durations.lockingBet) {
             const isNeedToBalance =
                 (totalBets[choices[0]] || 0) / (totalBets[choices[1]] || 0) > this.ratioToStartBalancing ||
                 (totalBets[choices[1]] || 0) / (totalBets[choices[0]] || 0) > this.ratioToStartBalancing;
 
             const maxTickets = this.getMaxTicketsToBet(remainingTime, durations);
+            const betChoices = remainingTime < durations.balancingBetTime || isNeedToBalance ? this.generateBetChoicesToBalance(maxTickets) : [];
 
-            const betChoices =
-                remainingTime < durations.balancingBetTime || isNeedToBalance ? this.generateBetChoicesToBalance(maxTickets) : [];
-
-            this.getBotsAndPlaceBet(maxTickets, betChoices);
+            await this.getBotsAndPlaceBet(maxTickets, betChoices);
         }
     }
 
@@ -67,28 +65,29 @@ export default class Bot extends Core.BaseBot {
     }
 
     generateBetChoicesToBalance(maxTickets) {
-        let result = [];
         const { totalBets } = this.gameData;
-        const {choices}=this.definition;
+        const { choices } = this.definition;
         const ticketsForSmallestChoice = Math.round((maxTickets * this.balancingRatio) / 100);
         const select = (totalBets[choices[0]] || 0) < (totalBets[choices[1]] || 0);
+        const result = [];
 
         for (let index = 0; index < ticketsForSmallestChoice; index++) {
-            result.push(select?choices[0]:choices[1]);
+            result.push(select ? choices[0] : choices[1]);
         }
 
         for (let index = ticketsForSmallestChoice; index < maxTickets; index++) {
-            result.push(select?choices[1]:choices[0]);
+            result.push(select ? choices[1] : choices[0]);
         }
 
         return this.chance.shuffle(result);
     }
 
-    getBotsAndPlaceBet(maxTickets, choices) {
+    async getBotsAndPlaceBet(maxTickets, choices) {
         for (let index = 0; index < maxTickets; index++) {
             const bot = this.botList[index];
+
             if (bot) {
-                this.placeBet(bot, this.getBetChoice(index, choices));
+                await this.placeBet(bot, this.getBetChoice(index, choices));
             }
         }
 
@@ -97,14 +96,13 @@ export default class Bot extends Core.BaseBot {
 
     async placeBet(bot, choice) {
         const minBet = this.getMinBet();
-        const isUnround =
-            this.totalBotTickets == 0 ? false : (this.totalUnroundTickets * 100) / this.totalBotTickets < this.ratioOfUnroundTicket;
-
         const maxBet = this.getMaxBet(bot, null);
+        const isUnround = this.totalBotTickets == 0 ? false : (this.totalUnroundTickets * 100) / this.totalBotTickets < this.ratioOfUnroundTicket;
         const betAmount = this.getRandomAmount(minBet, maxBet, isUnround);
+        const { roundId } = this.gameData;
+
         this.gameData.totalBets[choice] = (this.gameData.totalBets[choice] || 0) + betAmount;
         this.gameData.betCount[choice] = (this.gameData.totalBets[choice] || 0) + 1;
-        const { roundId } = this.gameData;
 
         await this.definition.betLogRepository.create({
             uid: bot.id,
@@ -145,6 +143,7 @@ export default class Bot extends Core.BaseBot {
 
         if (this.isSmallTicket()) {
             const maxBetOfSmallTicket = Math.min(minBet * this.smallTicketScale, maxBet * 0.3);
+
             return Math.min(maxBetOfSmallTicket, maxBet);
         }
 

@@ -2,8 +2,8 @@ import { userInfos } from "sc-base-database";
 import { Core } from "sc-game-base";
 
 export default class SettleGameRoundConsumer extends Core.BaseEventConsumers.SettleGameRoundConsumer {
-    constructor({ definition, gameData, mainServerApiSettings, roundResultPublisher, userBetResultPublisher }) {
-        super(definition, gameData, mainServerApiSettings, roundResultPublisher, userBetResultPublisher);
+    constructor({ definition, gameData, roundResultPublisher, userBetResultPublisher }) {
+        super(definition, gameData, roundResultPublisher, userBetResultPublisher);
     }
 
     async settleBets({ result, settlementResult, roundId, time }) {
@@ -15,6 +15,7 @@ export default class SettleGameRoundConsumer extends Core.BaseEventConsumers.Set
 
             const realBets = bets.filter((bet) => !uusUserIds.includes(bet.uid));
             const realBetProcessors = this.settleBetsByGroup(realBets, roundId, settlementResult, this.gameData.totalBets);
+
             const uusBets = bets.filter((bet) => uusUserIds.includes(bet.uid));
             const uusBetProcessors = this.settleBetsByGroup(uusBets, roundId, settlementResult, this.gameData.totalUUSBets);
 
@@ -25,9 +26,13 @@ export default class SettleGameRoundConsumer extends Core.BaseEventConsumers.Set
             await Promise.all(
                 settledBets.map(async (bet) => {
                     const betResult = this.calculateBetResult(bet);
+
                     await this.callEndGame(bet, roundId, time, betResult);
                     this.captureBetResult(bet.uid, betResult);
-                    bet.memberId && this.userBetResultPublisher.publish(bet.uid, betResult);
+
+                    if (bet.memberId) {
+                        this.userBetResultPublisher.publish(bet.uid, betResult);
+                    }
                 })
             );
         }
@@ -52,7 +57,7 @@ export default class SettleGameRoundConsumer extends Core.BaseEventConsumers.Set
     }
 
     querySettledBets(roundId) {
-        return this.definition.betRepository.find({ phien: roundId, thanhtoan: true }).exec();
+        return this.definition.betRepository.find({ phien: roundId, thanhtoan: true }).lean().exec();
     }
 
     settleBetsByGroup(bets, roundId, settlementResult, totalBets) {
@@ -68,16 +73,16 @@ export default class SettleGameRoundConsumer extends Core.BaseEventConsumers.Set
     }
 
     async settleBet(bet, roundId, settlementResult, refundInfo) {
-        let betWin = 0;
-        let refund = 0;
         const { choice, amount: betAmount } = bet;
         const isWinningBet = settlementResult[choice];
         const odd = this.gameData.gameConfigs.odds[choice];
+        let betWin = 0;
+        let refund = 0;
 
         bet.thanhtoan = true;
         bet.win = isWinningBet;
 
-        if (refundInfo.amount && bet.choice == refundInfo.choice) {
+        if (refundInfo.amount && bet.choice === refundInfo.choice) {
             if (refundInfo.amount >= betAmount) {
                 refund = betAmount;
                 refundInfo.amount -= betAmount;
@@ -96,6 +101,7 @@ export default class SettleGameRoundConsumer extends Core.BaseEventConsumers.Set
         bet.refund = refund;
         bet.betwin = betWin;
         await bet.save();
+
         await this.definition.betRepository.updateOne(
             { uid: bet.uid, phien: roundId },
             { $set: { win: isWinningBet, thanhtoan: true, time: new Date() }, $inc: { refund, betwin: betWin } }
