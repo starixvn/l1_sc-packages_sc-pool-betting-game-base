@@ -32,18 +32,23 @@ export default class ProcessBetQueue extends Core.Cron.ProcessBetQueue {
                 { $inc: existingBetIncrement, $setOnInsert: newBet },
                 { upsert: true, setDefaultsOnInsert: true }
             );
+
+            if (this.isUUSAccount(player)) {
+                this.gameData.betCount[bet.betChoice] = (this.gameData.betCount[bet.betChoice] ?? 0) + 1;
+            }
         }
     }
 
     adjustTotalBets(player, bet) {
-        const isUUSAccount = player?.session?.currency?.toUpperCase() === "UUS";
-        const { betChoice, amount } = bet;
-
-        if (isUUSAccount) {
+        if (this.isUUSAccount(player)) {
+            const { betChoice, amount } = bet;
             this.gameData.totalUUSBets[betChoice] = (this.gameData.totalUUSBets[betChoice] ?? 0) + amount;
         } else {
-            this.gameData.betCount[betChoice] = (this.gameData.betCount[betChoice] ?? 0) + 1;
             super.adjustTotalBets(player, bet);
         }
+    }
+
+    isUUSAccount(player) {
+        return player?.session?.currency?.toUpperCase() === "UUS";
     }
 }

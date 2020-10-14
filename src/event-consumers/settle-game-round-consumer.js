@@ -19,7 +19,7 @@ export default class SettleGameRoundConsumer extends Core.BaseEventConsumers.Set
             const uusBets = bets.filter((bet) => uusUserIds.includes(bet.uid));
             const uusBetProcessors = this.settleBetsByGroup(uusBets, roundId, settlementResult, this.gameData.totalUUSBets);
 
-            Promise.all(realBetProcessors.concat(uusBetProcessors));
+            await Promise.all(realBetProcessors.concat(uusBetProcessors));
 
             const settledBets = await this.querySettledBets(roundId);
 
