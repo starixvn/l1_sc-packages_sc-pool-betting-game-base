@@ -18,6 +18,31 @@ export default class PlaceBetConsumer extends Core.BaseEventConsumers.PlaceBetCo
             },
         ];
 
-        return criteria.concat(baseCriteria);
+        return baseCriteria.concat(criteria);
+    }
+
+    composeBetAmountValidationCriteria(player, betChoice, amount, freeBet) {
+        const configs = this.gameData.gameConfigs;
+        const { betTracks } = this.gameData.ingame[player.profile.name] || { betTracks: {} };
+        const totalAmount = this.definition.choices.reduce((total, choice) => total + (betTracks[choice] || 0), 0) + amount;
+
+        return [
+            {
+                failure: freeBet && !configs.enableFreeBet,
+                notice: helpers.noticeHelper.invalidBet,
+            },
+            {
+                failure: amount < configs.minbet,
+                notice: helpers.noticeHelper.minBet(configs.minbet),
+            },
+            {
+                failure: amount > configs.maxbet,
+                notice: helpers.noticeHelper.maxBet(configs.maxbet),
+            },
+            {
+                failure: totalAmount > configs.maxbet,
+                notice: helpers.noticeHelper.maxBet(configs.maxbet),
+            },
+        ];
     }
 }
