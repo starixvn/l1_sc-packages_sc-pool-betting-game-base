@@ -42,6 +42,7 @@ export default class ProcessBetQueue extends Core.Cron.ProcessBetQueue {
     adjustTotalBets(player, bet) {
         if (this.isUUSAccount(player)) {
             const { betChoice, amount } = bet;
+
             this.gameData.totalUUSBets[betChoice] = (this.gameData.totalUUSBets[betChoice] ?? 0) + amount;
         } else {
             super.adjustTotalBets(player, bet);

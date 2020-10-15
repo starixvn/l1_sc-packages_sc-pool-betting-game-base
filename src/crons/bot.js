@@ -97,7 +97,7 @@ export default class Bot extends Core.BaseBot {
     async placeBet(bot, choice) {
         const minBet = this.getMinBet();
         const maxBet = this.getMaxBet(bot, null);
-        const isUnround = this.totalBotTickets == 0 ? false : (this.totalUnroundTickets * 100) / this.totalBotTickets < this.ratioOfUnroundTicket;
+        const isUnround = this.totalBotTickets === 0 ? false : (this.totalUnroundTickets * 100) / this.totalBotTickets < this.ratioOfUnroundTicket;
         const betAmount = this.getRandomAmount(minBet, maxBet, isUnround);
         const { roundId } = this.gameData;
 
@@ -155,6 +155,6 @@ export default class Bot extends Core.BaseBot {
     }
 
     isSmallTicket() {
-        return this.totalBotTickets == 0 ? true : (this.totalSmallBotTickets * 100) / this.totalBotTickets < this.ratioOfSmallTicket;
+        return this.totalBotTickets === 0 ? true : (this.totalSmallBotTickets * 100) / this.totalBotTickets < this.ratioOfSmallTicket;
     }
 }
