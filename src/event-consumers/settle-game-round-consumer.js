@@ -41,7 +41,7 @@ export default class SettleGameRoundConsumer extends Core.BaseEventConsumers.Set
     }
 
     calculateBetResult(bet) {
-        const winAmount = bet.win ? bet.betwin + bet.amount : 0;
+        const winAmount = bet.win ? bet.betwin + bet.amount : bet.refund;
         const lostAmount = bet.amount - bet.refund;
 
         return {
