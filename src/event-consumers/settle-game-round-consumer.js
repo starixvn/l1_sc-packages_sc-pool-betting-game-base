@@ -87,11 +87,12 @@ export default class SettleGameRoundConsumer extends Core.BaseEventConsumers.Set
                 refundInfo.amount -= betAmount;
             } else {
                 refund = refundInfo.amount;
-                refundInfo.amount = 0;
 
                 if (isWinningBet) {
                     betWin = this.calculateBetWin(betAmount - refundInfo.amount, odd);
                 }
+
+                refundInfo.amount = 0;
             }
         } else if (isWinningBet) {
             betWin = this.calculateBetWin(bet.amount, odd);
