@@ -19,5 +19,6 @@ export default class GameCron extends Core.Cron.BaseGameCron {
     resetForNewRound() {
         super.resetForNewRound();
         this.gameData.betCount = {};
+        this.gameData.totalUUSBets = {};
     }
 }
