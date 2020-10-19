@@ -4,6 +4,8 @@ export default class RunningRoundInfoPublisher extends Core.BaseEventPublishers.
     publish(gameData) {
         super.publish(gameData);
 
+        this.publishToAllAdmins({ totalBets: gameData.totalBets })
+
         const { betCount } = gameData;
         const choices = Object.keys(betCount);
 
