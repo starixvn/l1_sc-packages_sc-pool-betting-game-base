@@ -1,0 +1,49 @@
+import { helpers } from "sc-common";
+import { Core } from "sc-game-base";
+
+import notices from "./../constants/notices";
+
+export default class PlaceBetConsumer extends Core.BaseEventConsumers.PlaceBetConsumer {
+    constructor({ definition, gameData, publisher }) {
+        super(definition, gameData, publisher);
+    }
+
+    composeValidationCriteria(player, betChoice, amount, freeBet) {
+        const baseCriteria = super.composeValidationCriteria(player, betChoice, amount, freeBet);
+
+        const { betTracks } = this.gameData.ingame[player.profile.name] || { betTracks: {} };
+        const criteria = [
+            {
+                failure: Object.keys(betTracks).length && !(betChoice in betTracks),
+                notice: notices.oneChoiceAllowed,
+            },
+        ];
+
+        return baseCriteria.concat(criteria);
+    }
+
+    composeBetAmountValidationCriteria(player, betChoice, amount, freeBet) {
+        const configs = this.gameData.gameConfigs;
+        const { betTracks } = this.gameData.ingame[player.profile.name] || { betTracks: {} };
+        const totalAmount = this.definition.choices.reduce((total, choice) => total + (betTracks[choice] || 0), 0) + amount;
+
+        return [
+            {
+                failure: freeBet && !configs.enableFreeBet,
+                notice: helpers.noticeHelper.invalidBet,
+            },
+            {
+                failure: amount < configs.minbet,
+                notice: helpers.noticeHelper.minBet(configs.minbet),
+            },
+            {
+                failure: amount > configs.maxbet,
+                notice: helpers.noticeHelper.maxBet(configs.maxbet),
+            },
+            {
+                failure: totalAmount > configs.maxbet,
+                notice: helpers.noticeHelper.maxBet(configs.maxbet),
+            },
+        ];
+    }
+}
