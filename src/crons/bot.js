@@ -25,16 +25,19 @@ export default class Bot extends Core.BaseBot {
         const configs = this.gameData.gameConfigs;
 
         if (configs?.botenabled) {
-            const bots = await userInfos.find({ type: true, disabled: false }, "id name").lean().exec();
+            const bots = await userInfos.find({ type: true, disabled: false, banned: false }, "id name").lean().exec();
             const maxBot = Math.floor(bots.length * helpers.configHelper.getMaxBotForCurrentHour(configs));
 
             this.botList = this.chance.shuffle(bots).slice(0, maxBot);
-            this.totalBotTickets = 0;
-            this.totalUnroundTickets = 0;
-            this.totalBotTickets = 0;
         } else {
             this.botList = [];
         }
+    }
+
+    resetAllBotData() {
+        this.totalBotTickets = 0;
+        this.totalUnroundTickets = 0;
+        this.totalBotTickets = 0;
     }
 
     async run() {
@@ -96,7 +99,7 @@ export default class Bot extends Core.BaseBot {
 
     async placeBet(bot, choice) {
         const minBet = this.getMinBet();
-        const maxBet = this.getMaxBet(bot, null);
+        const maxBet = this.getMaxBet();
         const isUnround = this.totalBotTickets === 0 ? false : (this.totalUnroundTickets * 100) / this.totalBotTickets < this.ratioOfUnroundTicket;
         const betAmount = this.getRandomAmount(minBet, maxBet, isUnround);
         const { roundId } = this.gameData;
