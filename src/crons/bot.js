@@ -137,7 +137,7 @@ export default class Bot extends Core.BaseBot {
     }
 
     getRandomAmount(min, max, isUnround) {
-        return isUnround ? this.chance.integer({ min, max }) : helpers.numberHelper.getRandomNumberStep5(min, max, true);
+        return isUnround ? Math.floor(this.chance.integer({ min, max }) / min) * min : helpers.numberHelper.getRandomNumberStep5(min, max, true);
     }
 
     getMaxBet() {
