@@ -1,3 +1,14 @@
+## [1.0.1](https://git3.nexdev.net/sc-packages/sc-pool-betting-game-base/compare/v1.0.0...v1.0.1) (2020-11-04)
+
+
+### Bug Fixes
+
+* filter banned bot ([f389b53](https://git3.nexdev.net/sc-packages/sc-pool-betting-game-base/commit/f389b53ecb0e103e860514ed775734fadb185d8d))
+* update random amount of bot ([e26a77b](https://git3.nexdev.net/sc-packages/sc-pool-betting-game-base/commit/e26a77b32efaa157bbb59cf6bdc559f6c5ce4220))
+* upgrade sc-game-base package ([3bcca65](https://git3.nexdev.net/sc-packages/sc-pool-betting-game-base/commit/3bcca65ac70849cb713e93656692f7678cf1e4c5))
+* upgrade sc-game-base package ([aa07e5c](https://git3.nexdev.net/sc-packages/sc-pool-betting-game-base/commit/aa07e5cc0c0bcb355c5d222c1e6f29f712482934))
+* upgrade sc-game-base package ([70ab7df](https://git3.nexdev.net/sc-packages/sc-pool-betting-game-base/commit/70ab7df361a5631febc1694e4fab4b1ac4b4deb0))
+
 # 1.0.0 (2020-10-21)
 
 
