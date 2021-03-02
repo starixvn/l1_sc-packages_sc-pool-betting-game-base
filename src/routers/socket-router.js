@@ -1,34 +1,7 @@
 import { logger } from "sc-common";
 import { Core } from "sc-game-base";
 
-import { PlaceBetConsumer } from "./../event-consumers";
-import { RoundQuery } from "./../query-apis";
-
-export default class SocketRouter extends Core.Routers.BaseSocketRouter {
-    constructor({
-        definition,
-        gameData,
-        userSignInConsumer,
-        userDisconnectConsumer,
-        inGameConsumer,
-        placeBetConsumer,
-        userSignInPublisher,
-        historyQuery,
-        roundQuery,
-    }) {
-        super({
-            definition,
-            gameData,
-            userSignInConsumer,
-            userDisconnectConsumer,
-            inGameConsumer,
-            placeBetConsumer: placeBetConsumer ?? new PlaceBetConsumer({ definition, gameData }),
-            userSignInPublisher,
-            historyQuery,
-            roundQuery: roundQuery ?? new RoundQuery(definition),
-        });
-    }
-
+export class SocketRouter extends Core.Routers.BaseSocketRouter {
     /**
      * @param {SocketIO.Socket} socketClient
      */

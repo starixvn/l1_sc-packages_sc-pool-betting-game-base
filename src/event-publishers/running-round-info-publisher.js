@@ -1,6 +1,6 @@
 import { Core } from "sc-game-base";
 
-export default class RunningRoundInfoPublisher extends Core.BaseEventPublishers.RunningRoundInfoPublisher {
+export class RunningRoundInfoPublisher extends Core.BaseEventPublishers.RunningRoundInfoPublisher {
     publish(gameData) {
         super.publish(gameData);
 

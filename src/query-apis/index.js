@@ -1,3 +1,1 @@
-import RoundQuery from "./round-query";
-
-export { RoundQuery };
+export * from "./round-query";

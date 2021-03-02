@@ -1,7 +1,7 @@
 import { userInfos } from "sc-base-database";
 import { Core } from "sc-game-base";
 
-export default class RoundQuery extends Core.QueryApis.RoundQuery {
+export class RoundQuery extends Core.QueryApis.RoundQuery {
     async getOne(id, projections = { _id: false }) {
         const round = await super.getOne(id, projections);
         const uusUsers = await userInfos.find({ currency: "UUS" }, "id").lean().exec();

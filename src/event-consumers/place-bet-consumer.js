@@ -3,7 +3,7 @@ import { Core } from "sc-game-base";
 
 import notices from "./../constants/notices";
 
-export default class PlaceBetConsumer extends Core.BaseEventConsumers.PlaceBetConsumer {
+export class PlaceBetConsumer extends Core.BaseEventConsumers.PlaceBetConsumer {
     constructor({ definition, gameData, publisher }) {
         super(definition, gameData, publisher);
     }

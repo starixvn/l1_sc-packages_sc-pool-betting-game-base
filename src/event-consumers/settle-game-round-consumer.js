@@ -1,7 +1,7 @@
 import { userInfos } from "sc-base-database";
 import { Core } from "sc-game-base";
 
-export default class SettleGameRoundConsumer extends Core.BaseEventConsumers.SettleGameRoundConsumer {
+export class SettleGameRoundConsumer extends Core.BaseEventConsumers.SettleGameRoundConsumer {
     constructor({ definition, gameData, roundResultPublisher, userBetResultPublisher }) {
         super(definition, gameData, roundResultPublisher, userBetResultPublisher);
     }
