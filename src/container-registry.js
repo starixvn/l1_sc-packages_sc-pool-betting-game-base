@@ -1,3 +1,4 @@
+import { asClass } from "awilix";
 import { Core } from "sc-game-base";
 
 import { Bot, GameCron, ProcessBetQueue } from "./crons";
