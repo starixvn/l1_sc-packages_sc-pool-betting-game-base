@@ -3,7 +3,7 @@ import { Core } from "sc-game-base";
 export class ProcessBetQueue extends Core.Crons.ProcessBetQueue {
     async upsertBet(player, roundId, bet) {
         const existingBetFilter = { uid: player.UID, phien: roundId };
-        const existingBet = await this.definition.betRepository.findOne(existingBetFilter).exec();
+        const existingBet = await this.betsRepository.findOne(existingBetFilter).exec();
 
         if (existingBet) {
             existingBet.amount += bet.amount;
@@ -23,7 +23,7 @@ export class ProcessBetQueue extends Core.Crons.ProcessBetQueue {
                 newBet.siteId = player.session.siteId;
             }
 
-            await this.definition.betRepository.updateOne(
+            await this.betsRepository.updateOne(
                 existingBetFilter,
                 { $inc: existingBetIncrement, $setOnInsert: newBet },
                 { upsert: true, setDefaultsOnInsert: true }

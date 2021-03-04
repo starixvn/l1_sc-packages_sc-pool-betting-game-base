@@ -1,11 +1,25 @@
 import Chance from "chance";
-import { userInfos } from "sc-base-database";
+import mongoose from "mongoose";
 import { helpers } from "sc-common";
 import { Core } from "sc-game-base";
 
+import { GameData } from "../game-data";
+
 export class Bot extends Core.Crons.BaseBot {
-    constructor(definition, gameData, publisher) {
+    /**
+     * @param {Core.GameDefinition} definition
+     * @param {GameData} gameData
+     * @param {Core.BaseEventPublishers.BaseEventPublisher} publisher
+     * @param {mongoose.Model} userInfosRepository
+     * @param {mongoose.Model} betsRepository
+     * @param {mongoose.Model} betLogsRepository
+     */
+    constructor(definition, gameData, publisher, userInfosRepository, betsRepository, betLogsRepository) {
         super(definition, gameData, publisher);
+
+        this.userInfosRepository = userInfosRepository;
+        this.betsRepository = betsRepository;
+        this.betLogsRepository = betLogsRepository;
 
         this.chance = new Chance();
         this.botList = [];
@@ -25,7 +39,7 @@ export class Bot extends Core.Crons.BaseBot {
         const configs = this.gameData.gameConfigs;
 
         if (configs?.botenabled) {
-            const bots = await userInfos.find({ type: true, disabled: false, banned: false }, "id name").lean().exec();
+            const bots = await this.userInfosRepository.find({ type: true, disabled: false, banned: false }, "id name").lean().exec();
             const maxBot = Math.floor(bots.length * helpers.configHelper.getMaxBotForCurrentHour(configs));
 
             this.botList = this.chance.shuffle(bots).slice(0, maxBot);
@@ -107,7 +121,7 @@ export class Bot extends Core.Crons.BaseBot {
         this.gameData.totalBets[choice] = (this.gameData.totalBets[choice] || 0) + betAmount;
         this.gameData.betCount[choice] = (this.gameData.totalBets[choice] || 0) + 1;
 
-        await this.definition.betLogRepository.create({
+        await this.betLogsRepository.create({
             uid: bot.id,
             name: bot.name,
             phien: roundId,
@@ -119,7 +133,7 @@ export class Bot extends Core.Crons.BaseBot {
         const update = { amount: betAmount };
         const create = { uid: bot.id, phien: roundId, choice: choice, time: new Date() };
 
-        await this.definition.betRepository.updateOne(
+        await this.betsRepository.updateOne(
             { uid: bot.id, phien: roundId },
             { $inc: update, $setOnInsert: create },
             { upsert: true, setDefaultsOnInsert: true }

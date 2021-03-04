@@ -2,8 +2,19 @@ import { userInfos } from "sc-base-database";
 import { Core } from "sc-game-base";
 
 export class SettleGameRoundConsumer extends Core.BaseEventConsumers.SettleGameRoundConsumer {
-    constructor({ definition, gameData, roundResultPublisher, userBetResultPublisher }) {
-        super(definition, gameData, roundResultPublisher, userBetResultPublisher);
+    constructor({
+        definition,
+        gameData,
+        roundResultPublisher,
+        userBetResultPublisher,
+        endGame,
+        roundsRepository,
+        betsRepository,
+        betLogsRepository,
+    }) {
+        super({ definition, gameData, roundResultPublisher, userBetResultPublisher, endGame, roundsRepository, betsRepository });
+
+        this.betLogsRepository = betLogsRepository;
     }
 
     async settleBets({ result, settlementResult, roundId, time }) {
@@ -53,11 +64,11 @@ export class SettleGameRoundConsumer extends Core.BaseEventConsumers.SettleGameR
     }
 
     queryBets(roundId) {
-        return this.definition.betLogRepository.find({ phien: roundId }, null, { sort: { _id: -1 } }).exec();
+        return this.betLogsRepository.find({ phien: roundId }, null, { sort: { _id: -1 } }).exec();
     }
 
     querySettledBets(roundId) {
-        return this.definition.betRepository.find({ phien: roundId, thanhtoan: true }).lean().exec();
+        return this.betsRepository.find({ phien: roundId, thanhtoan: true }).lean().exec();
     }
 
     settleBetsByGroup(bets, roundId, settlementResult, totalBets) {
@@ -103,7 +114,7 @@ export class SettleGameRoundConsumer extends Core.BaseEventConsumers.SettleGameR
         bet.betwin = betWin;
         await bet.save();
 
-        await this.definition.betRepository.updateOne(
+        await this.betsRepository.updateOne(
             { uid: bet.uid, phien: roundId },
             { $set: { win: isWinningBet, thanhtoan: true, time: new Date() }, $inc: { refund, betwin: betWin } }
         );
