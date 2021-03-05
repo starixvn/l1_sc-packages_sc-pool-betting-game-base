@@ -2,6 +2,7 @@ import { Core } from "sc-game-base";
 
 export class ProcessBetQueue extends Core.Crons.ProcessBetQueue {
     async upsertBet(player, roundId, bet) {
+        const configs = this.gameData.gameConfigs;
         const existingBetFilter = { uid: player.UID, phien: roundId };
 
         const newBet = {
@@ -10,6 +11,7 @@ export class ProcessBetQueue extends Core.Crons.ProcessBetQueue {
             phien: roundId,
             choice: bet.betChoice,
             time: new Date(),
+            odds: configs.odds,
         };
         const existingBetIncrement = { amount: bet.amount, totalAmount: bet.amount };
 
