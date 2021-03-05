@@ -1,7 +1,32 @@
-import { logger } from "sc-common";
 import { Core } from "sc-game-base";
 
 export class SocketRouter extends Core.Routers.BaseSocketRouter {
+    constructor({
+        definition,
+        gameData,
+        userSignInConsumer,
+        inGameConsumer,
+        placeBetConsumer,
+        userDisconnectConsumer,
+        userSignInPublisher,
+        historyQuery,
+        logService,
+        roundQuery,
+    }) {
+        super({
+            definition,
+            gameData,
+            userSignInConsumer,
+            inGameConsumer,
+            placeBetConsumer,
+            userDisconnectConsumer,
+            userSignInPublisher,
+            historyQuery,
+            logService,
+        });
+
+        this.roundQuery = roundQuery;
+    }
     /**
      * @param {SocketIO.Socket} socketClient
      */
@@ -23,7 +48,7 @@ export class SocketRouter extends Core.Routers.BaseSocketRouter {
 
             this.socketClient.emit(this.definition.name, { round });
         } catch (error) {
-            logger.logError(error);
+            this.logService.logError(error);
         }
     }
 }

@@ -46,7 +46,7 @@ export class ContainerRegistry extends Core.ContainerRegistry {
         super.registerRouters();
 
         this.container.register({
-            socketRouter: asClass(SocketRouter),
+            socketRouter: asClass(SocketRouter).proxy(),
         });
     }
 }
