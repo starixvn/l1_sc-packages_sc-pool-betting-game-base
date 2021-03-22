@@ -10,7 +10,7 @@ export class PlaceBetConsumer extends Core.BaseEventConsumers.PlaceBetConsumer {
         const { betTracks } = this.gameData.ingame[player.profile.name] || { betTracks: {} };
         const criteria = [
             {
-                failure: Object.keys(betTracks).length && !(betChoice in betTracks),
+                failure: Object.keys(betTracks).length && !(betChoice in betTracks) && Object.values(betTracks).some((val) => val > 0),
                 notice: notices.oneChoiceAllowed,
             },
         ];
