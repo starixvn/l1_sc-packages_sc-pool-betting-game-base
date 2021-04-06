@@ -1,10 +1,10 @@
 import { Core } from "sc-game-base";
 
-export default class RunningRoundInfoPublisher extends Core.BaseEventPublishers.RunningRoundInfoPublisher {
-    publish(gameData) {
-        super.publish(gameData);
+export class RunningRoundInfoPublisher extends Core.BaseEventPublishers.RunningRoundInfoPublisher {
+    publish() {
+        super.publish();
 
-        const { betCount } = gameData;
+        const { betCount } = this.gameData;
         const choices = Object.keys(betCount);
 
         if (choices.length) {

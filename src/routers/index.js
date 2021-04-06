@@ -1,3 +1,1 @@
-import SocketRouter from "./socket-router";
-
-export { SocketRouter };
+export * from "./socket-router";

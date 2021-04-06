@@ -1,33 +1,31 @@
 import { Core } from "sc-game-base";
 
-export default class ProcessBetQueue extends Core.Cron.ProcessBetQueue {
-    constructor({ definition, gameData, publisher }) {
-        super(definition, gameData, publisher);
-    }
-
+export class ProcessBetQueue extends Core.Crons.ProcessBetQueue {
     async upsertBet(player, roundId, bet) {
+        const configs = this.gameData.gameConfigs;
         const existingBetFilter = { uid: player.UID, phien: roundId };
-        const existingBet = await this.definition.betRepository.findOne(existingBetFilter).exec();
-
+        const existingBet = await this.betsRepository.findOne(existingBetFilter).exec();
         if (existingBet) {
             existingBet.amount += bet.amount;
+            existingBet.totalAmount += bet.amount;
             await existingBet.save();
         } else {
             const newBet = {
                 uid: player.UID,
                 name: player.profile.name,
-                phien: this.gameData.roundId,
+                phien: roundId,
                 choice: bet.betChoice,
                 time: new Date(),
+                odds: configs.odds,
             };
-            const existingBetIncrement = { amount: bet.amount };
+            const existingBetIncrement = { amount: bet.amount, totalAmount: bet.amount };
 
             if (player.session) {
                 newBet.memberId = player.session.memberId;
                 newBet.siteId = player.session.siteId;
             }
 
-            await this.definition.betRepository.updateOne(
+            await this.betsRepository.updateOne(
                 existingBetFilter,
                 { $inc: existingBetIncrement, $setOnInsert: newBet },
                 { upsert: true, setDefaultsOnInsert: true }

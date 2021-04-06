@@ -1,34 +1,32 @@
-import { logger } from "sc-common";
 import { Core } from "sc-game-base";
 
-import { PlaceBetConsumer } from "./../event-consumers";
-import { RoundQuery } from "./../query-apis";
-
-export default class SocketRouter extends Core.Routers.BaseSocketRouter {
+export class SocketRouter extends Core.Routers.BaseSocketRouter {
     constructor({
         definition,
         gameData,
         userSignInConsumer,
-        userDisconnectConsumer,
         inGameConsumer,
         placeBetConsumer,
+        userDisconnectConsumer,
         userSignInPublisher,
         historyQuery,
+        logService,
         roundQuery,
     }) {
         super({
             definition,
             gameData,
             userSignInConsumer,
-            userDisconnectConsumer,
             inGameConsumer,
-            placeBetConsumer: placeBetConsumer ?? new PlaceBetConsumer({ definition, gameData }),
+            placeBetConsumer,
+            userDisconnectConsumer,
             userSignInPublisher,
             historyQuery,
-            roundQuery: roundQuery ?? new RoundQuery(definition),
+            logService,
         });
-    }
 
+        this.roundQuery = roundQuery;
+    }
     /**
      * @param {SocketIO.Socket} socketClient
      */
@@ -50,7 +48,7 @@ export default class SocketRouter extends Core.Routers.BaseSocketRouter {
 
             this.socketClient.emit(this.definition.name, { round });
         } catch (error) {
-            logger.logError(error);
+            this.logService.logError(error);
         }
     }
 }
