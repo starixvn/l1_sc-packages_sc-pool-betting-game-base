@@ -1,3 +1,32 @@
+# [1.1.0](https://git3.nexdev.net/sc-packages/sc-pool-betting-game-base/compare/v1.0.4...v1.1.0) (2021-04-06)
+
+
+### Bug Fixes
+
+* add missing import ([651b269](https://git3.nexdev.net/sc-packages/sc-pool-betting-game-base/commit/651b2699a4190815ef8c629a95fa48ae1fa6450f))
+* add missing params in constructor ([d38a55f](https://git3.nexdev.net/sc-packages/sc-pool-betting-game-base/commit/d38a55f18fd2a0eda05e87dad836d5b39850fcf1))
+* place bet validation ([00f947d](https://git3.nexdev.net/sc-packages/sc-pool-betting-game-base/commit/00f947da21a6b19ee287692047e02ecd0a844baa))
+* update package ([5177252](https://git3.nexdev.net/sc-packages/sc-pool-betting-game-base/commit/5177252b52128385236fc6b715d513e23cd36787))
+* update round query ([ecd8a80](https://git3.nexdev.net/sc-packages/sc-pool-betting-game-base/commit/ecd8a80eeac1ca8795f200924fc82d99effa2a5b))
+* update RunningRoundInfoPublisher ([d045652](https://git3.nexdev.net/sc-packages/sc-pool-betting-game-base/commit/d0456525d8a346c424193017f1303f6555e2cb53))
+* update socket router ([2f3981b](https://git3.nexdev.net/sc-packages/sc-pool-betting-game-base/commit/2f3981b5ebb2d1d170f7088e895ad750a172cc72))
+* update upsertBet ([8db5a0c](https://git3.nexdev.net/sc-packages/sc-pool-betting-game-base/commit/8db5a0c00597210602bb26a8163c2d7d49159d4a))
+* update upsertBet ([3b12a2b](https://git3.nexdev.net/sc-packages/sc-pool-betting-game-base/commit/3b12a2bbe2e278425210ee14e92aec26393d17a6))
+* validate bet ([daa2c03](https://git3.nexdev.net/sc-packages/sc-pool-betting-game-base/commit/daa2c030891be0135130c59e271c17ca44034a1f))
+
+
+### Features
+
+* add DI ([4d917fc](https://git3.nexdev.net/sc-packages/sc-pool-betting-game-base/commit/4d917fc54c62a502c672b5bf4e2f1412f16fa54b))
+* add jest ([0f9ac8f](https://git3.nexdev.net/sc-packages/sc-pool-betting-game-base/commit/0f9ac8f7341fe8d3c963f01bc34f8c7b0816bf2c))
+* add odds when placebet ([83ea1c6](https://git3.nexdev.net/sc-packages/sc-pool-betting-game-base/commit/83ea1c66b9218d7a41788091a4cf32e9cc06ad8d))
+* add unit test ([8f1da5c](https://git3.nexdev.net/sc-packages/sc-pool-betting-game-base/commit/8f1da5cf18a3c06c2a0545624127e36b82609ecb))
+* update ci ([4ed8ed9](https://git3.nexdev.net/sc-packages/sc-pool-betting-game-base/commit/4ed8ed9e979ebc3bbeefbae1b66363826c0f8042))
+* update package ([bb10392](https://git3.nexdev.net/sc-packages/sc-pool-betting-game-base/commit/bb10392d650dbd4e988def27123957c25a33f932))
+* update package ([c270f5a](https://git3.nexdev.net/sc-packages/sc-pool-betting-game-base/commit/c270f5a1be905bfa8d1d7d58dece65cbdb2ba529))
+* update packages ([fad71f7](https://git3.nexdev.net/sc-packages/sc-pool-betting-game-base/commit/fad71f707953d72d5e2a3ca2d8b1eb2c649af386))
+* update release package ([41cce6c](https://git3.nexdev.net/sc-packages/sc-pool-betting-game-base/commit/41cce6ccab1cfc73c66261b6e624b2dd16d09343))
+
 ## [1.0.4](https://git3.nexdev.net/sc-packages/sc-pool-betting-game-base/compare/v1.0.3...v1.0.4) (2021-01-18)
 
 
