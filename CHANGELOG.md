@@ -1,3 +1,13 @@
+## [1.1.1](https://git3.nexdev.net/sc-packages/sc-pool-betting-game-base/compare/v1.1.0...v1.1.1) (2021-04-08)
+
+
+### Bug Fixes
+
+* remove package lock ([3668f33](https://git3.nexdev.net/sc-packages/sc-pool-betting-game-base/commit/3668f335965769f618ad76bb002299a68f2a7d8b))
+* retrieve old data bet logs ([761a2f4](https://git3.nexdev.net/sc-packages/sc-pool-betting-game-base/commit/761a2f468ad97bad37097c2f1aad3f73926a9ee7))
+* update package ([b68e288](https://git3.nexdev.net/sc-packages/sc-pool-betting-game-base/commit/b68e288bff5cbc7cb1ddd2c6adb4c26e1d2d8a71))
+* update release package ([18f7a2c](https://git3.nexdev.net/sc-packages/sc-pool-betting-game-base/commit/18f7a2c4674acf249f1af46e551449ea684fc4a8))
+
 # [1.1.0](https://git3.nexdev.net/sc-packages/sc-pool-betting-game-base/compare/v1.0.4...v1.1.0) (2021-04-06)
 
 
