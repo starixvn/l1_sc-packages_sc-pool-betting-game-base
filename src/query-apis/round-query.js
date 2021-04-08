@@ -2,24 +2,33 @@ import { Core } from "sc-game-base";
 
 export class RoundQuery extends Core.QueryApis.RoundQuery {
     /**
-     * @param {mongoose.Model} roundsRepository 
-     * @param {mongoose.Model} userInfosRepository 
-     * @param {mongoose.Model} betLogsRepository 
+     * @param {mongoose.Model} roundsRepository
+     * @param {mongoose.Model} userInfosRepository
+     * @param {mongoose.Model} betLogsRepository
      */
     constructor(roundsRepository, userInfosRepository, betLogsRepository) {
         super(roundsRepository);
 
-        this.userInfosRepository = userInfosRepository
+        this.userInfosRepository = userInfosRepository;
         this.betLogsRepository = betLogsRepository;
+    }
+
+    convertBetLogs(betLogs) {
+        return betLogs;
     }
 
     async getOne(id, projections = { _id: false }) {
         const round = await super.getOne(id, projections);
         const uusUsers = await this.userInfosRepository.find({ currency: "UUS" }, "id").lean().exec();
         const uusUserIds = uusUsers.map((user) => user.id);
-        const betLogs = await this.betLogsRepository.find({ phien: id }, { _id: false }, { sort: { _id: 1 } }).lean().exec();
+        const betLogs = await this.betLogsRepository
+            .find({ phien: id }, { _id: false }, { sort: { _id: 1 } })
+            .lean()
+            .exec();
 
-        const betLogGroups = betLogs
+        const convertedBetLogs = this.convertBetLogs(betLogs);
+
+        const betLogGroups = convertedBetLogs
             .filter((betLog) => !uusUserIds.includes(betLog.uid))
             .reduce((accumulator, currentBetLog) => {
                 accumulator[currentBetLog.choice] = accumulator[currentBetLog.choice] ?? [];
