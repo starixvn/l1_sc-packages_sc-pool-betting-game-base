@@ -12,7 +12,6 @@
         "betaver": "npm version prerelease --preid beta",
         "pub": "npm publish --registry http://npm.lumigame.com",
         "pubbeta": "npm publish --registry http://npm.lumigame.com --tag beta",
-        "unpublish": "npm unpublish --force sc-base-database",
         "semantic-release": "semantic-release"
     },
     "repository": {
@@ -53,7 +52,7 @@
     },
     "dependencies": {
         "chance": "^1.1.7",
-        "sc-game-base": "^1.20.1"
+        "sc-game-base": "1.20.2-beta.2"
     },
     "husky": {
         "hooks": {
