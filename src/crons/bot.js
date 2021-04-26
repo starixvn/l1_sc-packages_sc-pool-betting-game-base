@@ -159,7 +159,7 @@ export class Bot extends Core.Crons.BaseBot {
         const minBet = this.getMinBet();
 
         if (this.isSmallTicket()) {
-            const maxBetOfSmallTicket = Math.min(minBet * this.smallTicketScale, maxBet * 0.3);
+            const maxBetOfSmallTicket = Math.min(minBet * this.smallTicketScale, Math.max(maxBet * 0.3, minBet));
 
             return Math.min(maxBetOfSmallTicket, maxBet);
         }
