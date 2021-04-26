@@ -1,3 +1,13 @@
+## [1.1.2](https://git3.nexdev.net/sc-packages/sc-pool-betting-game-base/compare/v1.1.1...v1.1.2) (2021-04-26)
+
+
+### Bug Fixes
+
+* bug bot place bet ([751944c](https://git3.nexdev.net/sc-packages/sc-pool-betting-game-base/commit/751944cfe328e7ece21f952bfdf63dc5bcdb4849))
+* update game base ([5dd21fb](https://git3.nexdev.net/sc-packages/sc-pool-betting-game-base/commit/5dd21fb2735c3036fe3da45cee5beb579b6ce9bc))
+* update game base 1.20.2 ([2aa6886](https://git3.nexdev.net/sc-packages/sc-pool-betting-game-base/commit/2aa6886991acefc59d6012df531265dd3da141b2))
+* update sc game base 1.20.2-beta.3 ([cd04af5](https://git3.nexdev.net/sc-packages/sc-pool-betting-game-base/commit/cd04af5c5eb9fc14bd3336c1ff00ace3ccd9a2f3))
+
 ## [1.1.1](https://git3.nexdev.net/sc-packages/sc-pool-betting-game-base/compare/v1.1.0...v1.1.1) (2021-04-08)
 
 
