@@ -11,7 +11,7 @@ export class PlaceBetConsumer extends Core.BaseEventConsumers.PlaceBetConsumer {
         const criteria = [
             {
                 failure: Object.keys(betTracks).filter((key) => key !== betChoice && betTracks[key] > 0).length > 0,
-                notice: notices.oneChoiceAllowed,
+                notice: this.getNoticeObj(notices.oneChoiceAllowed),
             },
         ];
 
@@ -26,19 +26,19 @@ export class PlaceBetConsumer extends Core.BaseEventConsumers.PlaceBetConsumer {
         return [
             {
                 failure: freeBet && !configs.enableFreeBet,
-                notice: helpers.noticeHelper.invalidBet,
+                notice: this.getNoticeObj(helpers.noticeHelper.invalidBet),
             },
             {
                 failure: amount < configs.minbet,
-                notice: helpers.noticeHelper.minBet(configs.minbet),
+                notice: this.getNoticeObj(helpers.noticeHelper.minBet),
             },
             {
                 failure: amount > configs.maxbet,
-                notice: helpers.noticeHelper.maxBet(configs.maxbet),
+                notice: this.getNoticeObj(helpers.noticeHelper.maxBet),
             },
             {
                 failure: totalAmount > configs.maxbet,
-                notice: helpers.noticeHelper.maxBet(configs.maxbet),
+                notice: this.getNoticeObj(helpers.noticeHelper.maxBet),
             },
         ];
     }
