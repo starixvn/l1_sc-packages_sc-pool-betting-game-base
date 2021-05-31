@@ -52,7 +52,7 @@
     },
     "dependencies": {
         "chance": "^1.1.7",
-        "sc-game-base": "~1.21.2-beta.12"
+        "sc-game-base": "~1.21.2-beta.19"
     },
     "husky": {
         "hooks": {

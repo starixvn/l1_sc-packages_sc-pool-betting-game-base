@@ -22,6 +22,8 @@ export class PlaceBetConsumer extends Core.BaseEventConsumers.PlaceBetConsumer {
         const configs = this.gameData.gameConfigs;
         const { betTracks } = this.gameData.ingame[player.profile.name] || { betTracks: {} };
         const totalAmount = this.definition.choices.reduce((total, choice) => total + (betTracks[choice] || 0), 0) + amount;
+        const minBet = Math.max(player.profile.minBet, configs.minbet);
+        const maxBet = Math.min(player.profile.maxBet, configs.maxbet);
 
         return [
             {
@@ -30,15 +32,15 @@ export class PlaceBetConsumer extends Core.BaseEventConsumers.PlaceBetConsumer {
             },
             {
                 failure: amount < configs.minbet,
-                notice: this.getNoticeObj(helpers.noticeHelper.minBet),
+                notice: this.getNoticeObj(helpers.noticeHelper.minBet, { minBet }),
             },
             {
                 failure: amount > configs.maxbet,
-                notice: this.getNoticeObj(helpers.noticeHelper.maxBet),
+                notice: this.getNoticeObj(helpers.noticeHelper.maxBet, { maxBet }),
             },
             {
                 failure: totalAmount > configs.maxbet,
-                notice: this.getNoticeObj(helpers.noticeHelper.maxBet),
+                notice: this.getNoticeObj(helpers.noticeHelper.maxBet, { maxBet }),
             },
         ];
     }
