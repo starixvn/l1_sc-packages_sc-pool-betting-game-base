@@ -1,6 +1,6 @@
 {
     "name": "sc-pool-betting-game-base",
-    "version": "1.1.4-beta.5",
+    "version": "1.1.4-beta.6",
     "description": "",
     "main": "./src/index.js",
     "scripts": {
