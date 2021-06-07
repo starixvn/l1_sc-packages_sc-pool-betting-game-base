@@ -40,7 +40,7 @@ export class SocketRouter extends Core.Routers.BaseSocketRouter {
         try {
             const { roundId } = payload;
 
-            if (!this.verify() || !roundId) {
+            if (!this.verify() || !roundId || roundId >= this.gameData.roundId) {
                 return;
             }
 
