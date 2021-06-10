@@ -11,7 +11,7 @@ export class PlaceBetConsumer extends Core.BaseEventConsumers.PlaceBetConsumer {
         const criteria = [
             {
                 failure: Object.keys(betTracks).filter((key) => key !== betChoice && betTracks[key] > 0).length > 0,
-                notice: notices.oneChoiceAllowed,
+                notice: this.getNoticeObj(notices.oneChoiceAllowed),
             },
         ];
 
@@ -22,23 +22,25 @@ export class PlaceBetConsumer extends Core.BaseEventConsumers.PlaceBetConsumer {
         const configs = this.gameData.gameConfigs;
         const { betTracks } = this.gameData.ingame[player.profile.name] || { betTracks: {} };
         const totalAmount = this.definition.choices.reduce((total, choice) => total + (betTracks[choice] || 0), 0) + amount;
+        const minBet = Math.max(player.profile.minBet, configs.minbet);
+        const maxBet = Math.min(player.profile.maxBet, configs.maxbet);
 
         return [
             {
                 failure: freeBet && !configs.enableFreeBet,
-                notice: helpers.noticeHelper.invalidBet,
+                notice: this.getNoticeObj(helpers.noticeHelper.invalidBet),
             },
             {
                 failure: amount < configs.minbet,
-                notice: helpers.noticeHelper.minBet(configs.minbet),
+                notice: this.getNoticeObj(helpers.noticeHelper.minBet, { minBet }),
             },
             {
                 failure: amount > configs.maxbet,
-                notice: helpers.noticeHelper.maxBet(configs.maxbet),
+                notice: this.getNoticeObj(helpers.noticeHelper.maxBet, { maxBet }),
             },
             {
                 failure: totalAmount > configs.maxbet,
-                notice: helpers.noticeHelper.maxBet(configs.maxbet),
+                notice: this.getNoticeObj(helpers.noticeHelper.maxBet, { maxBet }),
             },
         ];
     }
