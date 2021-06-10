@@ -1,3 +1,10 @@
+## [1.1.4](https://git3.nexdev.net/sc-packages/sc-pool-betting-game-base/compare/v1.1.3...v1.1.4) (2021-06-10)
+
+
+### Bug Fixes
+
+* validate round query if it greater than running round ([26d21be](https://git3.nexdev.net/sc-packages/sc-pool-betting-game-base/commit/26d21be5ca0bf0de904a599ae94dcc1fd404d4a5))
+
 ## [1.1.3](https://git3.nexdev.net/sc-packages/sc-pool-betting-game-base/compare/v1.1.2...v1.1.3) (2021-05-19)
 
 
