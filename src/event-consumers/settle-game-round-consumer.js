@@ -1,4 +1,3 @@
-import { userInfos } from "sc-base-database";
 import { Core } from "sc-game-base";
 
 export class SettleGameRoundConsumer extends Core.BaseEventConsumers.SettleGameRoundConsumer {
@@ -11,17 +10,19 @@ export class SettleGameRoundConsumer extends Core.BaseEventConsumers.SettleGameR
         roundsRepository,
         betsRepository,
         betLogsRepository,
+        userInfosRepository
     }) {
         super({ definition, gameData, roundResultPublisher, userBetResultPublisher, endGame, roundsRepository, betsRepository });
 
         this.betLogsRepository = betLogsRepository;
+        this.userInfosRepository = userInfosRepository;
     }
 
     async settleBets({ result, settlementResult, roundId, time }) {
         const bets = await this.queryBets(roundId);
 
         if (bets && bets.length) {
-            const uusUsers = await userInfos.find({ currency: "UUS" }, "id").exec();
+            const uusUsers = await this.userInfosRepository.find({ currency: "UUS" }, "id").lean().exec();
             const uusUserIds = uusUsers.map((user) => user.id);
 
             const realBets = bets.filter((bet) => !uusUserIds.includes(bet.uid));
