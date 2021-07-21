@@ -1,3 +1,10 @@
+## [1.1.5](https://git3.nexdev.net/sc-packages/sc-pool-betting-game-base/compare/v1.1.4...v1.1.5) (2021-07-21)
+
+
+### Bug Fixes
+
+* add roundId to composeValidationCriteria ([1b97bfc](https://git3.nexdev.net/sc-packages/sc-pool-betting-game-base/commit/1b97bfc7d23a323b500d6026d90a58961975d678))
+
 ## [1.1.4](https://git3.nexdev.net/sc-packages/sc-pool-betting-game-base/compare/v1.1.3...v1.1.4) (2021-06-10)
 
 
