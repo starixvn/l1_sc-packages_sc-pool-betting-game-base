@@ -14,7 +14,7 @@
   "resolved" "http://npm.lumigame.com/@babel%2fcompat-data/-/compat-data-7.14.4.tgz"
   "version" "7.14.4"
 
-"@babel/core@^7.0.0", "@babel/core@^7.0.0-0", "@babel/core@^7.1.0", "@babel/core@^7.12.0", "@babel/core@^7.13.0", "@babel/core@^7.4.0-0", "@babel/core@^7.7.5":
+"@babel/core@^7.1.0", "@babel/core@^7.7.5":
   "integrity" "sha512-jB5AmTKOCSJIZ72sd78ECEhuPiDMKlQdDI/4QRI6lzYATx5SSogS1oQA2AoPecRCknm30gHi2l+QVvNUu3wZAg=="
   "resolved" "http://npm.lumigame.com/@babel%2fcore/-/core-7.14.3.tgz"
   "version" "7.14.3"
@@ -1413,7 +1413,7 @@
   dependencies:
     "@octokit/types" "^6.0.3"
 
-"@octokit/core@^3.2.3", "@octokit/core@>=2", "@octokit/core@>=3":
+"@octokit/core@^3.2.3":
   "integrity" "sha512-6/vlKPP8NF17cgYXqucdshWqmMZGXkuvtcrWCgU5NOI0Pl2GjlmZyWgBMrU8zJ3v2MJlM6++CiB45VKYmhiWWg=="
   "resolved" "http://npm.lumigame.com/@octokit%2fcore/-/core-3.4.0.tgz"
   "version" "3.4.0"
@@ -4132,6 +4132,11 @@
   "resolved" "http://npm.lumigame.com/fs.realpath/-/fs.realpath-1.0.0.tgz"
   "version" "1.0.0"
 
+"fsevents@^2.1.2":
+  "integrity" "sha512-xiqMQR4xAeHTuB9uWm+fFRcIOgKBMiOBP+eXiyT7jsgVCq1bkVygt00oASowB7EdtpOHaaPgKt812P9ab+DDKA=="
+  "resolved" "http://npm.lumigame.com/fsevents/-/fsevents-2.3.2.tgz"
+  "version" "2.3.2"
+
 "function-bind@^1.1.1":
   "integrity" "sha512-yIovAzMX49sF8Yl58fSCWJ5svSLuaibPxXQJFLmBObTuCr0Mf1KiPopGM9NiFjiYBCbfaa2Fh6breQ6ANVTI0A=="
   "resolved" "http://npm.lumigame.com/function-bind/-/function-bind-1.1.1.tgz"
@@ -5371,7 +5376,7 @@
     "jest-regex-util" "^26.0.0"
     "jest-snapshot" "^26.6.2"
 
-"jest-resolve@*", "jest-resolve@^26.6.2":
+"jest-resolve@^26.6.2":
   "integrity" "sha512-sOxsZOq25mT1wRsfHcbtkInS+Ek7Q8jCHUB0ZUTP0tc/c41QHriU/NunqMfCUWsL4H3MHpvQD4QR9kSYhS7UvQ=="
   "resolved" "http://npm.lumigame.com/jest-resolve/-/jest-resolve-26.6.2.tgz"
   "version" "26.6.2"
@@ -5667,7 +5672,7 @@
   "integrity" "sha1-h3Gq4HmbZAdrdmQPygWPnBDjPss="
   "resolved" "http://npm.lumigame.com/jsonfile/-/jsonfile-4.0.0.tgz"
   "version" "4.0.0"
-  optionalDependencies:
+  dependencies:
     "graceful-fs" "^4.1.6"
 
 "jsonfile@^6.0.1":
@@ -5675,9 +5680,8 @@
   "resolved" "http://npm.lumigame.com/jsonfile/-/jsonfile-6.1.0.tgz"
   "version" "6.1.0"
   dependencies:
-    "universalify" "^2.0.0"
-  optionalDependencies:
     "graceful-fs" "^4.1.6"
+    "universalify" "^2.0.0"
 
 "jsonparse@^1.2.0":
   "integrity" "sha1-P02uSpH6wxX3EGL4UhzCOfE2YoA="
@@ -6173,7 +6177,7 @@
     "node-emoji" "^1.10.0"
     "supports-hyperlinks" "^2.1.0"
 
-"marked@^1.0.0 || ^2.0.0", "marked@^2.0.0":
+"marked@^2.0.0":
   "integrity" "sha512-BJXxkuIfJchcXOJWTT2DOL+yFWifFv2yGYOUzvXg8Qz610QKw+sHCvTMYwA+qWGhlA2uivBezChZ/pBy1tWdkQ=="
   "resolved" "http://npm.lumigame.com/marked/-/marked-2.0.7.tgz"
   "version" "2.0.7"
@@ -6471,7 +6475,7 @@
   "resolved" "http://npm.lumigame.com/mongoose-long/-/mongoose-long-0.3.2.tgz"
   "version" "0.3.2"
 
-"mongoose@*", "mongoose@^5.9.25", "mongoose@4.x || 5.x":
+"mongoose@^5.9.25":
   "integrity" "sha512-n+ZmGApaL5x/r92w6S4pb+c075i+YKzg1F9YWkznSzQMtvetj/2dSjj2cqsITpd6z60k3K7ZaosIl6hzHwUA9g=="
   "resolved" "http://npm.lumigame.com/mongoose/-/mongoose-5.12.12.tgz"
   "version" "5.12.12"
@@ -8023,10 +8027,10 @@
     "mongoose-long" "^0.3.0"
     "numeral" "^2.0.6"
 
-"sc-game-base@~1.23.0":
-  "integrity" "sha512-q/OWwYjCKN9x065KdVgRKAEiFixG/gVVHgLAfckDIcfbHVqt+a5aJ1k3ktCIQXkz28wdjUw/CTW7uUoEL/jt3g=="
-  "resolved" "http://npm.lumigame.com/sc-game-base/-/sc-game-base-1.23.0.tgz"
-  "version" "1.23.0"
+"sc-game-base@~1.24.1":
+  "integrity" "sha512-pp/05aTxBpn66LL2mGRy7nokaDhKCIAXFoAt6AvHSTLd91kfiM4Laz2Ovd3/SZLgKLD0tpIQjzTQ9oBwMeDMZg=="
+  "resolved" "http://npm.lumigame.com/sc-game-base/-/sc-game-base-1.24.1.tgz"
+  "version" "1.24.1"
   dependencies:
     "awilix" "^4.3.1"
     "axios" "^0.20.0"
@@ -8051,7 +8055,7 @@
   "resolved" "http://npm.lumigame.com/sc-semantic-release/-/sc-semantic-release-1.2.0.tgz"
   "version" "1.2.0"
 
-"semantic-release@^17.1.1", "semantic-release@>=15.8.0 <18.0.0", "semantic-release@>=16.0.0 <18.0.0":
+"semantic-release@^17.1.1":
   "integrity" "sha512-lTOUSrkbaQ+TRs3+BmtJhLtPSyiO7iTGmh5SyuEFqNO8HQbQ4nzXg4UlPrDQasO/C0eFK/V0eCbOzJdjtKBOYw=="
   "resolved" "http://npm.lumigame.com/semantic-release/-/semantic-release-17.4.3.tgz"
   "version" "17.4.3"

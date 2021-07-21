@@ -4,8 +4,8 @@ import { Core } from "sc-game-base";
 import notices from "./../constants/notices";
 
 export class PlaceBetConsumer extends Core.BaseEventConsumers.PlaceBetConsumer {
-    composeValidationCriteria(player, betChoice, amount, freeBet) {
-        const baseCriteria = super.composeValidationCriteria(player, betChoice, amount, freeBet);
+    composeValidationCriteria(player, betChoice, amount, freeBet, roundId) {
+        const baseCriteria = super.composeValidationCriteria(player, betChoice, amount, freeBet, roundId);
 
         const { betTracks } = this.gameData.ingame[player.profile.name] || { betTracks: {} };
         const criteria = [
