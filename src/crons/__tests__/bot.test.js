@@ -20,6 +20,7 @@ betsRepository.updateOne = jest.fn();
 
 /** @type {mongoose.Model}*/
 const betLogsRepository = stubMongooseModelStupidly(mongoose.Model);
+
 const bot = new Bot(definition, gameData, publisher, userInfosRepository, betsRepository, betLogsRepository);
 
 describe("bot tests", () => {
