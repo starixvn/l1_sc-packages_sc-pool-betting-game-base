@@ -31,15 +31,15 @@ export class PlaceBetConsumer extends Core.BaseEventConsumers.PlaceBetConsumer {
                 notice: this.getNoticeObj(helpers.noticeHelper.invalidBet),
             },
             {
-                failure: amount < configs.minbet,
+                failure: amount < minBet,
                 notice: this.getNoticeObj(helpers.noticeHelper.minBet, { minBet }),
             },
             {
-                failure: amount > configs.maxbet,
+                failure: amount > maxBet,
                 notice: this.getNoticeObj(helpers.noticeHelper.maxBet, { maxBet }),
             },
             {
-                failure: totalAmount > configs.maxbet,
+                failure: totalAmount > maxBet,
                 notice: this.getNoticeObj(helpers.noticeHelper.maxBet, { maxBet }),
             },
         ];
