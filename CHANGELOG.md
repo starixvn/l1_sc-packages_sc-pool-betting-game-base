@@ -1,3 +1,10 @@
+## [1.1.6](https://git3.nexdev.net/sc-packages/sc-pool-betting-game-base/compare/v1.1.5...v1.1.6) (2021-09-15)
+
+
+### Bug Fixes
+
+* place bet validation with user bet limit ([06440fe](https://git3.nexdev.net/sc-packages/sc-pool-betting-game-base/commit/06440fe7f6ca1f3a01da9eff01d1005b24287636))
+
 ## [1.1.5](https://git3.nexdev.net/sc-packages/sc-pool-betting-game-base/compare/v1.1.4...v1.1.5) (2021-07-21)
 
 
