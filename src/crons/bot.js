@@ -56,18 +56,25 @@ export class Bot extends Core.Crons.BaseBot {
 
     async run() {
         const { remainingTime, totalBets } = this.gameData;
-        const { durations, choices } = this.definition;
+        const { durations } = this.definition;
 
         if (this.botList.length && remainingTime > durations.lockingBet) {
+            const choices = this.getBetChoicesToBalance();
+
             const isNeedToBalance =
                 (totalBets[choices[0]] || 0) / (totalBets[choices[1]] || 0) > this.ratioToStartBalancing ||
                 (totalBets[choices[1]] || 0) / (totalBets[choices[0]] || 0) > this.ratioToStartBalancing;
 
             const maxTickets = this.getMaxTicketsToBet(remainingTime, durations);
-            const betChoices = remainingTime < durations.balancingBetTime || isNeedToBalance ? this.generateBetChoicesToBalance(maxTickets) : [];
+            const betChoices =
+                remainingTime < durations.balancingBetTime || isNeedToBalance ? this.generateBetChoicesToBalance(maxTickets, choices) : [];
 
             await this.getBotsAndPlaceBet(maxTickets, betChoices);
         }
+    }
+
+    getBetChoicesToBalance() {
+        return this.definition.choices;
     }
 
     getMaxTicketsToBet(remainingTime, durations) {
@@ -81,9 +88,8 @@ export class Bot extends Core.Crons.BaseBot {
             : this.chance.integer({ min: (maxBotRandom * 2) / 3, max: maxBotRandom });
     }
 
-    generateBetChoicesToBalance(maxTickets) {
+    generateBetChoicesToBalance(maxTickets, choices) {
         const { totalBets } = this.gameData;
-        const { choices } = this.definition;
         const ticketsForSmallestChoice = Math.round((maxTickets * this.balancingRatio) / 100);
         const select = (totalBets[choices[0]] || 0) < (totalBets[choices[1]] || 0);
         const result = [];
@@ -130,14 +136,7 @@ export class Bot extends Core.Crons.BaseBot {
             time: new Date(),
         });
 
-        const update = { amount: betAmount };
-        const create = { uid: bot.id, phien: roundId, choice: choice, time: new Date() };
-
-        await this.betsRepository.updateOne(
-            { uid: bot.id, phien: roundId },
-            { $inc: update, $setOnInsert: create },
-            { upsert: true, setDefaultsOnInsert: true }
-        );
+        await this.upsertBet(bot, choice, betAmount);
 
         if (this.isSmallTicket()) {
             this.totalSmallBotTickets++;
@@ -148,6 +147,19 @@ export class Bot extends Core.Crons.BaseBot {
         }
 
         this.totalBotTickets++;
+    }
+
+    async upsertBet(bot, choice, betAmount) {
+        const { roundId } = this.gameData;
+
+        const update = { amount: betAmount };
+        const create = { uid: bot.id, phien: roundId, choice, time: new Date() };
+
+        await this.betsRepository.updateOne(
+            { uid: bot.id, phien: roundId },
+            { $inc: update, $setOnInsert: create },
+            { upsert: true, setDefaultsOnInsert: true }
+        );
     }
 
     getRandomAmount(min, max, isUnround) {
