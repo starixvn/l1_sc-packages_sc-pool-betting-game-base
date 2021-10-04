@@ -67,7 +67,7 @@ export class Bot extends Core.Crons.BaseBot {
 
             const maxTickets = this.getMaxTicketsToBet(remainingTime, durations);
             const betChoices =
-                remainingTime < durations.balancingBetTime || isNeedToBalance ? this.generateBetChoicesToBalance(maxTickets, choices) : [];
+                remainingTime < durations.balancingBetTime || isNeedToBalance ? this.generateBetChoicesToBalance(maxTickets, choices) : choices;
 
             await this.getBotsAndPlaceBet(maxTickets, betChoices);
         }
@@ -180,7 +180,7 @@ export class Bot extends Core.Crons.BaseBot {
     }
 
     getBetChoice(index, choices) {
-        return choices[index] ?? this.definition.choices[this.chance.integer({ min: 0, max: 1 })];
+        return choices[index] ?? choices[this.chance.integer({ min: 0, max: 1 })];
     }
 
     isSmallTicket() {
