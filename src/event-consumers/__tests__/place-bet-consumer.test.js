@@ -1,4 +1,5 @@
-import { stub } from "jest-micro-auto-stub";
+import { stub, stubMongooseModelStupidly } from "jest-micro-auto-stub";
+import mongoose from "mongoose";
 import { Core } from "sc-game-base";
 
 import { GameData } from "../../game-data";
@@ -29,7 +30,11 @@ describe("PlaceBetConsumer test", () => {
     };
     gameData.gameConfigs = configs;
     const publisher = stub(Core.BaseEventPublishers.BaseEventPublisher);
-    const consumer = new PlaceBetConsumer({ choices: ["odd", "even"] }, gameData, publisher);
+
+    /** @type {mongoose.Model}*/
+    const currencyGroupGamesRepository = stubMongooseModelStupidly(mongoose.Model);
+
+    const consumer = new PlaceBetConsumer({ choices: ["odd", "even"] }, gameData, publisher, currencyGroupGamesRepository);
     beforeEach(() => {
         spyOn(Core.BaseEventConsumers.PlaceBetConsumer.prototype, "composeValidationCriteria");
     });
@@ -49,8 +54,10 @@ describe("PlaceBetConsumer test", () => {
         });
     });
 
-    it("composeBetAmountValidationCriteria_validBet_passed", () => {
-        const actualResult = consumer.composeBetAmountValidationCriteria(player, "odd", 100, false, 1);
+    it("composeBetAmountValidationCriteria_validBet_passed", async () => {
+        currencyGroupGamesRepository.findOne().lean().exec.mockReturnValue({ minBet: 1, maxBet: 2000 });
+
+        const actualResult = await consumer.composeBetAmountValidationCriteria(player, "odd", 100, false, 1);
 
         expect(actualResult.find((criteria) => criteria.failure)).toBeFalsy();
     });

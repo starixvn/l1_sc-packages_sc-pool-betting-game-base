@@ -25,11 +25,13 @@ const roundsRepository = stubMongooseModelStupidly(mongoose.Model);
 const betsRepository = stubMongooseModelStupidly(mongoose.Model);
 
 /** @type {mongoose.Model}*/
-const betLogsRepository = { find: () => { } };
+const betLogsRepository = { find: () => {} };
 
 /** @type {mongoose.Model}*/
 const userInfosRepository = stubMongooseModelStupidly(mongoose.Model);
 
+/** @type {mongoose.Model}*/
+const currenciesRepository = stubMongooseModelStupidly(mongoose.Model);
 
 describe("SettleGameRoundConsumer test", () => {
     const consumer = new SettleGameRoundConsumer({
@@ -41,9 +43,9 @@ describe("SettleGameRoundConsumer test", () => {
         roundsRepository,
         betsRepository,
         betLogsRepository,
-        userInfosRepository
-    })
-
+        userInfosRepository,
+        currenciesRepository,
+    });
 
     beforeEach(() => {
         spyOn(roundResultPublisher, "publishRoundResult");
@@ -80,20 +82,20 @@ describe("SettleGameRoundConsumer test", () => {
     });
 
     describe("settleBet_", () => {
-        it("refundAmount greater than betAmount_calls update bet", () => {
+        it("refundAmount greater than betAmount_calls update bet", async () => {
             // arrange
-            const bet = { uid: 1, amount: 200, choice: "even", save: jest.fn() };
+            const bet = { uid: 1, amount: 200, baseAmount: 2000, choice: "even", save: jest.fn() };
             const refundInfo = {
                 choice: "even",
                 amount: 300,
-            }
+            };
 
             // act
-            consumer.settleBet(bet, 1, settlementResult, refundInfo);
+            await consumer.settleBet(bet, 1, settlementResult, refundInfo);
 
             // asset
             expect(bet.save).toHaveBeenCalled();
-        })
+        });
 
         it("refundAmount greater than betAmount_calls update bet", () => {
             // arrange
@@ -138,7 +140,7 @@ describe("SettleGameRoundConsumer test", () => {
 
         // assert
         expect(consumer.settleBet).toHaveBeenCalled();
-    })
+    });
 
     it("calculateBetWin_always_returns correct value", () => {
         // arrange
@@ -155,11 +157,14 @@ describe("SettleGameRoundConsumer test", () => {
 
     describe("settleBets", () => {
         beforeEach(() => {
-            const users = [{ id: 1, name: "user1", currency: "UUS" }, { id: 2, name: "user2", currency: "UUS" }];
+            const users = [
+                { id: 1, name: "user1", currency: "UUS" },
+                { id: 2, name: "user2", currency: "UUS" },
+            ];
             const bets = [
                 { uid: 1, odd: 100, save: jest.fn() },
                 { uid: 3, even: 200, save: jest.fn() },
-            ]
+            ];
             const settleBets = [
                 { uid: 1, odd: 100, thanhtoan: true, memberId: 123, save: jest.fn() },
                 { uid: 3, even: 200, thanhtoan: true, memberId: 456, save: jest.fn() },
@@ -170,20 +175,21 @@ describe("SettleGameRoundConsumer test", () => {
             userInfosRepository.find().lean().exec.mockReturnValue(users);
             consumer.querySettledBets = jest.fn(() => settleBets);
             consumer.callEndGame = jest.fn();
-
         });
 
         it("_always_calls settleBets", () => {
-
             // act
-            consumer.settleBets({ result: { dice1: 1, dice2: 2, dice3: 3 }, settlementResult: { odd: true, even: false }, roundId: 1, time: Date.now() });
+            consumer.settleBets({
+                result: { dice1: 1, dice2: 2, dice3: 3 },
+                settlementResult: { odd: true, even: false },
+                roundId: 1,
+                time: Date.now(),
+            });
 
             // assert
             expect(consumer.queryBets).toHaveBeenCalled();
         });
     });
-
-
 });
 
 afterEach(() => {

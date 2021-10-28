@@ -4,8 +4,8 @@ import { Core } from "sc-game-base";
 import notices from "./../constants/notices";
 
 export class PlaceBetConsumer extends Core.BaseEventConsumers.PlaceBetConsumer {
-    composeValidationCriteria(player, betChoice, amount, freeBet, roundId) {
-        const baseCriteria = super.composeValidationCriteria(player, betChoice, amount, freeBet, roundId);
+    async composeValidationCriteria(player, betChoice, amount, freeBet, roundId) {
+        const baseCriteria = await super.composeValidationCriteria(player, betChoice, amount, freeBet, roundId);
 
         const { betTracks } = this.gameData.ingame[player.profile.name] || { betTracks: {} };
         const criteria = [
@@ -18,12 +18,14 @@ export class PlaceBetConsumer extends Core.BaseEventConsumers.PlaceBetConsumer {
         return baseCriteria.concat(criteria);
     }
 
-    composeBetAmountValidationCriteria(player, betChoice, amount, freeBet) {
+    async composeBetAmountValidationCriteria(player, betChoice, amount, freeBet) {
+        const settings = await this.currencyGroupGamesRepository.findOne({ groupId: player.session.currencyGroupId }, "minBet maxBet").lean().exec();
+
         const configs = this.gameData.gameConfigs;
         const { betTracks } = this.gameData.ingame[player.profile.name] || { betTracks: {} };
         const totalAmount = this.definition.choices.reduce((total, choice) => total + (betTracks[choice] || 0), 0) + amount;
-        const minBet = Math.max(player.profile.minBet, configs.minbet);
-        const maxBet = Math.min(player.profile.maxBet, configs.maxbet);
+        const minBet = Math.max(player.profile.minBet, settings.minBet);
+        const maxBet = Math.min(player.profile.maxBet, settings.maxBet);
 
         return [
             {

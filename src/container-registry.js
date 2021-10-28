@@ -1,4 +1,4 @@
-import { asClass } from "awilix";
+import { asClass, asValue } from "awilix";
 import { Core } from "sc-game-base";
 
 import { Bot, GameCron, ProcessBetQueue } from "./crons";
@@ -12,6 +12,14 @@ export class ContainerRegistry extends Core.ContainerRegistry {
         super.registerApis();
         this.container.register({
             roundQuery: asClass(RoundQuery).singleton(),
+        });
+    }
+
+    registerModels() {
+        super.registerModels();
+
+        this.container.register({
+            currenciesRepository: asValue(Currencies),
         });
     }
 

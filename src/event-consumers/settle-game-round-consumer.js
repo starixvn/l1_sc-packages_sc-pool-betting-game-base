@@ -10,28 +10,33 @@ export class SettleGameRoundConsumer extends Core.BaseEventConsumers.SettleGameR
         roundsRepository,
         betsRepository,
         betLogsRepository,
-        userInfosRepository
+        userInfosRepository,
+        currenciesRepository,
     }) {
         super({ definition, gameData, roundResultPublisher, userBetResultPublisher, endGame, roundsRepository, betsRepository });
 
         this.betLogsRepository = betLogsRepository;
         this.userInfosRepository = userInfosRepository;
+        this.currenciesRepository = currenciesRepository;
     }
 
     async settleBets({ result, settlementResult, roundId, time }) {
         const bets = await this.queryBets(roundId);
 
         if (bets && bets.length) {
-            const uusUsers = await this.userInfosRepository.find({ currency: "UUS" }, "id").lean().exec();
-            const uusUserIds = uusUsers.map((user) => user.id);
+            const testCurrencies = await this.currenciesRepository.find({ isTest: true }, "name partnerId").lean().exec();
 
-            const realBets = bets.filter((bet) => !uusUserIds.includes(bet.uid));
+            const realBets = bets.filter(
+                (bet) => !testCurrencies.some((currency) => currency.name === bet.currency && currency.partnerId === bet.partnerId)
+            );
             const realBetProcessors = this.settleBetsByGroup(realBets, roundId, settlementResult, this.gameData.totalBets);
 
-            const uusBets = bets.filter((bet) => uusUserIds.includes(bet.uid));
-            const uusBetProcessors = this.settleBetsByGroup(uusBets, roundId, settlementResult, this.gameData.totalUUSBets);
+            const testBets = bets.filter((bet) =>
+                testCurrencies.some((currency) => currency.name === bet.currency && currency.partnerId === bet.partnerId)
+            );
+            const testBetProcessors = this.settleBetsByGroup(testBets, roundId, settlementResult, this.gameData.totalUUSBets);
 
-            await Promise.all(realBetProcessors.concat(uusBetProcessors));
+            await Promise.all(realBetProcessors.concat(testBetProcessors));
 
             const settledBets = await this.querySettledBets(roundId);
 
@@ -85,39 +90,44 @@ export class SettleGameRoundConsumer extends Core.BaseEventConsumers.SettleGameR
     }
 
     async settleBet(bet, roundId, settlementResult, refundInfo) {
-        const { choice, amount: betAmount } = bet;
+        const { choice, baseAmount: betAmount } = bet;
         const isWinningBet = settlementResult[choice];
         const odd = this.gameData.gameConfigs.odds[choice];
-        let betWin = 0;
-        let refund = 0;
+        let baseBetWin = 0;
+        let baseRefund = 0;
 
         bet.thanhtoan = true;
         bet.win = isWinningBet;
 
         if (refundInfo.amount && bet.choice === refundInfo.choice) {
             if (refundInfo.amount >= betAmount) {
-                refund = betAmount;
+                baseRefund = betAmount;
                 refundInfo.amount -= betAmount;
             } else {
-                refund = refundInfo.amount;
+                baseRefund = refundInfo.amount;
 
                 if (isWinningBet) {
-                    betWin = this.calculateBetWin(betAmount - refundInfo.amount, odd);
+                    baseBetWin = this.calculateBetWin(betAmount - refundInfo.amount, odd);
                 }
 
                 refundInfo.amount = 0;
             }
         } else if (isWinningBet) {
-            betWin = this.calculateBetWin(bet.amount, odd);
+            baseBetWin = this.calculateBetWin(bet.amount, odd);
         }
 
+        const refund = (baseRefund / bet.rate).toFixed(4);
+        const betWin = (baseBetWin / bet.rate).toFixed(4);
+
+        bet.baseRefund = baseRefund;
+        bet.baseBetWin = baseBetWin;
         bet.refund = refund;
         bet.betwin = betWin;
         await bet.save();
 
         await this.betsRepository.updateOne(
             { uid: bet.uid, phien: roundId },
-            { $set: { win: isWinningBet, thanhtoan: true, time: new Date() }, $inc: { refund, betwin: betWin } }
+            { $set: { win: isWinningBet, thanhtoan: true, time: new Date() }, $inc: { refund, betwin: betWin, baseRefund, baseBetWin } }
         );
     }
 
