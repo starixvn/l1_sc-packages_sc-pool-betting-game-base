@@ -7,7 +7,7 @@ const schema = new mongoose.Schema({
     enable: { type: Boolean, require: true },
     isTest: { type: Boolean, require: true },
     parentId: { type: String, require: true },
-    groupId: { type: String, require: true },
+    groupId: { type: mongoose.Types.ObjectId, require: true },
 });
 
 export default mongoose.model("currencies", schema);
