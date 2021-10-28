@@ -4,6 +4,7 @@ import { Core } from "sc-game-base";
 import { Bot, GameCron, ProcessBetQueue } from "./crons";
 import { PlaceBetConsumer, SettleGameRoundConsumer } from "./event-consumers";
 import { RunningRoundInfoPublisher } from "./event-publishers";
+import { Currencies } from "./models";
 import { RoundQuery } from "./query-apis";
 import { SocketRouter } from "./routers";
 
