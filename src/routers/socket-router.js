@@ -11,6 +11,7 @@ export class SocketRouter extends Core.Routers.BaseSocketRouter {
         userSignInPublisher,
         historyQuery,
         logService,
+        playGamePermissionValidator,
         roundQuery,
     }) {
         super({
@@ -23,6 +24,7 @@ export class SocketRouter extends Core.Routers.BaseSocketRouter {
             userSignInPublisher,
             historyQuery,
             logService,
+            playGamePermissionValidator,
         });
 
         this.roundQuery = roundQuery;
