@@ -90,7 +90,7 @@ export class SettleGameRoundConsumer extends Core.BaseEventConsumers.SettleGameR
     }
 
     async settleBet(bet, roundId, settlementResult, refundInfo) {
-        const { choice, baseAmount: betAmount } = bet;
+        const { choice, baseAmount } = bet;
         const isWinningBet = settlementResult[choice];
         const odd = this.gameData.gameConfigs.odds[choice];
         let baseBetWin = 0;
@@ -100,20 +100,20 @@ export class SettleGameRoundConsumer extends Core.BaseEventConsumers.SettleGameR
         bet.win = isWinningBet;
 
         if (refundInfo.amount && bet.choice === refundInfo.choice) {
-            if (refundInfo.amount >= betAmount) {
-                baseRefund = betAmount;
-                refundInfo.amount -= betAmount;
+            if (refundInfo.amount >= baseAmount) {
+                baseRefund = baseAmount;
+                refundInfo.amount -= baseAmount;
             } else {
                 baseRefund = refundInfo.amount;
 
                 if (isWinningBet) {
-                    baseBetWin = this.calculateBetWin(betAmount - refundInfo.amount, odd);
+                    baseBetWin = this.calculateBetWin(baseAmount - refundInfo.amount, odd);
                 }
 
                 refundInfo.amount = 0;
             }
         } else if (isWinningBet) {
-            baseBetWin = this.calculateBetWin(bet.amount, odd);
+            baseBetWin = this.calculateBetWin(baseAmount, odd);
         }
 
         const refund = (baseRefund / bet.rate).toFixed(4);
