@@ -132,11 +132,20 @@ export class Bot extends Core.Crons.BaseBot {
             name: bot.name,
             phien: roundId,
             amount: betAmount,
+            baseAmount: betAmount,
+            rate: this.botRate,
             choice: choice,
             time: new Date(),
         });
 
-        await this.upsertBet(bot, choice, betAmount);
+        const update = { amount: betAmount, baseAmount: betAmount };
+        const create = { uid: bot.id, phien: roundId, choice: choice, time: new Date(), rate: this.botRate };
+
+        await this.betsRepository.updateOne(
+            { uid: bot.id, phien: roundId },
+            { $inc: update, $setOnInsert: create },
+            { upsert: true, setDefaultsOnInsert: true }
+        );
 
         if (this.isSmallTicket()) {
             this.totalSmallBotTickets++;
