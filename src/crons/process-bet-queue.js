@@ -38,7 +38,7 @@ export class ProcessBetQueue extends Core.Crons.ProcessBetQueue {
                 { upsert: true, setDefaultsOnInsert: true }
             );
 
-            if (!this.isUUSAccount(player)) {
+            if (!this.isTestAccount(player)) {
                 this.gameData.betCount[betChoice] = (this.gameData.betCount[betChoice] ?? 0) + 1;
             }
         }
@@ -70,43 +70,16 @@ export class ProcessBetQueue extends Core.Crons.ProcessBetQueue {
     }
 
     adjustTotalBets(player, bet, rate) {
-    async insertBet(player, bet, roundId, configs) {
-        const newBet = {
-            uid: player.UID,
-            name: player.profile.name,
-            phien: roundId,
-            choice: bet.betChoice,
-            time: new Date(),
-            odds: configs.odds,
-            amount: bet.amount,
-            totalAmount: bet.amount,
-        };
-
-        if (player.session) {
-            newBet.memberId = player.session.memberId;
-            newBet.siteId = player.session.siteId;
-        }
-
-        await this.betsRepository.create(newBet);
-    }
-
-    async updateBet(existingBet, bet) {
-        existingBet.amount += bet.amount;
-        existingBet.totalAmount += bet.amount;
-        await existingBet.save();
-    }
-
-    adjustTotalBets(player, bet) {
-        if (this.isUUSAccount(player)) {
+        if (this.isTestAccount(player)) {
             const { betChoice, amount } = bet;
 
-            this.gameData.totalUUSBets[betChoice] = (this.gameData.totalUUSBets[betChoice] ?? 0) + amount * rate;
+            this.gameData.totalTestBets[betChoice] = (this.gameData.totalTestBets[betChoice] ?? 0) + amount * rate;
         } else {
             super.adjustTotalBets(player, bet, rate);
         }
     }
 
-    isUUSAccount(player) {
-        return player?.session?.currency?.toUpperCase() === "UUS";
+    isTestAccount(player) {
+        return player?.session?.isTestCurrency;
     }
 }

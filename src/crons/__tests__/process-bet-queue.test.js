@@ -47,17 +47,17 @@ describe("ProcessBetQueue test", () => {
         expect(processBetQueue instanceof Core.Crons.ProcessBetQueue).toBeTruthy();
     });
 
-    describe("_isUUSAccount", () => {
-        it("_currency is UUS", () => {
-            const player = { session: { currency: "UUS" } };
+    describe("isTestAccount", () => {
+        it("_currency is test", () => {
+            const player = { session: { isTestCurrency: true, currencyName: "UUS" } };
 
-            expect(processBetQueue.isUUSAccount(player)).toBeTruthy();
+            expect(processBetQueue.isTestAccount(player)).toBeTruthy();
         });
 
-        it("_currency is not UUS", () => {
-            const player = { session: { currency: "$US" } };
+        it("_currency is not test", () => {
+            const player = { session: { isTestCurrency: false, currencyName: "$US" } };
 
-            expect(processBetQueue.isUUSAccount(player)).toBeFalsy();
+            expect(processBetQueue.isTestAccount(player)).toBeFalsy();
         });
     });
 
@@ -65,8 +65,8 @@ describe("ProcessBetQueue test", () => {
         beforeEach(() => {
             spyOn(Core.Crons.ProcessBetQueue.prototype, "adjustTotalBets");
         });
-        it("_isUUSAccount", () => {
-            const player = { session: { currency: "UUS" } };
+        it("isTestAccount", () => {
+            const player = { session: { isTestCurrency: true, currencyName: "UUS" } };
             const bet = { betChoice: "odd", amount: 10 };
 
             processBetQueue.adjustTotalBets(player, bet);
@@ -74,8 +74,8 @@ describe("ProcessBetQueue test", () => {
             expect(Core.Crons.ProcessBetQueue.prototype.adjustTotalBets).not.toHaveBeenCalled();
         });
 
-        it("_isNotUUSAccount", () => {
-            const player = { session: { currency: "$US" } };
+        it("_isNotTestAccount", () => {
+            const player = { session: { isTestCurrency: false, currencyName: "$US" } };
             const bet = { betChoice: "odd", amount: 10 };
 
             processBetQueue.adjustTotalBets(player, bet);
@@ -86,7 +86,7 @@ describe("ProcessBetQueue test", () => {
 
     describe("upsertBet", () => {
         it("_existingBet_save bet", () => {
-            const player = { session: { currency: "UUS" } };
+            const player = { session: { isTestCurrency: true, currencyName: "UUS" } };
             const bet = { betChoice: "odd", amount: 10 };
             const existingBet = { uid: 1, amount: 200, choice: "even", save: jest.fn() };
             spyOn(existingBet, "save");
@@ -104,7 +104,7 @@ describe("ProcessBetQueue test", () => {
         });
 
         it("_newBet", () => {
-            const player = { UID: 1, profile: { name: "AAA" }, session: { memberId: 1234, currency: "$US" } };
+            const player = { UID: 1, profile: { name: "AAA" }, session: { memberId: 1234, isTestCurrency: true, currencyName: "$US" } };
             const bet = { betChoice: "odd", amount: 10 };
 
             spyOn(betsRepository, "findOne").and.callFake(() => {
