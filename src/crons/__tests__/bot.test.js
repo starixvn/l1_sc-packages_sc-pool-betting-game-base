@@ -7,7 +7,7 @@ import { Bot } from "../bot";
 
 const definition = { id: 1, name: "game name", durations: { lockingBet: 5 }, choices: ["odd", "even"] };
 const gameData = new GameData(30);
-gameData.totalBets = { odd: 100, even: 50 };
+gameData.totalBets = { odd: 200, even: 50 };
 
 const publisher = stub(Core.BaseEventPublishers.BaseEventPublisher);
 
@@ -36,10 +36,10 @@ describe("bot tests", () => {
         expect(bot.getBotsAndPlaceBet).not.toHaveBeenCalled();
     });
 
-    it("run_existing bot_call getBotsAndPlaceBet", () => {
+    it("run_existing bot_call getBotsAndPlaceBet", async () => {
         bot.botList = [{ id: 1 }];
         spyOn(bot, "getBotsAndPlaceBet");
-        bot.run();
+        await bot.run();
 
         expect(bot.getBotsAndPlaceBet).toHaveBeenCalled();
     });
