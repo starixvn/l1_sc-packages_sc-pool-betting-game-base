@@ -28,9 +28,6 @@ const betsRepository = stubMongooseModelStupidly(mongoose.Model);
 const betLogsRepository = { find: () => {} };
 
 /** @type {mongoose.Model}*/
-const userInfosRepository = stubMongooseModelStupidly(mongoose.Model);
-
-/** @type {mongoose.Model}*/
 const currenciesRepository = stubMongooseModelStupidly(mongoose.Model);
 
 describe("SettleGameRoundConsumer test", () => {
@@ -43,7 +40,6 @@ describe("SettleGameRoundConsumer test", () => {
         roundsRepository,
         betsRepository,
         betLogsRepository,
-        userInfosRepository,
         currenciesRepository,
     });
 
@@ -157,22 +153,18 @@ describe("SettleGameRoundConsumer test", () => {
 
     describe("settleBets", () => {
         beforeEach(() => {
-            const users = [
-                { id: 1, name: "user1", currency: "UUS" },
-                { id: 2, name: "user2", currency: "UUS" },
-            ];
             const bets = [
-                { uid: 1, odd: 100, save: jest.fn() },
-                { uid: 3, even: 200, save: jest.fn() },
+                { uid: 1, odd: 100, save: jest.fn(), partnerId: "OW", currency: "$US" },
+                { uid: 3, even: 200, save: jest.fn(), partnerId: "OW", currency: "UUS" },
             ];
             const settleBets = [
                 { uid: 1, odd: 100, thanhtoan: true, memberId: 123, save: jest.fn() },
                 { uid: 3, even: 200, thanhtoan: true, memberId: 456, save: jest.fn() },
             ];
+            const testCurrencies = [{ name: "UUS", partnerId: "OW" }];
+            currenciesRepository.find().lean().exec.mockReturnValueOnce(testCurrencies);
             consumer.queryBets = jest.fn(() => bets);
             consumer.settleBetsByGroup = jest.fn(() => settleBets);
-
-            userInfosRepository.find().lean().exec.mockReturnValue(users);
             consumer.querySettledBets = jest.fn(() => settleBets);
             consumer.callEndGame = jest.fn();
         });

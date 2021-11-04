@@ -10,13 +10,11 @@ export class SettleGameRoundConsumer extends Core.BaseEventConsumers.SettleGameR
         roundsRepository,
         betsRepository,
         betLogsRepository,
-        userInfosRepository,
         currenciesRepository,
     }) {
         super({ definition, gameData, roundResultPublisher, userBetResultPublisher, endGame, roundsRepository, betsRepository });
 
         this.betLogsRepository = betLogsRepository;
-        this.userInfosRepository = userInfosRepository;
         this.currenciesRepository = currenciesRepository;
     }
 

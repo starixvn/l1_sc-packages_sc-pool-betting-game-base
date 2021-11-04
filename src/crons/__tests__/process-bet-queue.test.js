@@ -86,7 +86,7 @@ describe("ProcessBetQueue test", () => {
 
     describe("upsertBet", () => {
         it("_existingBet_save bet", () => {
-            const player = { session: { isTestCurrency: true, currencyName: "UUS" } };
+            const player = { session: { isTestCurrency: false, currencyName: "$US" } };
             const bet = { betChoice: "odd", amount: 10 };
             const existingBet = { uid: 1, amount: 200, choice: "even", save: jest.fn() };
             spyOn(existingBet, "save");
@@ -121,5 +121,14 @@ describe("ProcessBetQueue test", () => {
 
             expect(betsRepository.findOne).toHaveBeenCalled();
         });
+    });
+
+    it("_insertBetLog_always_calls create bet log", async () => {
+        const player = { UID: 1, profile: { name: "AAA" }, session: { memberId: 1234, isTestCurrency: true, currencyName: "$US" } };
+        const bet = { betChoice: "odd", amount: 10 };
+
+        await processBetQueue.insertBetLog(player, 1, bet, 0.05);
+
+        expect(betLogsRepository.create).toHaveBeenCalled();
     });
 });
