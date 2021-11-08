@@ -4,8 +4,8 @@ import { Core } from "sc-game-base";
 import notices from "./../constants/notices";
 
 export class PlaceBetConsumer extends Core.BaseEventConsumers.PlaceBetConsumer {
-    async composeValidationCriteria(player, betChoice, amount, freeBet, roundId) {
-        const baseCriteria = await super.composeValidationCriteria(player, betChoice, amount, freeBet, roundId);
+    composeValidationCriteria(player, betChoice, amount, freeBet, roundId) {
+        const baseCriteria = super.composeValidationCriteria(player, betChoice, amount, freeBet, roundId);
 
         const { betTracks } = this.gameData.ingame[player.profile.name] || { betTracks: {} };
         const criteria = [
@@ -18,8 +18,8 @@ export class PlaceBetConsumer extends Core.BaseEventConsumers.PlaceBetConsumer {
         return baseCriteria.concat(criteria);
     }
 
-    async composeBetAmountValidationCriteria(player, betChoice, amount, freeBet) {
-        const settings = await this.currencyGroupGamesRepository.findOne({ groupId: player.session.currencyGroupId }, "minBet maxBet").lean().exec();
+    composeBetAmountValidationCriteria(player, betChoice, amount, freeBet) {
+        const settings = this.gameData.currencyGroupGames.find((x) => x.groupId.toString() === player.session.currencyGroupId);
 
         const configs = this.gameData.gameConfigs;
         const { betTracks } = this.gameData.ingame[player.profile.name] || { betTracks: {} };

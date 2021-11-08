@@ -1,5 +1,4 @@
-import { stub, stubMongooseModelStupidly } from "jest-micro-auto-stub";
-import mongoose from "mongoose";
+import { stub } from "jest-micro-auto-stub";
 import { Core } from "sc-game-base";
 
 import { GameData } from "../../game-data";
@@ -14,6 +13,7 @@ describe("PlaceBetConsumer test", () => {
         },
         session: {
             currency: "US",
+            currencyGroupId: "1",
         },
     };
     gameData.ingame = {
@@ -23,6 +23,14 @@ describe("PlaceBetConsumer test", () => {
             },
         },
     };
+    gameData.currencyGroupGames = [
+        {
+            groupId: 1,
+            minBet: 1,
+            maxBet: 2000,
+            maxBetPerChoices: [],
+        },
+    ];
     const configs = {
         enableFreeBet: false,
         minbet: 1,
@@ -31,10 +39,7 @@ describe("PlaceBetConsumer test", () => {
     gameData.gameConfigs = configs;
     const publisher = stub(Core.BaseEventPublishers.BaseEventPublisher);
 
-    /** @type {mongoose.Model}*/
-    const currencyGroupGamesRepository = stubMongooseModelStupidly(mongoose.Model);
-
-    const consumer = new PlaceBetConsumer({ choices: ["odd", "even"] }, gameData, publisher, currencyGroupGamesRepository);
+    const consumer = new PlaceBetConsumer({ choices: ["odd", "even"] }, gameData, publisher);
     beforeEach(() => {
         spyOn(Core.BaseEventConsumers.PlaceBetConsumer.prototype, "composeValidationCriteria");
     });
@@ -55,9 +60,7 @@ describe("PlaceBetConsumer test", () => {
     });
 
     it("composeBetAmountValidationCriteria_validBet_passed", async () => {
-        currencyGroupGamesRepository.findOne().lean().exec.mockReturnValue({ minBet: 1, maxBet: 2000 });
-
-        const actualResult = await consumer.composeBetAmountValidationCriteria(player, "odd", 100, false, 1);
+        const actualResult = consumer.composeBetAmountValidationCriteria(player, "odd", 100, false, 1);
 
         expect(actualResult.find((criteria) => criteria.failure)).toBeFalsy();
     });
