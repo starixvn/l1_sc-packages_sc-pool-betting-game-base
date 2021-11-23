@@ -4,13 +4,13 @@ export class RoundQuery extends Core.QueryApis.RoundQuery {
     /**
      * @param {mongoose.Model} roundsRepository
      * @param {mongoose.Model} betLogsRepository
-     * @param {mongoose.Model} currenciesRepository
+     * @param {mongoose.Model} currencyRepository
      */
-    constructor(roundsRepository, betLogsRepository, currenciesRepository) {
+    constructor(roundsRepository, betLogsRepository, currencyRepository) {
         super(roundsRepository);
 
         this.betLogsRepository = betLogsRepository;
-        this.currenciesRepository = currenciesRepository;
+        this.currencyRepository = currencyRepository;
     }
 
     convertBetLogs(betLogs) {
@@ -19,7 +19,7 @@ export class RoundQuery extends Core.QueryApis.RoundQuery {
 
     async getOne(id, projections = { _id: false }) {
         const round = await super.getOne(id, projections);
-        const testCurrencies = await this.currenciesRepository.find({ isTest: true }, "name partnerId").lean().exec();
+        const testCurrencies = await this.currencyRepository.find({ isTest: true }, "name partnerId").lean().exec();
 
         const betLogs = await this.betLogsRepository
             .find({ phien: id }, { _id: false }, { sort: { _id: 1 } })

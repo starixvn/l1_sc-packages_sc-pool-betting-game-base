@@ -10,19 +10,19 @@ export class SettleGameRoundConsumer extends Core.BaseEventConsumers.SettleGameR
         roundsRepository,
         betsRepository,
         betLogsRepository,
-        currenciesRepository,
+        currencyRepository,
     }) {
         super({ definition, gameData, roundResultPublisher, userBetResultPublisher, endGame, roundsRepository, betsRepository });
 
         this.betLogsRepository = betLogsRepository;
-        this.currenciesRepository = currenciesRepository;
+        this.currencyRepository = currencyRepository;
     }
 
     async settleBets({ result, settlementResult, roundId, time }) {
         const bets = await this.queryBets(roundId);
 
         if (bets && bets.length) {
-            const testCurrencies = await this.currenciesRepository.find({ isTest: true }, "name partnerId").lean().exec();
+            const testCurrencies = await this.currencyRepository.find({ isTest: true }, "name partnerId").lean().exec();
 
             const realBets = bets.filter(
                 (bet) => !testCurrencies.some((currency) => currency.name === bet.currency && currency.partnerId === bet.partnerId)

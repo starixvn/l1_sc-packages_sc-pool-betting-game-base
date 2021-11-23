@@ -28,7 +28,7 @@ const betsRepository = stubMongooseModelStupidly(mongoose.Model);
 const betLogsRepository = { find: () => {} };
 
 /** @type {mongoose.Model}*/
-const currenciesRepository = stubMongooseModelStupidly(mongoose.Model);
+const currencyRepository = stubMongooseModelStupidly(mongoose.Model);
 
 describe("SettleGameRoundConsumer test", () => {
     const consumer = new SettleGameRoundConsumer({
@@ -40,7 +40,7 @@ describe("SettleGameRoundConsumer test", () => {
         roundsRepository,
         betsRepository,
         betLogsRepository,
-        currenciesRepository,
+        currencyRepository,
     });
 
     beforeEach(() => {
@@ -162,7 +162,7 @@ describe("SettleGameRoundConsumer test", () => {
                 { uid: 3, even: 200, thanhtoan: true, memberId: 456, save: jest.fn() },
             ];
             const testCurrencies = [{ name: "UUS", partnerId: "OW" }];
-            currenciesRepository.find().lean().exec.mockReturnValueOnce(testCurrencies);
+            currencyRepository.find().lean().exec.mockReturnValueOnce(testCurrencies);
             consumer.queryBets = jest.fn(() => bets);
             consumer.settleBetsByGroup = jest.fn(() => settleBets);
             consumer.querySettledBets = jest.fn(() => settleBets);
