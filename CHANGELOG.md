@@ -1,3 +1,13 @@
+# [1.2.0](https://git3.nexdev.net/sc-packages/sc-pool-betting-game-base/compare/v1.1.6...v1.2.0) (2021-11-25)
+
+
+### Features
+
+* bot - update getting choices ([0d982ae](https://git3.nexdev.net/sc-packages/sc-pool-betting-game-base/commit/0d982ae2f82c905307470c36d083b8fe95fc89ea))
+* refactor bot ([7f04b25](https://git3.nexdev.net/sc-packages/sc-pool-betting-game-base/commit/7f04b257c16863bc6dc66e62d90fe56466142513))
+* running-round-info-publisher - publishBetPercentage ([8650461](https://git3.nexdev.net/sc-packages/sc-pool-betting-game-base/commit/86504617a81fbaf02ea4b3088247651e2196adf5))
+* update calculate bet percentage ([5a86abf](https://git3.nexdev.net/sc-packages/sc-pool-betting-game-base/commit/5a86abf5d908d647d75fd99d662af52d0b6eef8b))
+
 ## [1.1.6](https://git3.nexdev.net/sc-packages/sc-pool-betting-game-base/compare/v1.1.5...v1.1.6) (2021-09-15)
 
 
