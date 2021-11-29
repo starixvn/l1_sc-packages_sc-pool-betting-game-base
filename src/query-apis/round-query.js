@@ -42,8 +42,8 @@ export class RoundQuery extends Core.QueryApis.RoundQuery {
         Object.keys(betLogGroups).forEach((choice) => {
             total[choice] = betLogGroups[choice].reduce(
                 (result, log) => {
-                    result.betAmount += log.amount;
-                    result.refund += log.refund;
+                    result.betAmount += log.baseAmount;
+                    result.refund += log.baseRefund;
 
                     return result;
                 },
