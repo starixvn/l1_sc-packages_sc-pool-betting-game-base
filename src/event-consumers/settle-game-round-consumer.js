@@ -123,9 +123,15 @@ export class SettleGameRoundConsumer extends Core.BaseEventConsumers.SettleGameR
         bet.betwin = betWin;
         await bet.save();
 
+        const baseTotalWin = baseRefund + baseBetWin + (baseAmount - baseRefund);
+        const totalWin = (baseTotalWin / bet.rate).toFixed(4);
+
         await this.betsRepository.updateOne(
             { uid: bet.uid, phien: roundId },
-            { $set: { win: isWinningBet, thanhtoan: true, time: new Date() }, $inc: { refund, betwin: betWin, baseRefund, baseBetWin } }
+            { 
+                $set: { win: isWinningBet, thanhtoan: true, time: new Date() }, 
+                $inc: { refund, betwin: betWin, baseRefund, baseBetWin, baseTotalWin, totalWin } 
+            }
         );
     }
 

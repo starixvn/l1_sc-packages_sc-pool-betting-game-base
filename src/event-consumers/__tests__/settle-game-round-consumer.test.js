@@ -80,7 +80,7 @@ describe("SettleGameRoundConsumer test", () => {
     describe("settleBet_", () => {
         it("refundAmount greater than betAmount_calls update bet", async () => {
             // arrange
-            const bet = { uid: 1, amount: 200, baseAmount: 2000, choice: "even", save: jest.fn() };
+            const bet = { uid: 1, amount: 200, baseAmount: 200, choice: "even", baseRefund: 0, rate: 1, save: jest.fn() };
             const refundInfo = {
                 choice: "even",
                 amount: 300,
@@ -89,35 +89,81 @@ describe("SettleGameRoundConsumer test", () => {
             // act
             await consumer.settleBet(bet, 1, settlementResult, refundInfo);
 
-            // asset
+            // assert
             expect(bet.save).toHaveBeenCalled();
+            expect(betsRepository.updateOne).toHaveBeenCalledWith(
+                expect.anything(),
+                {
+                    $set: expect.anything(),
+                    $inc:{
+                        refund:  bet.baseRefund.toFixed(4),
+                        totalWin: bet.baseRefund.toFixed(4),
+                        baseBetWin: 0,
+                        baseRefund: bet.baseRefund,
+                        baseTotalWin: bet.baseRefund,
+                        betwin: "0.0000",
+                    }
+                });
         });
 
-        it("refundAmount greater than betAmount_calls update bet", () => {
+        it("refundAmount less than betAmount_calls update bet", async () => {
             // arrange
-            const bet = { uid: 1, amount: 200, choice: "even", save: jest.fn() };
+            const bet = { uid: 1, amount: 200, baseAmount: 200, choice: "even", rate: 1, refund: 0, baseRefund: 0, save: jest.fn() };
             const refundInfo = {
                 choice: "even",
                 amount: 100,
             };
+            const odds = gameData.gameConfigs.odds[bet.choice];
+            const expectedBetWin = consumer.calculateBetWin(bet.amount - refundInfo.amount, odds);
+            const expectedTotalWin = expectedBetWin + refundInfo.amount + (bet.amount - refundInfo.amount);
 
             // act
-            consumer.settleBet(bet, 1, settlementResult, refundInfo);
+            await consumer.settleBet(bet, 1, settlementResult, refundInfo);
 
             // asset
             expect(bet.save).toHaveBeenCalled();
+            expect(betsRepository.updateOne).toHaveBeenCalledWith(
+                expect.anything(),
+                {
+                    $set: expect.anything(),
+                    $inc:{
+                        refund:  bet.refund,
+                        totalWin: expectedTotalWin.toFixed(4),
+                        baseBetWin: expectedBetWin,
+                        baseRefund: bet.baseRefund,
+                        baseTotalWin: expectedTotalWin,
+                        betwin: (expectedBetWin / bet.rate).toFixed(4),
+                    }
+                });
         });
 
-        it("no refund_calls update bet", () => {
+        it("no refund_calls update bet", async () => {
             // arrange
-            const bet = { uid: 1, amount: 200, choice: "even", save: jest.fn() };
+            const bet = { uid: 1, amount: 200, baseAmount: 200, choice: "even", rate: 1, refund: 0, baseRefund: 0, save: jest.fn() };
             const refundInfo = {};
+            const odds = gameData.gameConfigs.odds[bet.choice];
+            const expectedBetWin = consumer.calculateBetWin(bet.baseAmount, odds);
+            const expectedTotalWin = expectedBetWin + bet.baseAmount;
 
             // act
-            consumer.settleBet(bet, 1, settlementResult, refundInfo);
+            await consumer.settleBet(bet, 1, settlementResult, refundInfo);
 
             // asset
             expect(bet.save).toHaveBeenCalled();
+            expect(betsRepository.updateOne).toHaveBeenCalledWith(
+                expect.anything(),
+                {
+                    $set: expect.anything(),
+                    $inc:{
+                        refund:  bet.refund,
+                        totalWin: expectedTotalWin.toFixed(4),
+                        baseBetWin: expectedBetWin,
+                        baseRefund: bet.baseRefund,
+                        baseTotalWin: expectedTotalWin,
+                        betwin: (expectedBetWin / bet.rate).toFixed(4),
+                    }
+                }
+            );
         });
     });
 
