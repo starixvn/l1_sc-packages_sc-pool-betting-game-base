@@ -18,6 +18,7 @@ export class ProcessBetQueue extends Core.Crons.ProcessBetQueue {
     }
 
     async insertBet(player, bet, roundId, configs, rate) {
+        const existingBetFilter = { uid: player.UID, phien: roundId };
         const newBet = {
             uid: player.UID,
             name: player.profile.name,
