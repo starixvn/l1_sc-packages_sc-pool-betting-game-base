@@ -5,43 +5,49 @@ export class ProcessBetQueue extends Core.Crons.ProcessBetQueue {
         const configs = this.gameData.gameConfigs;
         const existingBetFilter = { uid: player.UID, phien: roundId };
         const existingBet = await this.betsRepository.findOne(existingBetFilter).exec();
-        const { betChoice, amount } = bet;
-        const baseAmount = amount * rate;
+
         if (existingBet) {
-            existingBet.amount += amount;
-            existingBet.totalAmount += amount;
-            existingBet.baseAmount += baseAmount;
-
-            await existingBet.save();
+            await this.updateBet(existingBet, bet, rate);
         } else {
-            const newBet = {
-                uid: player.UID,
-                name: player.profile.name,
-                phien: roundId,
-                choice: betChoice,
-                time: new Date(),
-                odds: configs.odds,
-            };
-            const existingBetIncrement = { amount: amount, totalAmount: amount, baseAmount: baseAmount };
-
-            if (player.session) {
-                newBet.memberId = player.session.memberId;
-                newBet.siteId = player.session.siteId;
-                newBet.partnerId = player.session.partnerId;
-                newBet.currency = player.session.currencyName;
-                newBet.rate = rate;
-            }
-
-            await this.betsRepository.updateOne(
-                existingBetFilter,
-                { $inc: existingBetIncrement, $setOnInsert: newBet },
-                { upsert: true, setDefaultsOnInsert: true }
-            );
+            await this.insertBet(player, bet, roundId, configs, rate);
 
             if (!this.isTestAccount(player)) {
-                this.gameData.betCount[betChoice] = (this.gameData.betCount[betChoice] ?? 0) + 1;
+                this.gameData.betCount[bet.betChoice] = (this.gameData.betCount[bet.betChoice] ?? 0) + 1;
             }
         }
+    }
+
+    async insertBet(player, bet, roundId, configs, rate) {
+        const newBet = {
+            uid: player.UID,
+            name: player.profile.name,
+            phien: roundId,
+            choice: bet.betChoice,
+            time: new Date(),
+            odds: configs.odds,
+        };
+        const existingBetIncrement = { amount: bet.amount, totalAmount: bet.amount, baseAmount: bet.amount * rate };
+
+        if (player.session) {
+            newBet.memberId = player.session.memberId;
+            newBet.siteId = player.session.siteId;
+            newBet.partnerId = player.session.partnerId;
+            newBet.currency = player.session.currencyName;
+            newBet.rate = rate;
+        }
+
+        await this.betsRepository.updateOne(
+            existingBetFilter,
+            { $inc: existingBetIncrement, $setOnInsert: newBet },
+            { upsert: true, setDefaultsOnInsert: true }
+        );
+    }
+
+    async updateBet(existingBet, bet, rate) {
+        existingBet.amount += bet.amount;
+        existingBet.totalAmount += bet.amount;
+        existingBet.baseAmount += bet.amount * rate;
+        await existingBet.save();
     }
 
     async insertBetLog(player, roundId, bet, rate) {

@@ -19,6 +19,7 @@ export class RunningRoundInfoPublisher extends Core.BaseEventPublishers.RunningR
 
     calculateBetPercentage(choices) {
         const betPercentage = {};
+        const { betCount } = this.gameData;
         const totalBetCount = Object.values(betCount).reduce((accumulator, currentValue) => accumulator + currentValue);
         const percent = parseInt((betCount[choices[0]] * 100) / totalBetCount);
 
