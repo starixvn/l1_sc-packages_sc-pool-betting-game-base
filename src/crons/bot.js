@@ -138,7 +138,7 @@ export class Bot extends Core.Crons.BaseBot {
             time: new Date(),
         });
 
-        await this.upsertBet();
+        await this.upsertBet(bot, choice, betAmount);
 
         if (this.isSmallTicket()) {
             this.totalSmallBotTickets++;
