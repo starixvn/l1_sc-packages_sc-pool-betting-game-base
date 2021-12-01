@@ -123,7 +123,7 @@ export class SettleGameRoundConsumer extends Core.BaseEventConsumers.SettleGameR
         bet.betwin = betWin;
         await bet.save();
 
-        const baseTotalWin = baseRefund + baseBetWin + (baseAmount - baseRefund);
+        const baseTotalWin = isWinningBet ? baseBetWin + baseAmount : baseRefund;
         const totalWin = (baseTotalWin / bet.rate).toFixed(4);
 
         await this.betsRepository.updateOne(
