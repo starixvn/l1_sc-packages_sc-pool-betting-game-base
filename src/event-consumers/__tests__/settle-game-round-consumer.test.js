@@ -25,11 +25,10 @@ const roundsRepository = stubMongooseModelStupidly(mongoose.Model);
 const betsRepository = stubMongooseModelStupidly(mongoose.Model);
 
 /** @type {mongoose.Model}*/
-const betLogsRepository = { find: () => { } };
+const betLogsRepository = { find: () => {} };
 
 /** @type {mongoose.Model}*/
-const userInfosRepository = stubMongooseModelStupidly(mongoose.Model);
-
+const currencyRepository = stubMongooseModelStupidly(mongoose.Model);
 
 describe("SettleGameRoundConsumer test", () => {
     const consumer = new SettleGameRoundConsumer({
@@ -41,9 +40,8 @@ describe("SettleGameRoundConsumer test", () => {
         roundsRepository,
         betsRepository,
         betLogsRepository,
-        userInfosRepository
-    })
-
+        currencyRepository,
+    });
 
     beforeEach(() => {
         spyOn(roundResultPublisher, "publishRoundResult");
@@ -80,46 +78,151 @@ describe("SettleGameRoundConsumer test", () => {
     });
 
     describe("settleBet_", () => {
-        it("refundAmount greater than betAmount_calls update bet", () => {
+        it("refundAmount greater than betAmount_calls update bet", async () => {
             // arrange
-            const bet = { uid: 1, amount: 200, choice: "even", save: jest.fn() };
+            const bet = { uid: 1, amount: 200, baseAmount: 200, choice: "even", baseRefund: 0, rate: 1, save: jest.fn() };
             const refundInfo = {
                 choice: "even",
                 amount: 300,
-            }
+            };
 
             // act
-            consumer.settleBet(bet, 1, settlementResult, refundInfo);
+            await consumer.settleBet(bet, 1, settlementResult, refundInfo);
 
-            // asset
+            // assert
             expect(bet.save).toHaveBeenCalled();
-        })
+            expect(betsRepository.updateOne).toHaveBeenCalledWith(
+                expect.anything(),
+                {
+                    $set: expect.anything(),
+                    $inc:{
+                        refund:  bet.baseRefund.toFixed(4),
+                        totalWin: bet.baseRefund.toFixed(4),
+                        baseBetWin: 0,
+                        baseRefund: bet.baseRefund,
+                        baseTotalWin: bet.baseRefund,
+                        betwin: "0.0000",
+                    }
+                });
+        });
 
-        it("refundAmount greater than betAmount_calls update bet", () => {
+        it("refundAmount less than betAmount_calls update bet", async () => {
             // arrange
-            const bet = { uid: 1, amount: 200, choice: "even", save: jest.fn() };
+            const bet = { uid: 1, amount: 200, baseAmount: 200, choice: "even", rate: 1, refund: 0, baseRefund: 0, save: jest.fn() };
             const refundInfo = {
                 choice: "even",
                 amount: 100,
             };
+            const odds = gameData.gameConfigs.odds[bet.choice];
+            const expectedBetWin = consumer.calculateBetWin(bet.amount - refundInfo.amount, odds);
+            const expectedTotalWin = expectedBetWin + refundInfo.amount + (bet.amount - refundInfo.amount);
 
             // act
-            consumer.settleBet(bet, 1, settlementResult, refundInfo);
+            await consumer.settleBet(bet, 1, settlementResult, refundInfo);
 
             // asset
             expect(bet.save).toHaveBeenCalled();
+            expect(betsRepository.updateOne).toHaveBeenCalledWith(
+                expect.anything(),
+                {
+                    $set: expect.anything(),
+                    $inc:{
+                        refund:  bet.refund,
+                        totalWin: expectedTotalWin.toFixed(4),
+                        baseBetWin: expectedBetWin,
+                        baseRefund: bet.baseRefund,
+                        baseTotalWin: expectedTotalWin,
+                        betwin: (expectedBetWin / bet.rate).toFixed(4),
+                    }
+                });
         });
 
-        it("no refund_calls update bet", () => {
+        it("no refund_calls update bet", async () => {
             // arrange
-            const bet = { uid: 1, amount: 200, choice: "even", save: jest.fn() };
+            const bet = { uid: 1, amount: 200, baseAmount: 200, choice: "even", rate: 1, refund: 0, baseRefund: 0, save: jest.fn() };
             const refundInfo = {};
+            const odds = gameData.gameConfigs.odds[bet.choice];
+            const expectedBetWin = consumer.calculateBetWin(bet.baseAmount, odds);
+            const expectedTotalWin = expectedBetWin + bet.baseAmount;
 
             // act
-            consumer.settleBet(bet, 1, settlementResult, refundInfo);
+            await consumer.settleBet(bet, 1, settlementResult, refundInfo);
 
             // asset
             expect(bet.save).toHaveBeenCalled();
+            expect(betsRepository.updateOne).toHaveBeenCalledWith(
+                expect.anything(),
+                {
+                    $set: expect.anything(),
+                    $inc:{
+                        refund:  bet.refund,
+                        totalWin: expectedTotalWin.toFixed(4),
+                        baseBetWin: expectedBetWin,
+                        baseRefund: bet.baseRefund,
+                        baseTotalWin: expectedTotalWin,
+                        betwin: (expectedBetWin / bet.rate).toFixed(4),
+                    }
+                }
+            );
+        });
+
+        it("loose and no refund_calls update bet", async () => {
+            // arrange
+            const bet = { uid: 1, amount: 200, baseAmount: 200, choice: "odd", rate: 1, refund: 0, baseRefund: 0, save: jest.fn() };
+            const refundInfo = {
+                choice: "odd",
+                amount: 100,
+            };
+            const expectedBetWin = 0;
+            const expectedTotalWin = 100;
+
+            // act
+            await consumer.settleBet(bet, 1, settlementResult, refundInfo);
+
+            // asset
+            expect(bet.save).toHaveBeenCalled();
+            expect(betsRepository.updateOne).toHaveBeenCalledWith(
+                expect.anything(),
+                {
+                    $set: expect.anything(),
+                    $inc:{
+                        refund:  bet.refund,
+                        totalWin: expectedTotalWin.toFixed(4),
+                        baseBetWin: expectedBetWin,
+                        baseRefund: bet.baseRefund,
+                        baseTotalWin: expectedTotalWin,
+                        betwin: (expectedBetWin / bet.rate).toFixed(4),
+                    }
+                }
+            );
+        });
+
+        it("loose partially and refund_calls update bet", async () => {
+            // arrange
+            const bet = { uid: 1, amount: 200, baseAmount: 200, choice: "odd", rate: 1, refund: 0, baseRefund: 0, save: jest.fn() };
+            const refundInfo = {};
+            const expectedBetWin = 0;
+            const expectedTotalWin = 0;
+
+            // act
+            await consumer.settleBet(bet, 1, settlementResult, refundInfo);
+
+            // asset
+            expect(bet.save).toHaveBeenCalled();
+            expect(betsRepository.updateOne).toHaveBeenCalledWith(
+                expect.anything(),
+                {
+                    $set: expect.anything(),
+                    $inc:{
+                        refund:  bet.refund,
+                        totalWin: expectedTotalWin.toFixed(4),
+                        baseBetWin: expectedBetWin,
+                        baseRefund: bet.baseRefund,
+                        baseTotalWin: expectedTotalWin,
+                        betwin: (expectedBetWin / bet.rate).toFixed(4),
+                    }
+                }
+            );
         });
     });
 
@@ -138,7 +241,7 @@ describe("SettleGameRoundConsumer test", () => {
 
         // assert
         expect(consumer.settleBet).toHaveBeenCalled();
-    })
+    });
 
     it("calculateBetWin_always_returns correct value", () => {
         // arrange
@@ -155,35 +258,35 @@ describe("SettleGameRoundConsumer test", () => {
 
     describe("settleBets", () => {
         beforeEach(() => {
-            const users = [{ id: 1, name: "user1", currency: "UUS" }, { id: 2, name: "user2", currency: "UUS" }];
             const bets = [
-                { uid: 1, odd: 100, save: jest.fn() },
-                { uid: 3, even: 200, save: jest.fn() },
-            ]
+                { uid: 1, odd: 100, save: jest.fn(), partnerId: "OW", currency: "$US" },
+                { uid: 3, even: 200, save: jest.fn(), partnerId: "OW", currency: "UUS" },
+            ];
             const settleBets = [
                 { uid: 1, odd: 100, thanhtoan: true, memberId: 123, save: jest.fn() },
                 { uid: 3, even: 200, thanhtoan: true, memberId: 456, save: jest.fn() },
             ];
+            const testCurrencies = [{ name: "UUS", partnerId: "OW" }];
+            currencyRepository.find().lean().exec.mockReturnValueOnce(testCurrencies);
             consumer.queryBets = jest.fn(() => bets);
             consumer.settleBetsByGroup = jest.fn(() => settleBets);
-
-            userInfosRepository.find().lean().exec.mockReturnValue(users);
             consumer.querySettledBets = jest.fn(() => settleBets);
             consumer.callEndGame = jest.fn();
-
         });
 
         it("_always_calls settleBets", () => {
-
             // act
-            consumer.settleBets({ result: { dice1: 1, dice2: 2, dice3: 3 }, settlementResult: { odd: true, even: false }, roundId: 1, time: Date.now() });
+            consumer.settleBets({
+                result: { dice1: 1, dice2: 2, dice3: 3 },
+                settlementResult: { odd: true, even: false },
+                roundId: 1,
+                time: Date.now(),
+            });
 
             // assert
             expect(consumer.queryBets).toHaveBeenCalled();
         });
     });
-
-
 });
 
 afterEach(() => {

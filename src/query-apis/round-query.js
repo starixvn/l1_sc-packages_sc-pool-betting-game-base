@@ -3,14 +3,14 @@ import { Core } from "sc-game-base";
 export class RoundQuery extends Core.QueryApis.RoundQuery {
     /**
      * @param {mongoose.Model} roundsRepository
-     * @param {mongoose.Model} userInfosRepository
      * @param {mongoose.Model} betLogsRepository
+     * @param {mongoose.Model} currencyRepository
      */
-    constructor(roundsRepository, userInfosRepository, betLogsRepository) {
+    constructor(roundsRepository, betLogsRepository, currencyRepository) {
         super(roundsRepository);
 
-        this.userInfosRepository = userInfosRepository;
         this.betLogsRepository = betLogsRepository;
+        this.currencyRepository = currencyRepository;
     }
 
     convertBetLogs(betLogs) {
@@ -19,8 +19,8 @@ export class RoundQuery extends Core.QueryApis.RoundQuery {
 
     async getOne(id, projections = { _id: false }) {
         const round = await super.getOne(id, projections);
-        const uusUsers = await this.userInfosRepository.find({ currency: "UUS" }, "id").lean().exec();
-        const uusUserIds = uusUsers.map((user) => user.id);
+        const testCurrencies = await this.currencyRepository.find({ isTest: true }, "name partnerId").lean().exec();
+
         const betLogs = await this.betLogsRepository
             .find({ phien: id }, { _id: false }, { sort: { _id: 1 } })
             .lean()
@@ -29,7 +29,7 @@ export class RoundQuery extends Core.QueryApis.RoundQuery {
         const convertedBetLogs = this.convertBetLogs(betLogs);
 
         const betLogGroups = convertedBetLogs
-            .filter((betLog) => !uusUserIds.includes(betLog.uid))
+            .filter((betLog) => !testCurrencies.some((currency) => currency.name === betLog.currency && currency.partnerId === betLog.partnerId))
             .reduce((accumulator, currentBetLog) => {
                 accumulator[currentBetLog.choice] = accumulator[currentBetLog.choice] ?? [];
                 accumulator[currentBetLog.choice].push(currentBetLog);
@@ -42,8 +42,8 @@ export class RoundQuery extends Core.QueryApis.RoundQuery {
         Object.keys(betLogGroups).forEach((choice) => {
             total[choice] = betLogGroups[choice].reduce(
                 (result, log) => {
-                    result.betAmount += log.amount;
-                    result.refund += log.refund;
+                    result.betAmount += log.baseAmount;
+                    result.refund += log.baseRefund;
 
                     return result;
                 },

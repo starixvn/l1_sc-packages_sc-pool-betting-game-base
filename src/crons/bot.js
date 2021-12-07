@@ -132,6 +132,8 @@ export class Bot extends Core.Crons.BaseBot {
             name: bot.name,
             phien: roundId,
             amount: betAmount,
+            baseAmount: betAmount,
+            rate: this.botRate,
             choice: choice,
             time: new Date(),
         });
@@ -152,8 +154,8 @@ export class Bot extends Core.Crons.BaseBot {
     async upsertBet(bot, choice, betAmount) {
         const { roundId } = this.gameData;
 
-        const update = { amount: betAmount };
-        const create = { uid: bot.id, phien: roundId, choice, time: new Date() };
+        const update = { amount: betAmount, baseAmount: betAmount * this.botRate };
+        const create = { uid: bot.id, phien: roundId, choice: choice, time: new Date(), rate: this.botRate };
 
         await this.betsRepository.updateOne(
             { uid: bot.id, phien: roundId },

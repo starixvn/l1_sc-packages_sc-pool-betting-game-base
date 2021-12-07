@@ -13,6 +13,7 @@ describe("PlaceBetConsumer test", () => {
         },
         session: {
             currency: "US",
+            currencyGroupId: "1",
         },
     };
     gameData.ingame = {
@@ -22,6 +23,14 @@ describe("PlaceBetConsumer test", () => {
             },
         },
     };
+    gameData.currencyGroupGames = [
+        {
+            groupId: 1,
+            minBet: 1,
+            maxBet: 2000,
+            maxBetPerChoices: [],
+        },
+    ];
     const configs = {
         enableFreeBet: false,
         minbet: 1,
@@ -29,6 +38,7 @@ describe("PlaceBetConsumer test", () => {
     };
     gameData.gameConfigs = configs;
     const publisher = stub(Core.BaseEventPublishers.BaseEventPublisher);
+
     const consumer = new PlaceBetConsumer({ choices: ["odd", "even"] }, gameData, publisher);
     beforeEach(() => {
         spyOn(Core.BaseEventConsumers.PlaceBetConsumer.prototype, "composeValidationCriteria");
@@ -49,7 +59,7 @@ describe("PlaceBetConsumer test", () => {
         });
     });
 
-    it("composeBetAmountValidationCriteria_validBet_passed", () => {
+    it("composeBetAmountValidationCriteria_validBet_passed", async () => {
         const actualResult = consumer.composeBetAmountValidationCriteria(player, "odd", 100, false, 1);
 
         expect(actualResult.find((criteria) => criteria.failure)).toBeFalsy();
