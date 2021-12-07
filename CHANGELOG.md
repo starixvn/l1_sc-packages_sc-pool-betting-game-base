@@ -1,3 +1,36 @@
+# [1.3.0](https://git3.nexdev.net/sc-packages/sc-pool-betting-game-base/compare/v1.2.0...v1.3.0) (2021-12-07)
+
+
+### Bug Fixes
+
+* add missing import ([d7f8403](https://git3.nexdev.net/sc-packages/sc-pool-betting-game-base/commit/d7f8403d293cc5dafb2119c05bf1e930defe2198))
+* add totalWin and baseTotalWin ([3a14b08](https://git3.nexdev.net/sc-packages/sc-pool-betting-game-base/commit/3a14b08db563eca8d3ef4367547b4564903c4d30))
+* bot betting ([9a13fde](https://git3.nexdev.net/sc-packages/sc-pool-betting-game-base/commit/9a13fde0453a0c0e096f99d0c8658a1aafbb6748))
+* insertBet ([0ec915f](https://git3.nexdev.net/sc-packages/sc-pool-betting-game-base/commit/0ec915f00b1dc00fa865fb6a41d1b7472cd2a444))
+* rebase code ([1e6b3d6](https://git3.nexdev.net/sc-packages/sc-pool-betting-game-base/commit/1e6b3d6cdf6e24a7b3f01bb27a30afca04673c42))
+* settleBet ([aec0992](https://git3.nexdev.net/sc-packages/sc-pool-betting-game-base/commit/aec099205cfa850246ce571a6f40a87b9e41f074))
+* update game base ([9036186](https://git3.nexdev.net/sc-packages/sc-pool-betting-game-base/commit/9036186c09784e721fef18dbeaa0adf768e32ae8))
+* update game base ([eb2764e](https://git3.nexdev.net/sc-packages/sc-pool-betting-game-base/commit/eb2764e86084602126e56ee0bde3cb6b74894f28))
+* update game-base ([adc9ee0](https://git3.nexdev.net/sc-packages/sc-pool-betting-game-base/commit/adc9ee0e7822a492a3cf07a677762923bca43b70))
+* update round query ([309efaa](https://git3.nexdev.net/sc-packages/sc-pool-betting-game-base/commit/309efaafb9e9558bdb8fcefbefc11d1ab245d5d4))
+* update totalWin for case lost partially and refund ([5239c92](https://git3.nexdev.net/sc-packages/sc-pool-betting-game-base/commit/5239c92f0b24cbd7a79570d1cf5f0d44f7e5a5f3))
+
+
+### Features
+
+* bot - move upsert bet to function ([079cd43](https://git3.nexdev.net/sc-packages/sc-pool-betting-game-base/commit/079cd43a33bc350d55a173bece07d9451cc0f7e1))
+* multiple currencies ([c8ff182](https://git3.nexdev.net/sc-packages/sc-pool-betting-game-base/commit/c8ff182c7a254fa94af6dafce73a1675efc84342))
+* online users ([c839fcd](https://git3.nexdev.net/sc-packages/sc-pool-betting-game-base/commit/c839fcd0d35c26eddbf2c7bb8e5abc07b42198bf))
+* update bot ([399f8fd](https://git3.nexdev.net/sc-packages/sc-pool-betting-game-base/commit/399f8fd0e45155416818256cea870b1d1cdc8b4b))
+* update game base ([f2c99f7](https://git3.nexdev.net/sc-packages/sc-pool-betting-game-base/commit/f2c99f768e5f889db1a0874b21d85bc6a7107087))
+* update game base ([4d333f9](https://git3.nexdev.net/sc-packages/sc-pool-betting-game-base/commit/4d333f920b49672cf7b9da297f8905c5a870b2ab))
+* update groupId type ([9278fcc](https://git3.nexdev.net/sc-packages/sc-pool-betting-game-base/commit/9278fcc8dfaf6e4ec8ba6ddb39a5591c66a63cb1))
+* update round query ([cdf0c7c](https://git3.nexdev.net/sc-packages/sc-pool-betting-game-base/commit/cdf0c7c08213942074be6172082f945517b0ce7f))
+* update socket router ([e31346a](https://git3.nexdev.net/sc-packages/sc-pool-betting-game-base/commit/e31346a7d19b49789aac2568860a806a11adc732))
+* upgrade game base ([5e6269d](https://git3.nexdev.net/sc-packages/sc-pool-betting-game-base/commit/5e6269d2735982932b26a12f5b7e65630a06a255))
+* upgrade game base ([1d97bb2](https://git3.nexdev.net/sc-packages/sc-pool-betting-game-base/commit/1d97bb2d9d147cd2a859fa0baefd4da2c9b88763))
+* upgrade game base ([2e27c6c](https://git3.nexdev.net/sc-packages/sc-pool-betting-game-base/commit/2e27c6c2c3012ae825093a462c00970d482377f1))
+
 # [1.2.0](https://git3.nexdev.net/sc-packages/sc-pool-betting-game-base/compare/v1.1.6...v1.2.0) (2021-11-25)
 
 
