@@ -1,3 +1,13 @@
+# [2.0.0](https://git3.nexdev.net/sc-packages/sc-pool-betting-game-base/compare/v1.3.0...v2.0.0) (2021-12-07)
+
+
+* feat!: update SCS release packages ([47e10af](https://git3.nexdev.net/sc-packages/sc-pool-betting-game-base/commit/47e10af7e7473a3850e9898ceeca09434ab4c588))
+
+
+### BREAKING CHANGES
+
+* SCS
+
 # [1.3.0](https://git3.nexdev.net/sc-packages/sc-pool-betting-game-base/compare/v1.2.0...v1.3.0) (2021-12-07)
 
 
