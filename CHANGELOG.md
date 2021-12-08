@@ -1,3 +1,10 @@
+## [2.0.1](https://git3.nexdev.net/sc-packages/sc-pool-betting-game-base/compare/v2.0.0...v2.0.1) (2021-12-08)
+
+
+### Bug Fixes
+
+* show round history for old round ([28fe953](https://git3.nexdev.net/sc-packages/sc-pool-betting-game-base/commit/28fe9537133499f467e0a07de598bfe527dca50e))
+
 # [2.0.0](https://git3.nexdev.net/sc-packages/sc-pool-betting-game-base/compare/v1.3.0...v2.0.0) (2021-12-07)
 
 
