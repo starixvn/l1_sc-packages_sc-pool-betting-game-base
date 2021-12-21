@@ -6,12 +6,12 @@
     "scripts": {
         "test": "jest",
         "test-coverage": "jest --collect-coverage",
-        "reg": "npm set registry http://npm.lumigame.com",
+        "reg": "npm set registry https://npm.lumigame.com",
         "verpatch": "npm version patch",
         "verminor": "npm version minor",
         "betaver": "npm version prerelease --preid beta",
-        "pub": "npm publish --registry http://npm.lumigame.com",
-        "pubbeta": "npm publish --registry http://npm.lumigame.com --tag beta",
+        "pub": "npm publish --registry https://npm.lumigame.com",
+        "pubbeta": "npm publish --registry https://npm.lumigame.com --tag beta",
         "semantic-release": "semantic-release"
     },
     "repository": {
