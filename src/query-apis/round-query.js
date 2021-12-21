@@ -21,13 +21,13 @@ export class RoundQuery extends Core.QueryApis.RoundQuery {
 
     async getRound(id, playerSession) {
         const round = await this.getOne(id);
+        const exchangeRates = await this.exchangeRatesRepository.findOne({ exId: round.exchangeRateId }).lean().exec();
+        const playerRate = playerSession.multiplier * exchangeRates.code[playerSession.currencyCode];
 
-        if (!round?.exchangeRateId) {
+        if (!playerRate && round.exchangeRateId) {
             return null;
         }
 
-        const exchangeRates = await this.exchangeRatesRepository.findOne({ exId: round.exchangeRateId }).lean().exec();
-        const playerRate = playerSession.multiplier * exchangeRates.code[playerSession.currencyCode];
         const testCurrencies = await this.currencyRepository.find({ isTest: true }, "name partnerId").lean().exec();
 
         const betLogs = await this.betLogsRepository
