@@ -5,20 +5,25 @@ export class RoundQuery extends Core.QueryApis.RoundQuery {
      * @param {mongoose.Model} roundsRepository
      * @param {mongoose.Model} betLogsRepository
      * @param {mongoose.Model} currencyRepository
+     * @param {mongoose.Model} exchangeRatesRepository
      */
-    constructor(roundsRepository, betLogsRepository, currencyRepository) {
+    constructor(roundsRepository, betLogsRepository, currencyRepository, exchangeRatesRepository) {
         super(roundsRepository);
 
         this.betLogsRepository = betLogsRepository;
         this.currencyRepository = currencyRepository;
+        this.exchangeRatesRepository = exchangeRatesRepository;
     }
 
-    convertBetLogs(betLogs) {
-        return betLogs;
-    }
+    async getRound(id, player) {
+        const round = await this.getOne(id);
 
-    async getOne(id, projections = { _id: false }) {
-        const round = await super.getOne(id, projections);
+        if (!round?.exchangeRateId) {
+            return null;
+        }
+
+        const exchangeRates = await this.exchangeRatesRepository.findOne({ exId: round.exchangeRateId }).lean().exec();
+        const playerRate = player.multiplier * exchangeRates.code[player.currency];
         const testCurrencies = await this.currencyRepository.find({ isTest: true }, "name partnerId").lean().exec();
 
         const betLogs = await this.betLogsRepository
@@ -32,7 +37,11 @@ export class RoundQuery extends Core.QueryApis.RoundQuery {
             .filter((betLog) => !testCurrencies.some((currency) => currency.name === betLog.currency && currency.partnerId === betLog.partnerId))
             .reduce((accumulator, currentBetLog) => {
                 accumulator[currentBetLog.choice] = accumulator[currentBetLog.choice] ?? [];
-                accumulator[currentBetLog.choice].push(currentBetLog);
+                accumulator[currentBetLog.choice].push({
+                    ...currentBetLog,
+                    exchangedAmount: currentBetLog.baseAmount / playerRate,
+                    exchangedRefund: currentBetLog.baseRefund / playerRate,
+                });
 
                 return accumulator;
             }, {});
@@ -42,8 +51,8 @@ export class RoundQuery extends Core.QueryApis.RoundQuery {
         Object.keys(betLogGroups).forEach((choice) => {
             total[choice] = betLogGroups[choice].reduce(
                 (result, log) => {
-                    result.betAmount += (log.baseAmount ?? log.amount);
-                    result.refund += (log.baseRefund ?? log.refund);
+                    result.betAmount += log.exchangedAmount ?? log.amount;
+                    result.refund += log.exchangedRefund ?? log.refund;
 
                     return result;
                 },

@@ -41,12 +41,13 @@ export class SocketRouter extends Core.Routers.BaseSocketRouter {
     async handleGetRound(payload) {
         try {
             const { roundId } = payload;
+            const realPlayer = this.gameData.realPlayers[this.socketClient.id];
 
             if (!this.verify() || !roundId || roundId >= this.gameData.roundId) {
                 return;
             }
 
-            const round = await this.roundQuery.getOne(roundId);
+            const round = await this.roundQuery.getRound(roundId, realPlayer.session);
 
             this.socketClient.emit(this.definition.name, { round });
         } catch (error) {
