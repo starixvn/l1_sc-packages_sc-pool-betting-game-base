@@ -19,7 +19,7 @@ export class RoundQuery extends Core.QueryApis.RoundQuery {
         return betLogs;
     }
 
-    async getRound(id, player) {
+    async getRound(id, playerSession) {
         const round = await this.getOne(id);
 
         if (!round?.exchangeRateId) {
@@ -27,7 +27,7 @@ export class RoundQuery extends Core.QueryApis.RoundQuery {
         }
 
         const exchangeRates = await this.exchangeRatesRepository.findOne({ exId: round.exchangeRateId }).lean().exec();
-        const playerRate = player.multiplier * exchangeRates.code[player.currency];
+        const playerRate = playerSession.multiplier * exchangeRates.code[playerSession.currency];
         const testCurrencies = await this.currencyRepository.find({ isTest: true }, "name partnerId").lean().exec();
 
         const betLogs = await this.betLogsRepository
@@ -41,11 +41,7 @@ export class RoundQuery extends Core.QueryApis.RoundQuery {
             .filter((betLog) => !testCurrencies.some((currency) => currency.name === betLog.currency && currency.partnerId === betLog.partnerId))
             .reduce((accumulator, currentBetLog) => {
                 accumulator[currentBetLog.choice] = accumulator[currentBetLog.choice] ?? [];
-                accumulator[currentBetLog.choice].push({
-                    ...currentBetLog,
-                    exchangedAmount: currentBetLog.baseAmount / playerRate,
-                    exchangedRefund: currentBetLog.baseRefund / playerRate,
-                });
+                accumulator[currentBetLog.choice].push(currentBetLog);
 
                 return accumulator;
             }, {});
@@ -55,8 +51,8 @@ export class RoundQuery extends Core.QueryApis.RoundQuery {
         Object.keys(betLogGroups).forEach((choice) => {
             total[choice] = betLogGroups[choice].reduce(
                 (result, log) => {
-                    result.betAmount += log.exchangedAmount ?? log.amount;
-                    result.refund += log.exchangedRefund ?? log.refund;
+                    result.betAmount += log.baseAmount ?? log.amount;
+                    result.refund += log.baseRefund ?? log.refund;
 
                     return result;
                 },
@@ -71,6 +67,7 @@ export class RoundQuery extends Core.QueryApis.RoundQuery {
             ...round,
             ...betLogGroups,
             total,
+            playerRate,
         };
     }
 }
