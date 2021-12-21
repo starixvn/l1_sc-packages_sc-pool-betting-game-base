@@ -15,6 +15,10 @@ export class RoundQuery extends Core.QueryApis.RoundQuery {
         this.exchangeRatesRepository = exchangeRatesRepository;
     }
 
+    convertBetLogs(betLogs) {
+        return betLogs;
+    }
+
     async getRound(id, player) {
         const round = await this.getOne(id);
 
