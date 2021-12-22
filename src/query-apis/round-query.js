@@ -25,7 +25,7 @@ export class RoundQuery extends Core.QueryApis.RoundQuery {
         const playerRate = playerSession.multiplier * exchangeRates?.code?.[playerSession.currencyCode];
 
         if (!playerRate && round.exchangeRateId) {
-            return null;
+            return { ...round };
         }
 
         const testCurrencies = await this.currencyRepository.find({ isTest: true }, "name partnerId").lean().exec();
