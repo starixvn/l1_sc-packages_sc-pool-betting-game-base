@@ -43,13 +43,13 @@ describe("RoundQuery test", () => {
             expect(Core.QueryApis.RoundQuery.prototype.getOne).toHaveBeenCalled();
         });
 
-        it("should return null when user has no exchange rate and round has exchangeId", async () => {
+        it("should return round info & empty object total when user has no exchange rate and round has exchangeId", async () => {
             const round = { exchangeRateId: 1 };
             spyOn(Core.QueryApis.RoundQuery.prototype, "getOne").and.returnValue(round);
             exchangeRatesRepository.findOne().lean().exec.mockReturnValue({ code: {} });
             const actualResult = await roundQuery.getRound(1, {});
 
-            expect(actualResult).toBe(null);
+            expect(actualResult).toEqual({ ...round, total: {} });
         });
     });
 });
