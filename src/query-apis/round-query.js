@@ -28,7 +28,9 @@ export class RoundQuery extends Core.QueryApis.RoundQuery {
             return { ...round, total: {} };
         }
 
-        const testCurrencies = await this.currencyRepository.find({ isTest: true }, "name partnerId").lean().exec();
+        const testCurrencies = (await this.currencyRepository.find({ isTest: true }, "name").lean().exec()).map((currency) => currency.name );
+        const uusUsers = await this.userInfosRepository.find({currency: { $in: testCurrencies }}, "id").lean().exec();
+        const uusUserIds = uusUsers.map((user) => user.id);
 
         const betLogs = await this.betLogsRepository
             .find({ phien: id }, { _id: false }, { sort: { _id: 1 } })
@@ -38,7 +40,7 @@ export class RoundQuery extends Core.QueryApis.RoundQuery {
         const convertedBetLogs = this.convertBetLogs(betLogs);
 
         const betLogGroups = convertedBetLogs
-            .filter((betLog) => !testCurrencies.some((currency) => currency.name === betLog.currency && currency.partnerId === betLog.partnerId))
+            .filter((betLog) => !uusUserIds.includes(betLog.uid))
             .reduce((accumulator, currentBetLog) => {
                 accumulator[currentBetLog.choice] = accumulator[currentBetLog.choice] ?? [];
                 accumulator[currentBetLog.choice].push(currentBetLog);
