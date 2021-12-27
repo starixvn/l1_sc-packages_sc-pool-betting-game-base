@@ -6,13 +6,15 @@ export class RoundQuery extends Core.QueryApis.RoundQuery {
      * @param {mongoose.Model} betLogsRepository
      * @param {mongoose.Model} currencyRepository
      * @param {mongoose.Model} exchangeRatesRepository
+     * @param {mongoose.Model} userInfosRepository
      */
-    constructor(roundsRepository, betLogsRepository, currencyRepository, exchangeRatesRepository) {
+    constructor(roundsRepository, betLogsRepository, currencyRepository, exchangeRatesRepository, userInfosRepository) {
         super(roundsRepository);
 
         this.betLogsRepository = betLogsRepository;
         this.currencyRepository = currencyRepository;
         this.exchangeRatesRepository = exchangeRatesRepository;
+        this.userInfosRepository = userInfosRepository;
     }
 
     convertBetLogs(betLogs) {
