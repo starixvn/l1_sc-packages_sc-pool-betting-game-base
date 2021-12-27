@@ -8083,10 +8083,10 @@
     "mongoose-long" "^0.3.0"
     "numeral" "^2.0.6"
 
-"sc-game-base@2.1.1-beta.15":
-  "integrity" "sha512-s2nKQeYvHENKl+8V20LYJS4ALOLX/qPOCGvF94zXV2Bh3yPooEoSvxj6l7nRpBrTiiRo+Uq5gK9e5ntSOW/NMw=="
-  "resolved" "https://npm.lumigame.com/sc-game-base/-/sc-game-base-2.1.1-beta.15.tgz"
-  "version" "2.1.1-beta.15"
+"sc-game-base@2.1.1-beta.16":
+  "integrity" "sha512-lO20EmJaEjPN0jrboWVHdr+kgOdqsHYU5ssLCd6uvkvCcD9P+VKWFWt0yqvv68fzxWpqZ+vCwIFYVHxOYyY3OQ=="
+  "resolved" "https://npm.lumigame.com/sc-game-base/-/sc-game-base-2.1.1-beta.16.tgz"
+  "version" "2.1.1-beta.16"
   dependencies:
     "awilix" "^4.3.1"
     "axios" "^0.20.0"
