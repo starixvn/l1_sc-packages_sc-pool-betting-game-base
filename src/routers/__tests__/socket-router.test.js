@@ -18,6 +18,9 @@ const roundQuery = stub(RoundQuery);
 const definition = { name: "name" };
 const gameData = new GameData(0);
 gameData.roundId = 100;
+gameData.realPlayers = {
+    "socket-id": {},
+};
 const socketRouter = new SocketRouter({
     definition,
     gameData,
@@ -95,18 +98,18 @@ describe("SocketRouter test", () => {
 
         it("valid payload_", () => {
             spyOn(socketRouter, "verify").and.returnValue(true);
-            spyOn(roundQuery, "getOne");
+            spyOn(roundQuery, "getRound");
 
             // act
             socketRouter.handleGetRound({ roundId: 99 });
 
             // asset
-            expect(roundQuery.getOne).toHaveBeenCalled();
+            expect(roundQuery.getRound).toHaveBeenCalled();
         });
 
         it("have error_log error", () => {
             spyOn(socketRouter, "verify").and.returnValue(true);
-            spyOn(roundQuery, "getOne").and.throwError("error");
+            spyOn(roundQuery, "getRound").and.throwError("error");
 
             // act
             socketRouter.handleGetRound({ roundId: 99 });

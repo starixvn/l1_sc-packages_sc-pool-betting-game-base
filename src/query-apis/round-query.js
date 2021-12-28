@@ -5,21 +5,34 @@ export class RoundQuery extends Core.QueryApis.RoundQuery {
      * @param {mongoose.Model} roundsRepository
      * @param {mongoose.Model} betLogsRepository
      * @param {mongoose.Model} currencyRepository
+     * @param {mongoose.Model} exchangeRatesRepository
+     * @param {mongoose.Model} userInfosRepository
      */
-    constructor(roundsRepository, betLogsRepository, currencyRepository) {
+    constructor(roundsRepository, betLogsRepository, currencyRepository, exchangeRatesRepository, userInfosRepository) {
         super(roundsRepository);
 
         this.betLogsRepository = betLogsRepository;
         this.currencyRepository = currencyRepository;
+        this.exchangeRatesRepository = exchangeRatesRepository;
+        this.userInfosRepository = userInfosRepository;
     }
 
     convertBetLogs(betLogs) {
         return betLogs;
     }
 
-    async getOne(id, projections = { _id: false }) {
-        const round = await super.getOne(id, projections);
-        const testCurrencies = await this.currencyRepository.find({ isTest: true }, "name partnerId").lean().exec();
+    async getRound(id, playerSession) {
+        const round = await this.getOne(id);
+        const exchangeRates = await this.exchangeRatesRepository.findOne({ exId: round.exchangeRateId }).lean().exec();
+        const playerRate = playerSession.multiplier * exchangeRates?.code?.[playerSession.currencyCode];
+
+        if (!playerRate && round.exchangeRateId) {
+            return { ...round, total: {} };
+        }
+
+        const testCurrencies = (await this.currencyRepository.find({ isTest: true }, "name").lean().exec()).map((currency) => currency.name );
+        const uusUsers = await this.userInfosRepository.find({currency: { $in: testCurrencies }}, "id").lean().exec();
+        const uusUserIds = uusUsers.map((user) => user.id);
 
         const betLogs = await this.betLogsRepository
             .find({ phien: id }, { _id: false }, { sort: { _id: 1 } })
@@ -29,7 +42,7 @@ export class RoundQuery extends Core.QueryApis.RoundQuery {
         const convertedBetLogs = this.convertBetLogs(betLogs);
 
         const betLogGroups = convertedBetLogs
-            .filter((betLog) => !testCurrencies.some((currency) => currency.name === betLog.currency && currency.partnerId === betLog.partnerId))
+            .filter((betLog) => !uusUserIds.includes(betLog.uid))
             .reduce((accumulator, currentBetLog) => {
                 accumulator[currentBetLog.choice] = accumulator[currentBetLog.choice] ?? [];
                 accumulator[currentBetLog.choice].push(currentBetLog);
@@ -42,8 +55,8 @@ export class RoundQuery extends Core.QueryApis.RoundQuery {
         Object.keys(betLogGroups).forEach((choice) => {
             total[choice] = betLogGroups[choice].reduce(
                 (result, log) => {
-                    result.betAmount += (log.baseAmount ?? log.amount);
-                    result.refund += (log.baseRefund ?? log.refund);
+                    result.betAmount += log.baseAmount ?? log.amount;
+                    result.refund += log.baseRefund ?? log.refund;
 
                     return result;
                 },
@@ -58,6 +71,7 @@ export class RoundQuery extends Core.QueryApis.RoundQuery {
             ...round,
             ...betLogGroups,
             total,
+            playerRate,
         };
     }
 }
