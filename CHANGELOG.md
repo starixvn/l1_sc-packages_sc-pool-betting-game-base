@@ -1,3 +1,26 @@
+# [2.1.0](https://git3.nexdev.net/sc-packages/sc-pool-betting-game-base/compare/v2.0.1...v2.1.0) (2021-12-28)
+
+
+### Bug Fixes
+
+* add empty total object for client ([b12d937](https://git3.nexdev.net/sc-packages/sc-pool-betting-game-base/commit/b12d93765d79d2f6d3daf633a3b232c7c9bd5cb5))
+* convert bet logs issue ([414f560](https://git3.nexdev.net/sc-packages/sc-pool-betting-game-base/commit/414f560e221bcec55a4308cab0e3fc8b6695ccf8))
+* currency code field name ([eeca3c7](https://git3.nexdev.net/sc-packages/sc-pool-betting-game-base/commit/eeca3c7c0eeabf290f7787449a5038a78c3b0e55))
+* filter test currency by betlog uid for old data ([219c070](https://git3.nexdev.net/sc-packages/sc-pool-betting-game-base/commit/219c0700d4de0f980ca0c597e19ad44b17018c46))
+* inject userInfosRepository ([6b6693a](https://git3.nexdev.net/sc-packages/sc-pool-betting-game-base/commit/6b6693a125cde9f5566f24f1f28133d763f912de))
+* return null when user having no exchange rate on query round ([a104c31](https://git3.nexdev.net/sc-packages/sc-pool-betting-game-base/commit/a104c31bbc16f5b5b9a6d19449fe1629840ea282))
+* return player rate to client ([301b448](https://git3.nexdev.net/sc-packages/sc-pool-betting-game-base/commit/301b448254f80ce9387079f9836f155caa08d2f7))
+* return round info on no data ([19a1178](https://git3.nexdev.net/sc-packages/sc-pool-betting-game-base/commit/19a1178e1e90059c7ed218753b8874e860bb7bf8))
+* round has no exhange id ([fd07ade](https://git3.nexdev.net/sc-packages/sc-pool-betting-game-base/commit/fd07ade54e32f5737ddce3c118b41d965542542f))
+* update game base package ([5d58969](https://git3.nexdev.net/sc-packages/sc-pool-betting-game-base/commit/5d589695fcbfa07a6df280e933086cfdc0f918bf))
+* upgrade sc-game-base 2.1.1-beta.15 ([7892eb4](https://git3.nexdev.net/sc-packages/sc-pool-betting-game-base/commit/7892eb45418654f4b7b8159d03639caa3affa167))
+* upgrade sc-game-base 2.1.1-beta.16 ([617ca80](https://git3.nexdev.net/sc-packages/sc-pool-betting-game-base/commit/617ca80d59700d167ad3f2009179c2682ff484f4))
+
+
+### Features
+
+* convert round history amounts with round exchange rate ([fd39b4e](https://git3.nexdev.net/sc-packages/sc-pool-betting-game-base/commit/fd39b4e8eda8f7e596502ebb808215ba2ee1f599))
+
 ## [2.0.1](https://git3.nexdev.net/sc-packages/sc-pool-betting-game-base/compare/v2.0.0...v2.0.1) (2021-12-08)
 
 
