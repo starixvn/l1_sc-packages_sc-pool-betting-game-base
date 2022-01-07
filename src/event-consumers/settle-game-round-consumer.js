@@ -91,6 +91,9 @@ export class SettleGameRoundConsumer extends Core.BaseEventConsumers.SettleGameR
 
         if (betResult.totalLost > 0) {
             settlementInfo.redLost = betResult.totalLost;
+        }
+
+        if (betResult.totalLost >= 0) {
             settlementInfo.validBetAmount = betResult.totalLost;
         }
 
