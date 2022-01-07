@@ -91,19 +91,17 @@ describe("SettleGameRoundConsumer test", () => {
 
             // assert
             expect(bet.save).toHaveBeenCalled();
-            expect(betsRepository.updateOne).toHaveBeenCalledWith(
-                expect.anything(),
-                {
-                    $set: expect.anything(),
-                    $inc:{
-                        refund:  bet.baseRefund.toFixed(4),
-                        totalWin: bet.baseRefund.toFixed(4),
-                        baseBetWin: 0,
-                        baseRefund: bet.baseRefund,
-                        baseTotalWin: bet.baseRefund,
-                        betwin: "0.0000",
-                    }
-                });
+            expect(betsRepository.updateOne).toHaveBeenCalledWith(expect.anything(), {
+                $set: expect.anything(),
+                $inc: {
+                    refund: bet.baseRefund.toFixed(4),
+                    totalWin: bet.baseRefund.toFixed(4),
+                    baseBetWin: 0,
+                    baseRefund: bet.baseRefund,
+                    baseTotalWin: bet.baseRefund,
+                    betwin: "0.0000",
+                },
+            });
         });
 
         it("refundAmount less than betAmount_calls update bet", async () => {
@@ -122,19 +120,17 @@ describe("SettleGameRoundConsumer test", () => {
 
             // asset
             expect(bet.save).toHaveBeenCalled();
-            expect(betsRepository.updateOne).toHaveBeenCalledWith(
-                expect.anything(),
-                {
-                    $set: expect.anything(),
-                    $inc:{
-                        refund:  bet.refund,
-                        totalWin: expectedTotalWin.toFixed(4),
-                        baseBetWin: expectedBetWin,
-                        baseRefund: bet.baseRefund,
-                        baseTotalWin: expectedTotalWin,
-                        betwin: (expectedBetWin / bet.rate).toFixed(4),
-                    }
-                });
+            expect(betsRepository.updateOne).toHaveBeenCalledWith(expect.anything(), {
+                $set: expect.anything(),
+                $inc: {
+                    refund: bet.refund,
+                    totalWin: expectedTotalWin.toFixed(4),
+                    baseBetWin: expectedBetWin,
+                    baseRefund: bet.baseRefund,
+                    baseTotalWin: expectedTotalWin,
+                    betwin: (expectedBetWin / bet.rate).toFixed(4),
+                },
+            });
         });
 
         it("no refund_calls update bet", async () => {
@@ -150,20 +146,17 @@ describe("SettleGameRoundConsumer test", () => {
 
             // asset
             expect(bet.save).toHaveBeenCalled();
-            expect(betsRepository.updateOne).toHaveBeenCalledWith(
-                expect.anything(),
-                {
-                    $set: expect.anything(),
-                    $inc:{
-                        refund:  bet.refund,
-                        totalWin: expectedTotalWin.toFixed(4),
-                        baseBetWin: expectedBetWin,
-                        baseRefund: bet.baseRefund,
-                        baseTotalWin: expectedTotalWin,
-                        betwin: (expectedBetWin / bet.rate).toFixed(4),
-                    }
-                }
-            );
+            expect(betsRepository.updateOne).toHaveBeenCalledWith(expect.anything(), {
+                $set: expect.anything(),
+                $inc: {
+                    refund: bet.refund,
+                    totalWin: expectedTotalWin.toFixed(4),
+                    baseBetWin: expectedBetWin,
+                    baseRefund: bet.baseRefund,
+                    baseTotalWin: expectedTotalWin,
+                    betwin: (expectedBetWin / bet.rate).toFixed(4),
+                },
+            });
         });
 
         it("loose and no refund_calls update bet", async () => {
@@ -181,20 +174,17 @@ describe("SettleGameRoundConsumer test", () => {
 
             // asset
             expect(bet.save).toHaveBeenCalled();
-            expect(betsRepository.updateOne).toHaveBeenCalledWith(
-                expect.anything(),
-                {
-                    $set: expect.anything(),
-                    $inc:{
-                        refund:  bet.refund,
-                        totalWin: expectedTotalWin.toFixed(4),
-                        baseBetWin: expectedBetWin,
-                        baseRefund: bet.baseRefund,
-                        baseTotalWin: expectedTotalWin,
-                        betwin: (expectedBetWin / bet.rate).toFixed(4),
-                    }
-                }
-            );
+            expect(betsRepository.updateOne).toHaveBeenCalledWith(expect.anything(), {
+                $set: expect.anything(),
+                $inc: {
+                    refund: bet.refund,
+                    totalWin: expectedTotalWin.toFixed(4),
+                    baseBetWin: expectedBetWin,
+                    baseRefund: bet.baseRefund,
+                    baseTotalWin: expectedTotalWin,
+                    betwin: (expectedBetWin / bet.rate).toFixed(4),
+                },
+            });
         });
 
         it("loose partially and refund_calls update bet", async () => {
@@ -209,20 +199,17 @@ describe("SettleGameRoundConsumer test", () => {
 
             // asset
             expect(bet.save).toHaveBeenCalled();
-            expect(betsRepository.updateOne).toHaveBeenCalledWith(
-                expect.anything(),
-                {
-                    $set: expect.anything(),
-                    $inc:{
-                        refund:  bet.refund,
-                        totalWin: expectedTotalWin.toFixed(4),
-                        baseBetWin: expectedBetWin,
-                        baseRefund: bet.baseRefund,
-                        baseTotalWin: expectedTotalWin,
-                        betwin: (expectedBetWin / bet.rate).toFixed(4),
-                    }
-                }
-            );
+            expect(betsRepository.updateOne).toHaveBeenCalledWith(expect.anything(), {
+                $set: expect.anything(),
+                $inc: {
+                    refund: bet.refund,
+                    totalWin: expectedTotalWin.toFixed(4),
+                    baseBetWin: expectedBetWin,
+                    baseRefund: bet.baseRefund,
+                    baseTotalWin: expectedTotalWin,
+                    betwin: (expectedBetWin / bet.rate).toFixed(4),
+                },
+            });
         });
     });
 
@@ -285,6 +272,87 @@ describe("SettleGameRoundConsumer test", () => {
 
             // assert
             expect(consumer.queryBets).toHaveBeenCalled();
+        });
+    });
+
+    describe("formatEndGameInfo", () => {
+        it("should return result with correct format", () => {
+            const roundId = 123;
+            const time = new Date();
+            const bet = { freeBet: false, memberId: "432", partnerId: "OW", currency: "$US" };
+            const betResult = {
+                totalBetAmount: 100,
+                totalWin: 150,
+                totalLost: 0,
+                netWin: 50,
+            };
+
+            const actualResult = consumer.formatEndGameInfo(bet, roundId, time, betResult);
+
+            expect(actualResult).toEqual({
+                gameInfo: {
+                    gameRoundId: roundId,
+                    memberId: bet.memberId,
+                    siteId: bet.siteId,
+                    partnerId: bet.partnerId,
+                    time: time,
+                },
+                settlementInfo: {
+                    redPlay: betResult.totalBetAmount,
+                    freeBet: bet.freeBet,
+                    red: betResult.totalWin,
+                    validBetAmount: betResult.totalLost,
+                    redLost: betResult.totalLost,
+                    redWin: betResult.netWin,
+                },
+            });
+        });
+
+        it("should return undefined settlementInfo red when total win <= 0", () => {
+            const roundId = 123;
+            const time = new Date();
+            const bet = { freeBet: false, memberId: "432", partnerId: "OW", currency: "$US" };
+            const betResult = {
+                totalBetAmount: 100,
+                totalWin: 0,
+                totalLost: 100,
+                netWin: 0,
+            };
+
+            const actualResult = consumer.formatEndGameInfo(bet, roundId, time, betResult);
+
+            expect(actualResult.red).toBeUndefined();
+        });
+
+        it("should return undefined settlementInfo redWin when total win <= 0", () => {
+            const roundId = 123;
+            const time = new Date();
+            const bet = { freeBet: false, memberId: "432", partnerId: "OW", currency: "$US" };
+            const betResult = {
+                totalBetAmount: 100,
+                totalWin: 0,
+                totalLost: 100,
+                netWin: 0,
+            };
+
+            const actualResult = consumer.formatEndGameInfo(bet, roundId, time, betResult);
+
+            expect(actualResult.redWin).toBeUndefined();
+        });
+
+        it("should return undefined settlementInfo validBetAmount & undefined settlementInfo redLost when total lost < 0", () => {
+            const roundId = 123;
+            const time = new Date();
+            const bet = { freeBet: false, memberId: "432", partnerId: "OW", currency: "$US" };
+            const betResult = {
+                totalBetAmount: 100,
+                totalWin: 2,
+                totalLost: -1,
+            };
+
+            const actualResult = consumer.formatEndGameInfo(bet, roundId, time, betResult);
+
+            expect(actualResult.red).toBeUndefined();
         });
     });
 });
