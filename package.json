@@ -1,10 +1,10 @@
 {
     "name": "sc-pool-betting-game-base",
-    "version": "2.2.1-beta.2",
+    "version": "2.2.0",
     "description": "",
     "main": "./src/index.js",
     "scripts": {
-    "test": "jest",
+        "test": "jest",
         "test-coverage": "jest --collect-coverage",
         "reg": "npm set registry https://npm.lumigame.com",
         "verpatch": "npm version patch",

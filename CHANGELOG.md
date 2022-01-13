@@ -1,3 +1,15 @@
+# [2.2.0](https://git3.nexdev.net/sc-packages/sc-pool-betting-game-base/compare/v2.1.1...v2.2.0) (2022-01-13)
+
+
+### Bug Fixes
+
+* refund 100% issue ([60cb00e](https://git3.nexdev.net/sc-packages/sc-pool-betting-game-base/commit/60cb00edd2aab7a816530ebd1f74af2da20bbd0f))
+
+
+### Features
+
+* call end game with valid bet amount exclude refund ([dd62570](https://git3.nexdev.net/sc-packages/sc-pool-betting-game-base/commit/dd62570b2eeb7f63eb0efcd3791f1701c9e29bd8))
+
 ## [2.1.1](https://git3.nexdev.net/sc-packages/sc-pool-betting-game-base/compare/v2.1.0...v2.1.1) (2021-12-28)
 
 
