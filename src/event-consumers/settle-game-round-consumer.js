@@ -67,6 +67,36 @@ export class SettleGameRoundConsumer extends Core.BaseEventConsumers.SettleGameR
         };
     }
 
+    formatEndGameInfo(bet, roundId, time, betResult) {
+        const gameInfo = {
+            gameId: this.definition.id,
+            gameRoundId: roundId,
+            memberId: bet.memberId,
+            siteId: bet.siteId,
+            partnerId: bet.partnerId,
+            time: time,
+        };
+        const settlementInfo = {
+            redPlay: betResult.totalBetAmount,
+            freeBet: bet.freeBet,
+        };
+
+        if (betResult.totalWin > 0) {
+            settlementInfo.red = betResult.totalWin;
+        }
+
+        if (betResult.netWin > 0) {
+            settlementInfo.redWin = betResult.netWin;
+        }
+
+        if (betResult.totalLost >= 0) {
+            settlementInfo.redLost = betResult.totalLost;
+            settlementInfo.validBetAmount = betResult.totalLost;
+        }
+
+        return { gameInfo, settlementInfo };
+    }
+
     queryBets(roundId) {
         return this.betLogsRepository.find({ phien: roundId }, null, { sort: { _id: -1 } }).exec();
     }
@@ -128,9 +158,9 @@ export class SettleGameRoundConsumer extends Core.BaseEventConsumers.SettleGameR
 
         await this.betsRepository.updateOne(
             { uid: bet.uid, phien: roundId },
-            { 
-                $set: { win: isWinningBet, thanhtoan: true, time: new Date() }, 
-                $inc: { refund, betwin: betWin, baseRefund, baseBetWin, baseTotalWin, totalWin } 
+            {
+                $set: { win: isWinningBet, thanhtoan: true, time: new Date() },
+                $inc: { refund, betwin: betWin, baseRefund, baseBetWin, baseTotalWin, totalWin },
             }
         );
     }
