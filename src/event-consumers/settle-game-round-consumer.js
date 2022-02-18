@@ -75,6 +75,9 @@ export class SettleGameRoundConsumer extends Core.BaseEventConsumers.SettleGameR
             siteId: bet.siteId,
             partnerId: bet.partnerId,
             time: time,
+            operatorId: bet.operatorId,
+            playerId: bet.playerId,
+            playerId: bet.playerId,
         };
         const settlementInfo = {
             redPlay: betResult.totalBetAmount,
@@ -125,6 +128,7 @@ export class SettleGameRoundConsumer extends Core.BaseEventConsumers.SettleGameR
         let baseRefund = 0;
 
         bet.thanhtoan = true;
+        bet.paid = true;
         bet.win = isWinningBet;
 
         if (refundInfo.amount && bet.choice === refundInfo.choice) {

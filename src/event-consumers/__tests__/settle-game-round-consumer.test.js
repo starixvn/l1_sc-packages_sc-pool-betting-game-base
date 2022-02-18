@@ -296,6 +296,7 @@ describe("SettleGameRoundConsumer test", () => {
                     siteId: bet.siteId,
                     partnerId: bet.partnerId,
                     time: time,
+                    operatorId: bet.operatorId,
                 },
                 settlementInfo: {
                     redPlay: betResult.totalBetAmount,
