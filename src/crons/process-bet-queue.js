@@ -36,8 +36,9 @@ export class ProcessBetQueue extends Core.Crons.ProcessBetQueue {
             newBet.partnerId = player.session.partnerId;
             newBet.currency = player.session.currencyName;
             newBet.rate = rate;
-            newBet.operatorId = player.session.operatorId;
-            newBet.playerId = player.session.playerId;
+
+            newBet.operatorId = player.session.partnerId;
+            newBet.playerId = player.session.memberId;
         }
 
         await this.betsRepository.updateOne(
@@ -75,8 +76,9 @@ export class ProcessBetQueue extends Core.Crons.ProcessBetQueue {
             newBetLog.partnerId = player.session.partnerId;
             newBetLog.currency = player.session.currencyName;
             newBetLog.rate = rate;
-            newBetLog.operatorId = player.session.operatorId;
-            newBetLog.playerId = player.session.playerId;
+
+            newBetLog.operatorId = player.session.partnerId;
+            newBetLog.playerId = player.session.memberId;
         }
 
         await this.betLogsRepository.create(newBetLog);
