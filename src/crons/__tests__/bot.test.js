@@ -81,4 +81,74 @@ describe("bot tests", () => {
 
         expect(userInfosRepository.find().lean().exec).toHaveBeenCalled();
     });
+
+    describe("getMaxTicketsToBet", () => {
+        describe("when remainingTime < durations.balancingBetTime", () => {
+            it("should return floor of  (this.botList.length - (this.botList.length * this.botBufferRatio) / 100) / remainingTime", () => {
+                // Arrange
+                const remainingTime = 20;
+                const durations = { balancingBetTime: 30 };
+                const expectedValue = 0;
+                bot.botList = [{ id: 1 }];
+
+                // Act
+                const actualValue = bot.getMaxTicketsToBet(remainingTime, durations);
+
+                // Assert
+                expect(actualValue).toStrictEqual(expectedValue);
+            });
+        });
+
+        describe("when remainingTime >= durations.balancingBetTime", () => {
+            it("should return random between { min: (maxBotRandom * 2) / 3, max: maxBotRandom }", () => {
+                // Arrange
+                const remainingTime = 40;
+                const durations = { balancingBetTime: 30, lockingBet: 35 };
+                const expectedValue = 0;
+                bot.botList = [];
+
+                // Act
+                const actualValue = bot.getMaxTicketsToBet(remainingTime, durations);
+
+                // Assert
+                expect(actualValue).toStrictEqual(expectedValue);
+            });
+        });
+    });
+
+    describe("getBotsAndPlaceBet", () => {
+        describe("when has bot", () => {
+            it("should call placeBet", async () => {
+                // Arrange
+                const maxTickets = 3;
+                bot.botList = [{ id: 1 }];
+                const choices = null;
+                spyOn(bot, "getBetChoice").and.returnValue(10);
+                spyOn(bot, "placeBet");
+
+                // Act
+                await bot.getBotsAndPlaceBet(maxTickets, choices);
+
+                // Assert
+                expect(bot.placeBet).toHaveBeenCalledWith({ id: 1 }, 10);
+            });
+        });
+
+        describe("when not has bot", () => {
+            it("should not call placeBet", async () => {
+                // Arrange
+                const maxTickets = 3;
+                bot.botList = [];
+                const choices = null;
+                spyOn(bot, "getBetChoice").and.returnValue(10);
+                spyOn(bot, "placeBet");
+
+                // Act
+                await bot.getBotsAndPlaceBet(maxTickets, choices);
+
+                // Assert
+                expect(bot.placeBet).not.toHaveBeenCalled();
+            });
+        });
+    });
 });
