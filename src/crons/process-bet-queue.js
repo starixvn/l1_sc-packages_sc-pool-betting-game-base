@@ -97,4 +97,8 @@ export class ProcessBetQueue extends Core.Crons.ProcessBetQueue {
     isTestAccount(player) {
         return player?.session?.isTestCurrency;
     }
+
+    isCountOnTotalBets(player) {
+        return true;
+    }
 }
