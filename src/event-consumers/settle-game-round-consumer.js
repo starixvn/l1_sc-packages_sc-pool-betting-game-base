@@ -160,7 +160,7 @@ export class SettleGameRoundConsumer extends Core.BaseEventConsumers.SettleGameR
         const totalWin = (baseTotalWin / bet.rate).toFixed(4);
 
         await this.betsRepository.updateOne(
-            { uid: bet.uid, phien: roundId, roundId },
+            { uid: bet.uid, phien: roundId },
             {
                 $set: { win: isWinningBet, thanhtoan: true, paid: true, time: new Date() },
                 $inc: { refund, betwin: betWin, baseRefund, baseBetWin, baseTotalWin, totalWin },
