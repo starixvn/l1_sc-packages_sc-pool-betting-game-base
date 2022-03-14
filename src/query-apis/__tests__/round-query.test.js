@@ -52,4 +52,17 @@ describe("RoundQuery test", () => {
             expect(actualResult).toEqual({ ...round, total: {} });
         });
     });
+
+    describe("convertBetLogs", () => {
+        it("should return input bet logs", () => {
+            // Arrange
+            const betLogs = [{ id: 1 }];
+
+            // Act
+            const actualValue = roundQuery.convertBetLogs(betLogs);
+
+            // Assert
+            expect(actualValue).toStrictEqual(betLogs);
+        });
+    });
 });

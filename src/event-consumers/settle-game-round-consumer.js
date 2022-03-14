@@ -75,6 +75,8 @@ export class SettleGameRoundConsumer extends Core.BaseEventConsumers.SettleGameR
             siteId: bet.siteId,
             partnerId: bet.partnerId,
             time: time,
+            operatorId: bet.partnerId,
+            playerId: bet.memberId,
         };
         const settlementInfo = {
             redPlay: betResult.totalBetAmount,
@@ -125,6 +127,7 @@ export class SettleGameRoundConsumer extends Core.BaseEventConsumers.SettleGameR
         let baseRefund = 0;
 
         bet.thanhtoan = true;
+        bet.paid = true;
         bet.win = isWinningBet;
 
         if (refundInfo.amount && bet.choice === refundInfo.choice) {
@@ -159,7 +162,7 @@ export class SettleGameRoundConsumer extends Core.BaseEventConsumers.SettleGameR
         await this.betsRepository.updateOne(
             { uid: bet.uid, phien: roundId },
             {
-                $set: { win: isWinningBet, thanhtoan: true, time: new Date() },
+                $set: { win: isWinningBet, thanhtoan: true, paid: true, time: new Date() },
                 $inc: { refund, betwin: betWin, baseRefund, baseBetWin, baseTotalWin, totalWin },
             }
         );

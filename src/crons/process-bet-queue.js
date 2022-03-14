@@ -26,6 +26,7 @@ export class ProcessBetQueue extends Core.Crons.ProcessBetQueue {
             choice: bet.betChoice,
             time: new Date(),
             odds: configs.odds,
+            roundId,
         };
         const existingBetIncrement = { amount: bet.amount, totalAmount: bet.amount, baseAmount: bet.amount * rate };
 
@@ -35,6 +36,9 @@ export class ProcessBetQueue extends Core.Crons.ProcessBetQueue {
             newBet.partnerId = player.session.partnerId;
             newBet.currency = player.session.currencyName;
             newBet.rate = rate;
+
+            newBet.operatorId = player.session.partnerId;
+            newBet.playerId = player.session.memberId;
         }
 
         await this.betsRepository.updateOne(
@@ -63,6 +67,7 @@ export class ProcessBetQueue extends Core.Crons.ProcessBetQueue {
             freeBet: bet.freeBet,
             clientSentTime: bet.clientSentTime,
             receivedTime: bet.receivedTime,
+            roundId,
         };
 
         if (player.session) {
@@ -71,6 +76,9 @@ export class ProcessBetQueue extends Core.Crons.ProcessBetQueue {
             newBetLog.partnerId = player.session.partnerId;
             newBetLog.currency = player.session.currencyName;
             newBetLog.rate = rate;
+
+            newBetLog.operatorId = player.session.partnerId;
+            newBetLog.playerId = player.session.memberId;
         }
 
         await this.betLogsRepository.create(newBetLog);
@@ -88,5 +96,9 @@ export class ProcessBetQueue extends Core.Crons.ProcessBetQueue {
 
     isTestAccount(player) {
         return player?.session?.isTestCurrency;
+    }
+
+    isCountOnTotalBets(player) {
+        return true;
     }
 }
