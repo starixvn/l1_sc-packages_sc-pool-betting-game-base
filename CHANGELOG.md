@@ -1,3 +1,18 @@
+## [2.2.1](https://git3.nexdev.net/sc-packages/sc-pool-betting-game-base/compare/v2.2.0...v2.2.1) (2022-03-14)
+
+
+### Bug Fixes
+
+* always count bets ([3652817](https://git3.nexdev.net/sc-packages/sc-pool-betting-game-base/commit/36528171c7a3b254c7c63532721e4470ad74bfe7))
+* remove round id filter ([e60d9ed](https://git3.nexdev.net/sc-packages/sc-pool-betting-game-base/commit/e60d9ed90f75537e9f3c5690ade1a7047b8f48ef))
+* update db schema ([db7b17d](https://git3.nexdev.net/sc-packages/sc-pool-betting-game-base/commit/db7b17d9810545d6be249fea5658fb6a956dfc44))
+* upgrade db schema ([da7d135](https://git3.nexdev.net/sc-packages/sc-pool-betting-game-base/commit/da7d135760f919516b2e48a3fb8084e9dd2430da))
+* upgrade sc-game-base@2.4.3-beta.3 ([1b31f26](https://git3.nexdev.net/sc-packages/sc-pool-betting-game-base/commit/1b31f2613eed1dffc898f26fedb448c872ca9f5e))
+* upgrade sc-game-base@2.4.3-beta.6 ([f960c50](https://git3.nexdev.net/sc-packages/sc-pool-betting-game-base/commit/f960c50af9851d24d984444208e39671d5138d0c))
+* upgrade sc-game-base@2.4.3-beta.7 ([8687da8](https://git3.nexdev.net/sc-packages/sc-pool-betting-game-base/commit/8687da8cff898a346e98b4175b17ffe045113bc7))
+* upgrade sc-game-base@2.6.0 ([dc6f9cb](https://git3.nexdev.net/sc-packages/sc-pool-betting-game-base/commit/dc6f9cb3a2b1104b247dbed05393fe191dd3372f))
+* upgrade version ([871a11c](https://git3.nexdev.net/sc-packages/sc-pool-betting-game-base/commit/871a11c9c3f24592a9ad298466c8ee4310da3d3f))
+
 # [2.2.0](https://git3.nexdev.net/sc-packages/sc-pool-betting-game-base/compare/v2.1.1...v2.2.0) (2022-01-13)
 
 
