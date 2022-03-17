@@ -30,7 +30,7 @@ const betLogsRepository = { find: () => {} };
 /** @type {mongoose.Model}*/
 const currencyRepository = stubMongooseModelStupidly(mongoose.Model);
 
-describe("SettleGameRoundConsumer test", () => {
+describe("SettleGameRoundConsumer", () => {
     const consumer = new SettleGameRoundConsumer({
         definition,
         gameData,
@@ -47,34 +47,38 @@ describe("SettleGameRoundConsumer test", () => {
         spyOn(roundResultPublisher, "publishRoundResult");
     });
 
-    it("queryBets_always_return correct result", async () => {
-        // arrange
-        const realPlayerBets = [{ round: 1, choice: "odd", amount: 10 }];
-        spyOn(betLogsRepository, "find").and.callFake(() => {
-            return {
-                exec: () => {
-                    return realPlayerBets;
-                },
-            };
+    describe("queryBets", () => {
+        it("should return correct result", async () => {
+            // Arrange
+            const realPlayerBets = [{ round: 1, choice: "odd", amount: 10 }];
+            spyOn(betLogsRepository, "find").and.callFake(() => {
+                return {
+                    exec: () => {
+                        return realPlayerBets;
+                    },
+                };
+            });
+
+            // Act
+            const actualResult = await consumer.queryBets(1);
+
+            // Assert
+            expect(actualResult).toEqual(realPlayerBets);
         });
-
-        // act
-        const actualResult = await consumer.queryBets(1);
-
-        // assert
-        expect(actualResult).toEqual(realPlayerBets);
     });
 
-    it("querySettledBets correct result", async () => {
-        // arrange
-        const realPlayerBets = [{ round: 1, choice: "odd", amount: 10 }];
-        betsRepository.find().lean().exec.mockReturnValueOnce(realPlayerBets);
+    describe("querySettledBets", () => {
+        it("should return correct result", async () => {
+            // Arrange
+            const realPlayerBets = [{ round: 1, choice: "odd", amount: 10 }];
+            betsRepository.find().lean().exec.mockReturnValueOnce(realPlayerBets);
 
-        // act
-        const actualResult = await consumer.querySettledBets(1);
+            // Act
+            const actualResult = await consumer.querySettledBets(1);
 
-        // assert
-        expect(actualResult).toEqual(realPlayerBets);
+            // Assert
+            expect(actualResult).toEqual(realPlayerBets);
+        });
     });
 
     describe("settleBet_", () => {
