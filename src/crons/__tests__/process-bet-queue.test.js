@@ -42,93 +42,158 @@ const processBetQueue = new ProcessBetQueue({
     validateBalance,
 });
 
-describe("ProcessBetQueue test", () => {
-    it("_inherit Core.Crons.ProcessBetQueue", () => {
+const testAccount = { session: { isTestCurrency: true, currencyName: "UUS" } };
+const realAccount = { session: { isTestCurrency: false, currencyName: "$US" }, profile: { name: "account name" } };
+const bet = { betChoice: "odd", amount: 10 };
+const rate = 1;
+
+describe("ProcessBetQueue", () => {
+    it("should inherit Core.Crons.ProcessBetQueue", () => {
         expect(processBetQueue instanceof Core.Crons.ProcessBetQueue).toBeTruthy();
     });
 
     describe("isTestAccount", () => {
-        it("_currency is test", () => {
-            const player = { session: { isTestCurrency: true, currencyName: "UUS" } };
+        describe("when player's currency is test", () => {
+            it("should return true", () => {
+                // Act
+                const actualResult = processBetQueue.isTestAccount(testAccount);
 
-            expect(processBetQueue.isTestAccount(player)).toBeTruthy();
+                // Assert
+                expect(actualResult).toBeTruthy();
+            });
         });
 
-        it("_currency is not test", () => {
-            const player = { session: { isTestCurrency: false, currencyName: "$US" } };
+        describe("when player's currency is real", () => {
+            it("should return false", () => {
+                // Act
+                const actualResult = processBetQueue.isTestAccount(realAccount);
 
-            expect(processBetQueue.isTestAccount(player)).toBeFalsy();
+                // Assert
+                expect(actualResult).toBeFalsy();
+            });
+        });
+    });
+
+    describe("isCountOnTotalBets", () => {
+        it("should return true", () => {
+            // Act & Assert
+            expect(processBetQueue.isCountOnTotalBets({})).toBeTruthy();
         });
     });
 
     describe("adjustTotalBets", () => {
-        beforeEach(() => {
+        beforeAll(() => {
+            // Arrange
             spyOn(Core.Crons.ProcessBetQueue.prototype, "adjustTotalBets");
         });
-        it("isTestAccount", () => {
-            const player = { session: { isTestCurrency: true, currencyName: "UUS" } };
-            const bet = { betChoice: "odd", amount: 10 };
 
-            processBetQueue.adjustTotalBets(player, bet);
+        describe("when account is test", () => {
+            it("should NOT call super.adjustTotalBets", () => {
+                // Act
+                processBetQueue.adjustTotalBets(testAccount, bet);
 
-            expect(Core.Crons.ProcessBetQueue.prototype.adjustTotalBets).not.toHaveBeenCalled();
+                // Assert
+                expect(Core.Crons.ProcessBetQueue.prototype.adjustTotalBets).not.toHaveBeenCalled();
+            });
         });
 
-        it("_isNotTestAccount", () => {
-            const player = { session: { isTestCurrency: false, currencyName: "$US" } };
-            const bet = { betChoice: "odd", amount: 10 };
+        describe("when account is real", () => {
+            it("should call super.adjustTotalBets", () => {
+                // Act
+                processBetQueue.adjustTotalBets(realAccount, bet);
 
-            processBetQueue.adjustTotalBets(player, bet);
-
-            expect(Core.Crons.ProcessBetQueue.prototype.adjustTotalBets).toHaveBeenCalled();
+                // Assert
+                expect(Core.Crons.ProcessBetQueue.prototype.adjustTotalBets).toHaveBeenCalled();
+            });
         });
     });
 
     describe("upsertBet", () => {
-        it("_existingBet_save bet", () => {
-            const player = { session: { isTestCurrency: false, currencyName: "$US" } };
-            const bet = { betChoice: "odd", amount: 10 };
+        describe("when existing bet", () => {
+            // Arrange
             const existingBet = { uid: 1, amount: 200, choice: "even", save: jest.fn() };
-            spyOn(existingBet, "save");
-            spyOn(betsRepository, "findOne").and.callFake(() => {
-                return {
-                    exec: () => {
-                        return existingBet;
-                    },
-                };
+            beforeAll(() => {
+                spyOn(existingBet, "save");
+                spyOn(betsRepository, "findOne").and.callFake(() => {
+                    return {
+                        exec: () => {
+                            return existingBet;
+                        },
+                    };
+                });
+                spyOn(processBetQueue, "updateBet");
             });
 
-            processBetQueue.upsertBet(player, 1, bet);
+            it("should call updateBet", async () => {
+                // Act
+                await processBetQueue.upsertBet(realAccount, 1, bet, rate);
 
-            expect(betsRepository.findOne).toHaveBeenCalled();
+                // Assert
+                expect(processBetQueue.updateBet).toHaveBeenCalled();
+            });
         });
 
-        it("_newBet", () => {
-            const player = { UID: 1, profile: { name: "AAA" }, session: { memberId: 1234, isTestCurrency: true, currencyName: "$US" } };
-            const bet = { betChoice: "odd", amount: 10 };
-
-            spyOn(betsRepository, "findOne").and.callFake(() => {
-                return {
-                    exec: () => {
-                        return null;
-                    },
-                };
+        describe("when NOT found existing bet", () => {
+            beforeAll(() => {
+                spyOn(betsRepository, "findOne").and.callFake(() => {
+                    return {
+                        exec: () => {
+                            return null;
+                        },
+                    };
+                });
+                spyOn(processBetQueue, "insertBet");
             });
 
-            spyOn(betsRepository, "updateOne");
+            it("should call insertBet", async () => {
+                // Act
+                await processBetQueue.upsertBet(realAccount, 1, bet, rate);
 
-            processBetQueue.upsertBet(player, 1, bet);
-
-            expect(betsRepository.findOne).toHaveBeenCalled();
+                // Assert
+                expect(processBetQueue.insertBet).toHaveBeenCalled();
+            });
         });
     });
 
-    it("_insertBetLog_always_calls create bet log", async () => {
-        const player = { UID: 1, profile: { name: "AAA" }, session: { memberId: 1234, isTestCurrency: true, currencyName: "$US" } };
-        const bet = { betChoice: "odd", amount: 10 };
+    describe("insertBetLog", () => {
+        beforeAll(async () => {
+            spyOn(betLogsRepository, "create");
+            await processBetQueue.insertBetLog(realAccount, 1, bet, rate);
+        });
 
-        await processBetQueue.insertBetLog(player, 1, bet, 0.05);
+        it("should call betLogsRepository.create", () => {
+            expect(betLogsRepository.create).toHaveBeenCalled();
+        });
+    });
 
-        expect(betLogsRepository.create).toHaveBeenCalled();
+    describe("updateBet", () => {
+        // Arrange
+        const existingBet = {
+            amount: 10,
+            totalAmount: 10,
+            baseAmount: 10,
+            save: jest.fn(),
+        };
+
+        beforeAll(async () => {
+            // Act
+            await processBetQueue.updateBet(existingBet, bet, rate);
+        });
+
+        it("should call save existingBet", () => {
+            // Assert
+            expect(existingBet.save).toHaveBeenCalled();
+        });
+    });
+
+    describe("insertBet", () => {
+        beforeAll(async () => {
+            spyOn(betsRepository, "updateOne");
+            await processBetQueue.insertBet(realAccount, bet, 1, gameData.gameConfigs, rate);
+        });
+
+        it("should call betsRepository.updateOne", () => {
+            expect(betsRepository.updateOne).toHaveBeenCalled();
+        });
     });
 });
