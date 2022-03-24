@@ -41,81 +41,125 @@ const socketClient = {
     disconnect: jest.fn(),
 };
 
-describe("SocketRouter test", () => {
+const round = {
+    roundId: 99,
+};
+
+describe("SocketRouter", () => {
     beforeEach(() => {
+        // Arrange
         spyOn(logService, "logError");
     });
 
-    it("_extends BaseSocketRouter", () => {
+    it("should inherit BaseSocketRouter", () => {
+        // Assert
         expect(socketRouter instanceof Core.Routers.BaseSocketRouter).toBeTruthy();
     });
 
-    it("init_always_registers events", () => {
-        // arrange
-        spyOn(Core.Routers.BaseSocketRouter.prototype, "init");
+    describe("init", () => {
+        beforeAll(() => {
+            // Arrange
+            spyOn(Core.Routers.BaseSocketRouter.prototype, "init");
 
-        // act
-        socketRouter.init(socketClient);
+            // Act
+            socketRouter.init(socketClient);
+        });
 
-        // assert
-        expect(Core.Routers.BaseSocketRouter.prototype.init).toHaveBeenCalled();
-        expect(socketClient.on).toHaveBeenCalled();
+        it("should call super.init", () => {
+            // Assert
+            expect(Core.Routers.BaseSocketRouter.prototype.init).toHaveBeenCalled();
+        });
+
+        it("should register event for socketClient", () => {
+            expect(socketClient.on).toHaveBeenCalled();
+        });
     });
 
     describe("handleGetRound", () => {
-        beforeEach(() => {
+        beforeAll(() => {
+            // Arrange
             socketRouter.init(socketClient);
         });
-        describe("invalid payload", () => {
-            it("_verify failed", () => {
+
+        describe("when verify failed", () => {
+            beforeAll(() => {
+                // Arrange
                 spyOn(socketRouter, "verify").and.returnValue(false);
-                // act
+
+                // Act
                 socketRouter.handleGetRound({ roundId: 1 });
-
-                // asset
-                expect(socketClient.emit).not.toHaveBeenCalled();
             });
 
-            it("_invalid roundId", () => {
+            it("should NOT call getRound", () => {
+                // Assert
+                expect(roundQuery.getRound).not.toHaveBeenCalled();
+            });
+
+            it("should NOT emit message to socket client", () => {
+                // Assert
+                expect(socketClient.emit).not.toHaveBeenCalled();
+            });
+        });
+
+        describe("when roundId in payload is invalid", () => {
+            beforeAll(() => {
+                // Arrange
                 spyOn(socketRouter, "verify").and.returnValue(true);
-                // act
+
+                // Act
                 socketRouter.handleGetRound({ roundId: 0 });
-
-                // asset
-                expect(socketClient.emit).not.toHaveBeenCalled();
             });
 
-            it("_roundId greater than or equal gameData.roundId", () => {
+            it("should not call getRound", () => {
+                // Assert
+                expect(roundQuery.getRound).not.toHaveBeenCalled();
+            });
+
+            it("should NOT emit message to socket client", () => {
+                // Assert
+                expect(socketClient.emit).not.toHaveBeenCalled();
+            });
+        });
+
+        describe("when verify passed and roundId is valid", () => {
+            beforeAll(() => {
+                // Arrange
                 spyOn(socketRouter, "verify").and.returnValue(true);
-
-                // act
-                socketRouter.handleGetRound({ roundId: 101 });
-
-                // asset
-                expect(socketClient.emit).not.toHaveBeenCalled();
             });
-        });
 
-        it("valid payload_", () => {
-            spyOn(socketRouter, "verify").and.returnValue(true);
-            spyOn(roundQuery, "getRound");
+            describe("when DON'T have exception", () => {
+                beforeAll(async () => {
+                    // Arrange
+                    spyOn(roundQuery, "getRound").and.returnValue(round);
 
-            // act
-            socketRouter.handleGetRound({ roundId: 99 });
+                    // Act
+                    await socketRouter.handleGetRound({ roundId: 99 });
+                });
 
-            // asset
-            expect(roundQuery.getRound).toHaveBeenCalled();
-        });
+                it("should call getRound", () => {
+                    // Assert
+                    expect(roundQuery.getRound).toHaveBeenCalled();
+                });
 
-        it("have error_log error", () => {
-            spyOn(socketRouter, "verify").and.returnValue(true);
-            spyOn(roundQuery, "getRound").and.throwError("error");
+                it("should emit round info to client", () => {
+                    // Arrange
+                    expect(socketClient.emit).toHaveBeenCalledWith(definition.name, { round });
+                });
+            });
 
-            // act
-            socketRouter.handleGetRound({ roundId: 99 });
+            describe("when have exception", () => {
+                beforeEach(async () => {
+                    spyOn(roundQuery, "getRound").and.throwError("error");
 
-            // asset
-            expect(logger.logError).toHaveBeenCalled();
+                    // Act
+                    await socketRouter.handleGetRound({ roundId: 99 });
+                });
+
+                it("should call logError", () => {
+                    // Assert
+                    expect(logger.logError).toHaveBeenCalled();
+                });
+            });
         });
     });
 });

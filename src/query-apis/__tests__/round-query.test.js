@@ -16,20 +16,22 @@ const currencyRepository = stubMongooseModelStupidly(mongoose.Model);
 /** @type {mongoose.Model}*/
 const exchangeRatesRepository = stubMongooseModelStupidly(mongoose.Model);
 
-const roundQuery = new RoundQuery(roundsRepository, betLogsRepository, currencyRepository, exchangeRatesRepository);
+/** @type {mongoose.Model}*/
+const userInfosRepository = stubMongooseModelStupidly(mongoose.Model);
 
-describe("RoundQuery test", () => {
-    beforeEach(() => {});
+const roundQuery = new RoundQuery(roundsRepository, betLogsRepository, currencyRepository, exchangeRatesRepository, userInfosRepository);
 
-    it("_inherit Core.QueryApis.RoundQuery", () => {
+describe("RoundQuery", () => {
+    it("should inherit Core.QueryApis.RoundQuery", () => {
         expect(roundQuery instanceof Core.QueryApis.RoundQuery).toBeTruthy();
     });
 
-    describe("_getRound", () => {
-        it("_always_calls getOne", () => {
-            const round = {
-                exchangeRateId: 1,
-            };
+    describe("getRound", () => {
+        const round = {
+            exchangeRateId: 1,
+        };
+        beforeAll(() => {
+            // Arrange
             spyOn(Core.QueryApis.RoundQuery.prototype, "getOne").and.returnValue(round);
 
             const betLogs = [
@@ -38,18 +40,61 @@ describe("RoundQuery test", () => {
             ];
             betLogsRepository.find().lean().exec.mockReturnValue(betLogs);
 
-            roundQuery.getRound(1);
-
-            expect(Core.QueryApis.RoundQuery.prototype.getOne).toHaveBeenCalled();
+            const exchangeRates = {
+                exId: 1,
+                code: {
+                    $US: 1,
+                },
+            };
+            exchangeRatesRepository.findOne().lean().exec.mockReturnValue(exchangeRates);
         });
 
-        it("should return round info & empty object total when user has no exchange rate and round has exchangeId", async () => {
-            const round = { exchangeRateId: 1 };
-            spyOn(Core.QueryApis.RoundQuery.prototype, "getOne").and.returnValue(round);
-            exchangeRatesRepository.findOne().lean().exec.mockReturnValue({ code: {} });
-            const actualResult = await roundQuery.getRound(1, {});
+        describe("when playerRate is invalid", () => {
+            // Arrange
+            const playerSession = {
+                multiplier: 0,
+                currencyCode: "$US",
+            };
 
-            expect(actualResult).toEqual({ ...round, total: {} });
+            it("should return round info & empty object total", async () => {
+                // Act
+                const actualResult = await roundQuery.getRound(1, playerSession);
+
+                // Assert
+                expect(actualResult).toEqual({ ...round, total: {} });
+            });
+        });
+
+        describe("when playerRate is valid", () => {
+            beforeAll(async () => {
+                // Arrange
+                const playerSession = {
+                    multiplier: 1,
+                    currencyCode: "$US",
+                };
+
+                currencyRepository.find().lean().exec.mockReturnValue([]);
+                userInfosRepository.find().lean().exec.mockReturnValue([]);
+                betLogsRepository.find().lean().exec.mockReturnValue([]);
+
+                // Act
+                await roundQuery.getRound(1, playerSession);
+            });
+
+            it("should call get test currencies", () => {
+                // Assert
+                expect(currencyRepository.find().lean().exec).toHaveBeenCalled();
+            });
+
+            it("should call get userInfos", () => {
+                // Assert
+                expect(userInfosRepository.find().lean().exec).toHaveBeenCalled();
+            });
+
+            it("should call get betLogs", () => {
+                // Assert
+                expect(betLogsRepository.find().lean().exec).toHaveBeenCalled();
+            });
         });
     });
 

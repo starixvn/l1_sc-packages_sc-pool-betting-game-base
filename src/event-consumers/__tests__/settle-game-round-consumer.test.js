@@ -81,7 +81,7 @@ describe("SettleGameRoundConsumer", () => {
         });
     });
 
-    describe("settleBet_", () => {
+    describe("settleBet", () => {
         it("refundAmount greater than betAmount_calls update bet", async () => {
             // arrange
             const bet = { uid: 1, amount: 200, baseAmount: 200, choice: "even", baseRefund: 0, rate: 1, save: jest.fn() };
@@ -265,7 +265,7 @@ describe("SettleGameRoundConsumer", () => {
             consumer.callEndGame = jest.fn();
         });
 
-        it("_always_calls settleBets", () => {
+        it("should call queryBets", () => {
             // act
             consumer.settleBets({
                 result: { dice1: 1, dice2: 2, dice3: 3 },

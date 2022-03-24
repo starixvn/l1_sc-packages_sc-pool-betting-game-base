@@ -3,26 +3,29 @@ import { Core } from "sc-game-base";
 import { GameData } from "../../game-data";
 import { RunningRoundInfoPublisher } from "../running-round-info-publisher";
 
-describe("RunningRoundInfoPublisher test", () => {
+describe("RunningRoundInfoPublisher", () => {
     const gameData = new GameData(0);
-    gameData.betCount = { odd: 10, even: 10 }
+    gameData.betCount = { odd: 10, even: 10 };
     const publisher = new RunningRoundInfoPublisher("game name", gameData);
 
-    beforeEach(() => {
+    beforeAll(() => {
+        // Arrange
         spyOn(Core.BaseEventPublishers.RunningRoundInfoPublisher.prototype, "publish");
     });
 
-    it("inherit Core.BaseEventPublishers.RunningRoundInfoPublisher", () => {
+    it("should inherit Core.BaseEventPublishers.RunningRoundInfoPublisher", () => {
         expect(publisher instanceof Core.BaseEventPublishers.RunningRoundInfoPublisher).toBeTruthy();
     });
 
-    describe("publish_", () => {
-        beforeEach(() => {
+    describe("publish", () => {
+        beforeAll(() => {
+            // Act
             publisher.publish();
         });
 
-        it("always_calls super.publish", () => {
+        it("should super.publish", () => {
+            // Assert
             expect(Core.BaseEventPublishers.RunningRoundInfoPublisher.prototype.publish).toHaveBeenCalled();
-        })
-    })
+        });
+    });
 });
