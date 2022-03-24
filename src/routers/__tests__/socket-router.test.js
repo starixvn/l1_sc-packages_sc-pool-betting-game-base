@@ -39,6 +39,7 @@ const socketClient = {
     on: jest.fn(),
     emit: jest.fn(),
     disconnect: jest.fn(),
+    use: jest.fn(),
 };
 
 describe("SocketRouter test", () => {
