@@ -1389,8 +1389,6 @@
     "read-package-json-fast" "^2.0.1"
 
 "@npmcli/metavuln-calculator@^1.1.0":
-  "integrity" "sha512-9xe+ZZ1iGVaUovBVFI9h3qW+UuECUzhvZPxK9RaEA2mjU26o5D0JloGYWwLYvQELJNmBdQB6rrpuN8jni6LwzQ=="
-  "resolved" "http://npm.lumigame.com/@npmcli%2fmetavuln-calculator/-/metavuln-calculator-1.1.1.tgz"
   "version" "1.1.1"
   dependencies:
     "cacache" "^15.0.5"
@@ -2186,6 +2184,8 @@
     "color-convert" "^2.0.1"
 
 "ansicolors@*":
+  "integrity" "sha1-ZlWX3oap/+Oqm/vmyuXG6kJrSXk="
+  "resolved" "https://npm.lumigame.com/ansicolors/-/ansicolors-0.3.2.tgz"
   "version" "0.3.2"
 
 "ansicolors@~0.3.2":
@@ -2194,6 +2194,8 @@
   "version" "0.3.2"
 
 "ansistyles@*":
+  "integrity" "sha1-XeYEFb2gcbs3EnhUyGT0GyMlRTk="
+  "resolved" "https://npm.lumigame.com/ansistyles/-/ansistyles-0.1.3.tgz"
   "version" "0.1.3"
 
 "anymatch@^2.0.0":
@@ -2223,6 +2225,8 @@
   "version" "1.2.0"
 
 "archy@*":
+  "integrity" "sha1-+cjBN1fMHde8N5rHeyxipcKGjEA="
+  "resolved" "https://npm.lumigame.com/archy/-/archy-1.0.0.tgz"
   "version" "1.0.0"
 
 "are-we-there-yet@^2.0.0":
@@ -2505,8 +2509,6 @@
   "version" "2.2.2"
 
 "bin-links@^2.2.1":
-  "integrity" "sha512-wFzVTqavpgCCYAh8SVBdnZdiQMxTkGR+T3b14CNpBXIBe2neJWaMGAZ55XWWHELJJ89dscuq0VCBqcVaIOgCMg=="
-  "resolved" "http://npm.lumigame.com/bin-links/-/bin-links-2.2.1.tgz"
   "version" "2.2.1"
   dependencies:
     "cmd-shim" "^4.0.1"
@@ -2973,13 +2975,11 @@
   "version" "1.1.3"
 
 "color-support@^1.1.2":
-  "integrity" "sha512-qiBjkpbMLO/HL68y+lh4q0/O1MZFj2RX6X/KmMa3+gJD3z+WwI1ZzDHysvqHGS3mP6mznPckpXmw1nI9cJjyRg=="
-  "resolved" "http://npm.lumigame.com/color-support/-/color-support-1.1.3.tgz"
   "version" "1.1.3"
 
 "colors@^1.1.2":
   "integrity" "sha512-a+UqTh4kgZg/SlGvfbzDHpgRu7AAQOmmqRHJnxhRZICKFUT91brVhNNt58CMWU9PsBbv3PDCZUHbVxuDiH2mtA=="
-  "resolved" "http://npm.lumigame.com/colors/-/colors-1.4.0.tgz"
+  "resolved" "https://npm.lumigame.com/colors/-/colors-1.4.0.tgz"
   "version" "1.4.0"
 
 "columnify@*":
@@ -3451,7 +3451,7 @@
 
 "depd@^1.1.2":
   "integrity" "sha1-m81S4UwJd2PnSbJ0xDRu0uVgtak="
-  "resolved" "http://npm.lumigame.com/depd/-/depd-1.1.2.tgz"
+  "resolved" "https://npm.lumigame.com/depd/-/depd-1.1.2.tgz"
   "version" "1.1.2"
 
 "depd@~1.1.2":
@@ -3904,6 +3904,8 @@
   "version" "2.0.6"
 
 "fastest-levenshtein@*":
+  "integrity" "sha512-On2N+BpYJ15xIC974QNVuYGMOlEVt4s0EOI3wwMqOmK1fdDY+FN/zltPV8vosq4ad4c/gJ1KHScUn/6AWIgiow=="
+  "resolved" "https://npm.lumigame.com/fastest-levenshtein/-/fastest-levenshtein-1.0.12.tgz"
   "version" "1.0.12"
 
 "fastq@^1.6.0":
@@ -4127,8 +4129,6 @@
   "version" "1.1.1"
 
 "gauge@^3.0.0":
-  "integrity" "sha512-6STz6KdQgxO4S/ko+AbjlFGGdGcknluoqU+79GOFCDqqyYj5OanQf9AjxwN0jCidtT+ziPMmPSt9E4hfQ0CwIQ=="
-  "resolved" "http://npm.lumigame.com/gauge/-/gauge-3.0.1.tgz"
   "version" "3.0.1"
   dependencies:
     "aproba" "^1.0.3 || ^2.0.0"
@@ -4765,6 +4765,8 @@
     "ci-info" "^2.0.0"
 
 "is-cidr@*":
+  "integrity" "sha512-z4a1ENUajDbEl/Q6/pVBpTR1nBjjEE1X7qb7bmWYanNnPoKAvUCPFKeXV6Fe4mgTkWKBqiHIcwsI3SndiO5FeA=="
+  "resolved" "https://npm.lumigame.com/is-cidr/-/is-cidr-4.0.2.tgz"
   "version" "4.0.2"
   dependencies:
     "cidr-regex" "^3.1.1"
@@ -6495,7 +6497,7 @@
 
 "ms@*", "ms@^2.0.0":
   "integrity" "sha512-6FlzubTLZG3J2a/NVCAleEhjzq5oxgHyaCU9yYXvcLsvoVaHJq/s5xXI6/XXP6tz7R9xAOtHnSO/tXtF3WRTlA=="
-  "resolved" "http://npm.lumigame.com/ms/-/ms-2.1.3.tgz"
+  "resolved" "https://npm.lumigame.com/ms/-/ms-2.1.3.tgz"
   "version" "2.1.3"
 
 "ms@^2.1.1", "ms@^2.1.2", "ms@2.1.2":
@@ -6774,6 +6776,8 @@
     "path-key" "^3.0.0"
 
 "npm-user-validate@*":
+  "integrity" "sha512-uQwcd/tY+h1jnEaze6cdX/LrhWhoBxfSknxentoqmIuStxUExxjWd3ULMLFPiFUrZKbOVMowH6Jq2FRWfmhcEw=="
+  "resolved" "https://npm.lumigame.com/npm-user-validate/-/npm-user-validate-1.0.1.tgz"
   "version" "1.0.1"
 
 "npm@^7.0.0":
@@ -6978,6 +6982,8 @@
   "version" "2.0.3"
 
 "opener@*":
+  "integrity" "sha512-ur5UIdyw5Y7yEj9wLzhqXiy6GZ3Mwx0yGI+5sMn2r0N0v3cKJvUmFH5yPP+WXh9e0xfyzyJX95D8l088DNFj7A=="
+  "resolved" "https://npm.lumigame.com/opener/-/opener-1.5.2.tgz"
   "version" "1.5.2"
 
 "openid-client@^3.15.9":
@@ -7403,8 +7409,6 @@
     "react-is" "^17.0.1"
 
 "proc-log@^1.0.0":
-  "integrity" "sha512-aCk8AO51s+4JyuYGg3Q/a6gnrlDO09NpVWePtjp7xwphcoQ04x5WAfCyugcsbLooWcMJ87CLkD4+604IckEdhg=="
-  "resolved" "http://npm.lumigame.com/proc-log/-/proc-log-1.0.0.tgz"
   "version" "1.0.0"
 
 "process-nextick-args@~2.0.0":
@@ -7509,6 +7513,8 @@
   "version" "1.5.1"
 
 "qrcode-terminal@*":
+  "integrity" "sha512-EXtzRZmC+YGmGlDFbXKxQiMZNwCLEO6BANKXG4iCtSIM0yqc/pappSx3RIKr4r0uh5JsBckOXeKrB3Iz7mdQpQ=="
+  "resolved" "https://npm.lumigame.com/qrcode-terminal/-/qrcode-terminal-0.12.0.tgz"
   "version" "0.12.0"
 
 "qs@^6.9.4":
@@ -8054,10 +8060,10 @@
     "mongoose-long" "^0.3.0"
     "numeral" "^2.0.6"
 
-"sc-game-base@2.6.5-beta.2":
-  "integrity" "sha512-ZSwoE6hZY3y5vlkEY6RCRI7PzR7As+6J/gt3XebtOQir+ANyIYy/LeW0dop8AdTl/foTXvg9suT0qDr/Qk5W7A=="
-  "resolved" "https://npm.lumigame.com/sc-game-base/-/sc-game-base-2.6.5-beta.2.tgz"
-  "version" "2.6.5-beta.2"
+"sc-game-base@2.6.5-beta.3":
+  "integrity" "sha512-Ne3fm301zvMulF+Ib8yHbl/zaH60EzUikPwUO3KvFvm41EdwtTuinG4XdhS3F3xOfL13vseP7lKBdUbQ1d1SRw=="
+  "resolved" "https://npm.lumigame.com/sc-game-base/-/sc-game-base-2.6.5-beta.3.tgz"
+  "version" "2.6.5-beta.3"
   dependencies:
     "awilix" "^4.3.1"
     "axios" "^0.20.0"
@@ -8789,6 +8795,8 @@
   "version" "1.9.0"
 
 "text-table@*":
+  "integrity" "sha1-f17oI66AUgfACvLfSoTsP8+lcLQ="
+  "resolved" "https://npm.lumigame.com/text-table/-/text-table-0.2.0.tgz"
   "version" "0.2.0"
 
 "throat@^5.0.0":
@@ -8817,6 +8825,8 @@
     "xtend" "~4.0.1"
 
 "tiny-relative-date@*":
+  "integrity" "sha512-MOQHpzllWxDCHHaDno30hhLfbouoYlOI8YlMNtvKe1zXbjEVhbcEovQxvZrPvtiYW630GQDoMMarCnjfyfHA+A=="
+  "resolved" "https://npm.lumigame.com/tiny-relative-date/-/tiny-relative-date-1.3.0.tgz"
   "version" "1.3.0"
 
 "tmpl@1.0.5":
