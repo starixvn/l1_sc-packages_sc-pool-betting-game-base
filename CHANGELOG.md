@@ -1,3 +1,11 @@
+## [2.2.2](https://git3.nexdev.net/sc-packages/sc-pool-betting-game-base/compare/v2.2.1...v2.2.2) (2022-04-07)
+
+
+### Bug Fixes
+
+* upgrade sc-game-base ([6ea818d](https://git3.nexdev.net/sc-packages/sc-pool-betting-game-base/commit/6ea818d9443c0b59486a63ce04ed2505905d1365))
+* upgrade sc-game-base ([474ca5b](https://git3.nexdev.net/sc-packages/sc-pool-betting-game-base/commit/474ca5bf2712f0bf1d50982b0d8f510fbbd38316))
+
 ## [2.2.1](https://git3.nexdev.net/sc-packages/sc-pool-betting-game-base/compare/v2.2.0...v2.2.1) (2022-03-14)
 
 
