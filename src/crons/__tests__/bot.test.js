@@ -23,63 +23,118 @@ const betLogsRepository = stubMongooseModelStupidly(mongoose.Model);
 
 const bot = new Bot(definition, gameData, publisher, userInfosRepository, betsRepository, betLogsRepository);
 
-describe("bot tests", () => {
-    it("inherit_Core.Crons.BaseBot", () => {
+describe("bot", () => {
+    it("should inherit Core.Crons.BaseBot", () => {
         expect(bot instanceof Core.Crons.BaseBot).toBeTruthy();
     });
 
-    it("run_not existing bot_do not call getBotsAndPlaceBet", () => {
-        bot.botList = [];
-        spyOn(bot, "getBotsAndPlaceBet");
-        bot.run();
+    describe("run", () => {
+        beforeAll(() => {
+            // Arrange
+            spyOn(bot, "getBotsAndPlaceBet");
+        });
 
-        expect(bot.getBotsAndPlaceBet).not.toHaveBeenCalled();
+        describe("when bot NOT existing ", () => {
+            beforeAll(async () => {
+                // Arrange
+                bot.botList = [];
+
+                // Act
+                await bot.run();
+            });
+
+            it("should NOT call getBotsAndPlaceBet", () => {
+                // Assert
+                expect(bot.getBotsAndPlaceBet).not.toHaveBeenCalled();
+            });
+        });
+
+        describe("when bot existing ", () => {
+            beforeAll(async () => {
+                // Arrange
+                bot.botList = [{ id: 1 }];
+
+                // Act
+                await bot.run();
+            });
+
+            it("should NOT call getBotsAndPlaceBet", () => {
+                // Assert
+                expect(bot.getBotsAndPlaceBet).toHaveBeenCalled();
+            });
+        });
     });
 
-    it("run_existing bot_call getBotsAndPlaceBet", async () => {
-        bot.botList = [{ id: 1 }];
-        spyOn(bot, "getBotsAndPlaceBet");
-        await bot.run();
-
-        expect(bot.getBotsAndPlaceBet).toHaveBeenCalled();
-    });
-
-    it("resetAllBotData", () => {
-        // arrange
+    describe("resetAllBotData", () => {
+        // Arrange
         bot.totalBotTickets = 10;
         bot.totalUnroundTickets = 20;
         bot.totalBotTickets = 30;
 
-        // act
-        bot.resetAllBotData();
+        beforeAll(() => {
+            // Act
+            bot.resetAllBotData();
+        });
 
-        // asset
-        expect(bot.totalBotTickets).toEqual(0);
-        expect(bot.totalUnroundTickets).toEqual(0);
-        expect(bot.totalBotTickets).toEqual(0);
+        it("should reset totalBotTickets", () => {
+            // Assert
+            expect(bot.totalBotTickets).toEqual(0);
+        });
+
+        it("should reset totalUnroundTickets", () => {
+            // Assert
+            expect(bot.totalUnroundTickets).toEqual(0);
+        });
     });
 
-    it("placeBet", () => {
+    describe("placeBet", () => {
         const user = { id: 1, name: "bot" };
-        spyOn(betsRepository, "updateOne");
 
-        bot.placeBet(user, "odd");
+        beforeAll(async () => {
+            // Arrange
+            spyOn(betsRepository, "updateOne");
 
-        expect(betLogsRepository.create).toHaveBeenCalled();
+            // Act
+            await bot.placeBet(user, "odd");
+        });
+
+        it("should call create bet log", () => {
+            // Assert
+            expect(betLogsRepository.create).toHaveBeenCalled();
+        });
     });
 
-    it("reset_bot disabled_reset botList", () => {
-        bot.reset();
+    describe("reset", () => {
+        describe("when bot was disabled", () => {
+            beforeAll(async () => {
+                // Arrange
+                gameData.gameConfigs = { botenabled: false };
 
-        expect(bot.botList).toEqual([]);
-    });
+                // Act
+                await bot.reset();
+            });
 
-    it("reset_bot enabled_reset botList", () => {
-        gameData.gameConfigs = { botenabled: true };
-        userInfosRepository.find().lean().exec.mockReturnValue([]);
-        bot.reset();
+            it("should reset botList", () => {
+                // Assert
+                expect(bot.botList).toEqual([]);
+            });
+        });
 
-        expect(userInfosRepository.find().lean().exec).toHaveBeenCalled();
+        describe("when bot was enabled", () => {
+            beforeAll(async () => {
+                // Arrange
+                gameData.gameConfigs = { botenabled: true };
+                userInfosRepository.find().lean().exec.mockReturnValue([]);
+
+                // Act
+                await bot.reset();
+            });
+
+            it("should call find user info", () => {
+                // Assert
+                expect(userInfosRepository.find().lean().exec).toHaveBeenCalled();
+            });
+        });
     });
 
     describe("getMaxTicketsToBet", () => {

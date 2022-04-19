@@ -7,7 +7,8 @@ import { GameData } from "../../game-data";
 import { Bot } from "../bot";
 import { GameCron } from "../game-cron";
 
-describe("game cron test", () => {
+describe("game cron", () => {
+    // Arrange
     const definition = new Core.GameDefinition({ id: 1, name: "game-name" });
     const gameData = new GameData(0);
     const bot = stub(Bot);
@@ -23,19 +24,31 @@ describe("game cron test", () => {
         runningRoundInfoPublisher: runningRoundInfoPublisher,
     });
 
-    it("inherit BaseGameCron", () => {
+    it("should inherit BaseGameCron", () => {
+        // Assert
         expect(cron instanceof Core.Crons.BaseGameCron);
     });
 
-    it("resetForNewRound_always_call super", () => {
-        // arrange
-        spyOn(Core.Crons.BaseGameCron.prototype, "resetForNewRound");
+    describe("resetForNewRound", () => {
+        beforeAll(() => {
+            // Arrange
+            spyOn(Core.Crons.BaseGameCron.prototype, "resetForNewRound");
 
-        // act
-        cron.resetForNewRound();
+            // Act
+            cron.resetForNewRound();
+        });
 
-        // assert
-        expect(Core.Crons.BaseGameCron.prototype.resetForNewRound).toHaveBeenCalled();
-        expect(gameData.betCount).toEqual({});
+        it("should call super.resetForNewRound", () => {
+            // assert
+            expect(Core.Crons.BaseGameCron.prototype.resetForNewRound).toHaveBeenCalled();
+        });
+
+        it("should reset bet count data", () => {
+            expect(gameData.betCount).toEqual({});
+        });
+
+        it("should reset bet count data", () => {
+            expect(gameData.totalTestBets).toEqual({});
+        });
     });
 });

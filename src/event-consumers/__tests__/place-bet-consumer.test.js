@@ -4,7 +4,8 @@ import { Core } from "sc-game-base";
 import { GameData } from "../../game-data";
 import { PlaceBetConsumer } from "../place-bet-consumer";
 
-describe("PlaceBetConsumer test", () => {
+describe("PlaceBetConsumer", () => {
+    // Arrange
     const gameData = new GameData(0);
     const playerName = "nhanvat01";
     const player = {
@@ -44,7 +45,8 @@ describe("PlaceBetConsumer test", () => {
         spyOn(Core.BaseEventConsumers.PlaceBetConsumer.prototype, "composeValidationCriteria");
     });
 
-    it("inherit Core.BaseEventConsumers.PlaceBetConsumer", () => {
+    it("should inherit Core.BaseEventConsumers.PlaceBetConsumer", () => {
+        // Assert
         expect(consumer instanceof Core.BaseEventConsumers.PlaceBetConsumer).toBeTruthy();
     });
 
@@ -54,14 +56,21 @@ describe("PlaceBetConsumer test", () => {
             consumer.composeValidationCriteria(player, "odd", 100, false, 1);
         });
 
-        it("_always_calls super.composeValidationCriteria", () => {
+        it("should call super.composeValidationCriteria", () => {
+            // Assert
             expect(Core.BaseEventConsumers.PlaceBetConsumer.prototype.composeValidationCriteria).toHaveBeenCalled();
         });
     });
 
-    it("composeBetAmountValidationCriteria_validBet_passed", async () => {
-        const actualResult = consumer.composeBetAmountValidationCriteria(player, "odd", 100, false, 1);
+    describe("composeBetAmountValidationCriteria", () => {
+        describe("when bet is valid", () => {
+            it("should all criteria passed", () => {
+                // Act
+                const actualResult = consumer.composeBetAmountValidationCriteria(player, "odd", 100, false);
 
-        expect(actualResult.find((criteria) => criteria.failure)).toBeFalsy();
+                // Assert
+                expect(actualResult.find((criteria) => criteria.failure)).toBeFalsy();
+            });
+        });
     });
 });
