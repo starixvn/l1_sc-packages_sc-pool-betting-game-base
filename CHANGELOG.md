@@ -1,3 +1,18 @@
+# [2.3.0](https://git3.nexdev.net/sc-packages/sc-pool-betting-game-base/compare/v2.2.2...v2.3.0) (2022-04-19)
+
+
+### Features
+
+* update game base ([b946e6c](https://git3.nexdev.net/sc-packages/sc-pool-betting-game-base/commit/b946e6c2ab3f38761b2974304ec02229d7dbba6a))
+* update game base ([26ac9dd](https://git3.nexdev.net/sc-packages/sc-pool-betting-game-base/commit/26ac9dd4a7c9415c70a66bfa79ed1b0cf2943a20))
+* update game base ([c84fd34](https://git3.nexdev.net/sc-packages/sc-pool-betting-game-base/commit/c84fd34c915e28a790d654301847685777a50fdf))
+* update game base ([abbc50d](https://git3.nexdev.net/sc-packages/sc-pool-betting-game-base/commit/abbc50db86d6af597e4a8cca9c9cf147302bddb4))
+* update game base and restructure unit test ([c107086](https://git3.nexdev.net/sc-packages/sc-pool-betting-game-base/commit/c107086c67dee1fcf4472c5c5ac40a343add6586))
+* update game base package support MD5 ([b67817f](https://git3.nexdev.net/sc-packages/sc-pool-betting-game-base/commit/b67817fc3d6ed5c7d878a3284d08d4d965d83679))
+* update sc-game-base ([2646e96](https://git3.nexdev.net/sc-packages/sc-pool-betting-game-base/commit/2646e964a54430c212020fc3843865317347f3b7))
+* upgrade sc-game-base ([6861e28](https://git3.nexdev.net/sc-packages/sc-pool-betting-game-base/commit/6861e28526e740a409848b15d3fa1988799e882f))
+* upgrade sc-game-base for random modes ([1ac1aa1](https://git3.nexdev.net/sc-packages/sc-pool-betting-game-base/commit/1ac1aa1825e94e6fab50ce201a6ba53b300b7ade))
+
 ## [2.2.2](https://git3.nexdev.net/sc-packages/sc-pool-betting-game-base/compare/v2.2.1...v2.2.2) (2022-04-07)
 
 
