@@ -1,3 +1,20 @@
+# [2.4.0](https://git3.nexdev.net/sc-packages/sc-pool-betting-game-base/compare/v2.3.0...v2.4.0) (2022-05-05)
+
+
+### Bug Fixes
+
+* operator token ([817ee4d](https://git3.nexdev.net/sc-packages/sc-pool-betting-game-base/commit/817ee4d29b47a26db95158b10568cce72c985911))
+* rebase master ([fd4ea5a](https://git3.nexdev.net/sc-packages/sc-pool-betting-game-base/commit/fd4ea5a861ba58fad33eeb219e82147390dd6e6e))
+* upgrade sc-game-base 2.8.1-beta.2 ([b117d9e](https://git3.nexdev.net/sc-packages/sc-pool-betting-game-base/commit/b117d9e68e842c9d6864ae3eae56696bebdea30e))
+* upgrade sc-game-base 2.9.0 ([69bc66c](https://git3.nexdev.net/sc-packages/sc-pool-betting-game-base/commit/69bc66ca8c5d45a2cccf97c5e0d38ff928dd9f10))
+
+
+### Features
+
+* upgrade sc-game-base@2.7.2-beta.2 ([54610b7](https://git3.nexdev.net/sc-packages/sc-pool-betting-game-base/commit/54610b7de1e1eafd83a3a298d027fa1539c550e7))
+* upgrade sc-game-base@2.7.2-beta.3 ([2f88a81](https://git3.nexdev.net/sc-packages/sc-pool-betting-game-base/commit/2f88a811536b75c3b3bf1508061f428404e9e774))
+* upgrade sc-game-base@2.8.1-beta.0 ([274dcc7](https://git3.nexdev.net/sc-packages/sc-pool-betting-game-base/commit/274dcc7fb40b088671e7d67689757b42b30480ae))
+
 # [2.3.0](https://git3.nexdev.net/sc-packages/sc-pool-betting-game-base/compare/v2.2.2...v2.3.0) (2022-04-19)
 
 
