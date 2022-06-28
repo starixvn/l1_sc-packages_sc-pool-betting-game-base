@@ -1,3 +1,20 @@
+## [2.4.2](https://git3.nexdev.net/sc-packages/sc-pool-betting-game-base/compare/v2.4.1...v2.4.2) (2022-06-28)
+
+
+### Bug Fixes
+
+* combine authenticateSettings ([c5ff8a6](https://git3.nexdev.net/sc-packages/sc-pool-betting-game-base/commit/c5ff8a663526bab208339f3a9683240606426c28))
+* rebase branch ([b32b5d0](https://git3.nexdev.net/sc-packages/sc-pool-betting-game-base/commit/b32b5d08d37ee152d3f8d51129addf9ea45dfbbe))
+* release version ([6699a74](https://git3.nexdev.net/sc-packages/sc-pool-betting-game-base/commit/6699a74f9d86fc6b5ddaba990fc9a8a31fa110e8))
+* revert verify session ([20e0816](https://git3.nexdev.net/sc-packages/sc-pool-betting-game-base/commit/20e08162e9cb09026f6700c3f6d9ffc1167528d4))
+* separate branch ([fa1b4ee](https://git3.nexdev.net/sc-packages/sc-pool-betting-game-base/commit/fa1b4ee8e0e46dcbd9ce5caf85dd1bf76b7b3250))
+* update blocking time ([ab5f25c](https://git3.nexdev.net/sc-packages/sc-pool-betting-game-base/commit/ab5f25c6182c778a7a3e2be5486fe269574d481e))
+* update place bet blocking time ([69ae01d](https://git3.nexdev.net/sc-packages/sc-pool-betting-game-base/commit/69ae01dd378db31d005ca2a1631ecf2c3af151bb))
+* upgrade sc-game-base 3.0.3-beta.0 ([c82f100](https://git3.nexdev.net/sc-packages/sc-pool-betting-game-base/commit/c82f10067852e537fd882ace79c497722c17fbf4))
+* upgrade sc-game-base 3.0.3-beta.3 ([e2342b1](https://git3.nexdev.net/sc-packages/sc-pool-betting-game-base/commit/e2342b16963263192fade5221ff8a73841ce30eb))
+* upgrade sc-game-base@3.0.3-beta.4 ([15ed0ca](https://git3.nexdev.net/sc-packages/sc-pool-betting-game-base/commit/15ed0caaabd191f1a7530275d40f02b84cbeb847))
+* verify session ([541b099](https://git3.nexdev.net/sc-packages/sc-pool-betting-game-base/commit/541b09989b53ce203298245e64a161efdc9da9cc))
+
 ## [2.4.1](https://git3.nexdev.net/sc-packages/sc-pool-betting-game-base/compare/v2.4.0...v2.4.1) (2022-06-03)
 
 
