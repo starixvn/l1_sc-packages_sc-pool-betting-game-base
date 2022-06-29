@@ -1,3 +1,10 @@
+## [2.4.3](https://git3.nexdev.net/sc-packages/sc-pool-betting-game-base/compare/v2.4.2...v2.4.3) (2022-06-29)
+
+
+### Bug Fixes
+
+* query history ([7e2c85a](https://git3.nexdev.net/sc-packages/sc-pool-betting-game-base/commit/7e2c85aa39500da0c87d034ba8983462b2ec1a7e))
+
 ## [2.4.2](https://git3.nexdev.net/sc-packages/sc-pool-betting-game-base/compare/v2.4.1...v2.4.2) (2022-06-28)
 
 
