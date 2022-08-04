@@ -1,6 +1,6 @@
 {
     "name": "sc-pool-betting-game-base",
-    "version": "2.4.4",
+    "version": "2.4.5-beta.0",
     "description": "",
     "main": "./src/index.js",
     "scripts": {
@@ -52,7 +52,7 @@
     },
     "dependencies": {
         "chance": "^1.1.7",
-        "sc-game-base": "3.0.4"
+        "sc-game-base": "3.0.6"
     },
     "husky": {
         "hooks": {
