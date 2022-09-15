@@ -250,12 +250,12 @@ describe("SettleGameRoundConsumer", () => {
     describe("settleBets", () => {
         beforeEach(() => {
             const bets = [
-                { uid: 1, odd: 100, save: jest.fn(), partnerId: "OW", currency: "$US" },
-                { uid: 3, even: 200, save: jest.fn(), partnerId: "OW", currency: "UUS" },
+                { uid: 1, odd: 100, save: jest.fn(), operatorId: "OW", currency: "$US" },
+                { uid: 3, even: 200, save: jest.fn(), operatorId: "OW", currency: "UUS" },
             ];
             const settleBets = [
-                { uid: 1, odd: 100, thanhtoan: true, memberId: 123, save: jest.fn() },
-                { uid: 3, even: 200, thanhtoan: true, memberId: 456, save: jest.fn() },
+                { uid: 1, odd: 100, paid: true, playerId: 123, save: jest.fn() },
+                { uid: 3, even: 200, paid: true, playerId: 456, save: jest.fn() },
             ];
             const testCurrencies = [{ name: "UUS", partnerId: "OW" }];
             currencyRepository.find().lean().exec.mockReturnValueOnce(testCurrencies);
@@ -283,7 +283,7 @@ describe("SettleGameRoundConsumer", () => {
         it("should return result with correct format", () => {
             const roundId = 123;
             const time = new Date();
-            const bet = { freeBet: false, memberId: "432", partnerId: "OW", currency: "$US" };
+            const bet = { freeBet: false, playerId: "432", operatorId: "OW", currency: "$US" };
             const betResult = {
                 totalBetAmount: 100,
                 totalWin: 150,
@@ -296,12 +296,10 @@ describe("SettleGameRoundConsumer", () => {
             expect(actualResult).toEqual({
                 gameInfo: {
                     gameRoundId: roundId,
-                    memberId: bet.memberId,
                     siteId: bet.siteId,
-                    partnerId: bet.partnerId,
                     time: time,
-                    operatorId: bet.partnerId,
-                    playerId: bet.memberId,
+                    operatorId: bet.operatorId,
+                    playerId: bet.playerId,
                 },
                 settlementInfo: {
                     redPlay: betResult.totalBetAmount,
@@ -317,7 +315,7 @@ describe("SettleGameRoundConsumer", () => {
         it("should return undefined settlementInfo red when total win <= 0", () => {
             const roundId = 123;
             const time = new Date();
-            const bet = { freeBet: false, memberId: "432", partnerId: "OW", currency: "$US" };
+            const bet = { freeBet: false, playerId: "432", operatorId: "OW", currency: "$US" };
             const betResult = {
                 totalBetAmount: 100,
                 totalWin: 0,
@@ -333,7 +331,7 @@ describe("SettleGameRoundConsumer", () => {
         it("should return undefined settlementInfo redWin when total win <= 0", () => {
             const roundId = 123;
             const time = new Date();
-            const bet = { freeBet: false, memberId: "432", partnerId: "OW", currency: "$US" };
+            const bet = { freeBet: false, playerId: "432", operatorId: "OW", currency: "$US" };
             const betResult = {
                 totalBetAmount: 100,
                 totalWin: 0,
@@ -349,7 +347,7 @@ describe("SettleGameRoundConsumer", () => {
         it("should return undefined settlementInfo validBetAmount & undefined settlementInfo redLost when total lost < 0", () => {
             const roundId = 123;
             const time = new Date();
-            const bet = { freeBet: false, memberId: "432", partnerId: "OW", currency: "$US" };
+            const bet = { freeBet: false, playerId: "432", operatorId: "OW", currency: "$US" };
             const betResult = {
                 totalBetAmount: 100,
                 totalWin: 2,
