@@ -45,7 +45,7 @@ export class SettleGameRoundConsumer extends Core.BaseEventConsumers.SettleGameR
                     await this.callEndGame(bet, roundId, time, betResult);
                     this.captureBetResult(bet.uid, betResult);
 
-                    if (bet.memberId) {
+                    if (bet.playerId) {
                         this.userBetResultPublisher.publish(bet.uid, betResult);
                     }
                 })
@@ -71,12 +71,10 @@ export class SettleGameRoundConsumer extends Core.BaseEventConsumers.SettleGameR
         const gameInfo = {
             gameId: this.definition.id,
             gameRoundId: roundId,
-            memberId: bet.memberId,
             siteId: bet.siteId,
-            partnerId: bet.partnerId,
             time: time,
-            operatorId: bet.partnerId,
-            playerId: bet.memberId,
+            operatorId: bet.operatorId,
+            playerId: bet.playerId,
         };
         const settlementInfo = {
             redPlay: betResult.totalBetAmount,
@@ -100,11 +98,11 @@ export class SettleGameRoundConsumer extends Core.BaseEventConsumers.SettleGameR
     }
 
     queryBets(roundId) {
-        return this.betLogsRepository.find({ phien: roundId }, null, { sort: { _id: -1 } }).exec();
+        return this.betLogsRepository.find({ roundId }, null, { sort: { _id: -1 } }).exec();
     }
 
     querySettledBets(roundId) {
-        return this.betsRepository.find({ phien: roundId, thanhtoan: true }).lean().exec();
+        return this.betsRepository.find({ roundId, paid: true }).lean().exec();
     }
 
     settleBetsByGroup(bets, roundId, settlementResult, totalBets) {
@@ -126,7 +124,6 @@ export class SettleGameRoundConsumer extends Core.BaseEventConsumers.SettleGameR
         let baseBetWin = 0;
         let baseRefund = 0;
 
-        bet.thanhtoan = true;
         bet.paid = true;
         bet.win = isWinningBet;
 
@@ -160,9 +157,9 @@ export class SettleGameRoundConsumer extends Core.BaseEventConsumers.SettleGameR
         const totalWin = (baseTotalWin / bet.rate).toFixed(4);
 
         await this.betsRepository.updateOne(
-            { uid: bet.uid, phien: roundId },
+            { uid: bet.uid, roundId },
             {
-                $set: { win: isWinningBet, thanhtoan: true, paid: true, time: new Date() },
+                $set: { win: isWinningBet, paid: true, time: new Date() },
                 $inc: { refund, betwin: betWin, baseRefund, baseBetWin, baseTotalWin, totalWin },
             }
         );

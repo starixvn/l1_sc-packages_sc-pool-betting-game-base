@@ -3,7 +3,7 @@ import { Core } from "sc-game-base";
 export class ProcessBetQueue extends Core.Crons.ProcessBetQueue {
     async upsertBet(player, roundId, bet, rate) {
         const configs = this.gameData.gameConfigs;
-        const existingBetFilter = { uid: player.UID, phien: roundId };
+        const existingBetFilter = { uid: player.UID, roundId };
         const existingBet = await this.betsRepository.findOne(existingBetFilter).exec();
 
         if (existingBet) {
@@ -18,11 +18,10 @@ export class ProcessBetQueue extends Core.Crons.ProcessBetQueue {
     }
 
     async insertBet(player, bet, roundId, configs, rate) {
-        const existingBetFilter = { uid: player.UID, phien: roundId };
+        const existingBetFilter = { uid: player.UID, roundId };
         const newBet = {
             uid: player.UID,
             name: player.profile.name,
-            phien: roundId,
             choice: bet.betChoice,
             time: new Date(),
             odds: configs.odds,
@@ -31,14 +30,12 @@ export class ProcessBetQueue extends Core.Crons.ProcessBetQueue {
         const existingBetIncrement = { amount: bet.amount, totalAmount: bet.amount, baseAmount: bet.amount * rate };
 
         if (player.session) {
-            newBet.memberId = player.session.memberId;
             newBet.siteId = player.session.siteId;
-            newBet.partnerId = player.session.partnerId;
             newBet.currency = player.session.currencyName;
             newBet.rate = rate;
 
-            newBet.operatorId = player.session.partnerId;
-            newBet.playerId = player.session.memberId;
+            newBet.operatorId = player.session.operatorId;
+            newBet.playerId = player.session.playerId;
         }
 
         await this.betsRepository.updateOne(
@@ -59,7 +56,6 @@ export class ProcessBetQueue extends Core.Crons.ProcessBetQueue {
         const newBetLog = {
             uid: player.UID,
             name: player.profile.name,
-            phien: roundId,
             time: new Date(),
             choice: bet.betChoice,
             amount: bet.amount,
@@ -71,14 +67,12 @@ export class ProcessBetQueue extends Core.Crons.ProcessBetQueue {
         };
 
         if (player.session) {
-            newBetLog.memberId = player.session.memberId;
             newBetLog.siteId = player.session.siteId;
-            newBetLog.partnerId = player.session.partnerId;
             newBetLog.currency = player.session.currencyName;
             newBetLog.rate = rate;
 
-            newBetLog.operatorId = player.session.partnerId;
-            newBetLog.playerId = player.session.memberId;
+            newBetLog.operatorId = player.session.operatorId;
+            newBetLog.playerId = player.session.playerId;
         }
 
         await this.betLogsRepository.create(newBetLog);
