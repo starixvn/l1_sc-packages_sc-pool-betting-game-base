@@ -1,3 +1,15 @@
+## [2.4.6](https://git3.nexdev.net/sc-packages/sc-pool-betting-game-base/compare/v2.4.5...v2.4.6) (2022-10-04)
+
+
+### Bug Fixes
+
+* add required fields for bot ([e75e498](https://git3.nexdev.net/sc-packages/sc-pool-betting-game-base/commit/e75e498e31444c959f6b8a8a37b5b6947bbd8560))
+* add required fields for bot ([6ee37bf](https://git3.nexdev.net/sc-packages/sc-pool-betting-game-base/commit/6ee37bf01cac153722613c6f4fdde1ca10ad9a68))
+* playing permission ([d2d027d](https://git3.nexdev.net/sc-packages/sc-pool-betting-game-base/commit/d2d027dc8136afb0d9791f15c94faf29f96519c3))
+* release game base ([ff3fc2e](https://git3.nexdev.net/sc-packages/sc-pool-betting-game-base/commit/ff3fc2e52d3dbb8c07245b88eea24603398e53a1))
+* remove duplicated fields ([c21d0a3](https://git3.nexdev.net/sc-packages/sc-pool-betting-game-base/commit/c21d0a32173f388ab60bfa31f9c1a7e899dc8779))
+* remove duplicated fields ([d53245d](https://git3.nexdev.net/sc-packages/sc-pool-betting-game-base/commit/d53245df63373dbd3777abd790bd9dbdd3348735))
+
 ## [2.4.5](https://git3.nexdev.net/sc-packages/sc-pool-betting-game-base/compare/v2.4.4...v2.4.5) (2022-08-04)
 
 
