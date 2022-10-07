@@ -25,12 +25,12 @@ export class SettleGameRoundConsumer extends Core.BaseEventConsumers.SettleGameR
             const testCurrencies = await this.currencyRepository.find({ isTest: true }, "name partnerId").lean().exec();
 
             const realBets = bets.filter(
-                (bet) => !testCurrencies.some((currency) => currency.name === bet.currency && currency.partnerId === bet.partnerId)
+                (bet) => !testCurrencies.some((currency) => currency.name === bet.currency && currency.partnerId === bet.operatorId)
             );
             const realBetProcessors = this.settleBetsByGroup(realBets, roundId, settlementResult, this.gameData.totalBets);
 
             const testBets = bets.filter((bet) =>
-                testCurrencies.some((currency) => currency.name === bet.currency && currency.partnerId === bet.partnerId)
+                testCurrencies.some((currency) => currency.name === bet.currency && currency.partnerId === bet.operatorId)
             );
             const testBetProcessors = this.settleBetsByGroup(testBets, roundId, settlementResult, this.gameData.totalTestBets);
 
