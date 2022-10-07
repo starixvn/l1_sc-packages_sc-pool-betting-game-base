@@ -1,3 +1,10 @@
+## [2.4.7](https://git3.nexdev.net/sc-packages/sc-pool-betting-game-base/compare/v2.4.6...v2.4.7) (2022-10-07)
+
+
+### Bug Fixes
+
+* bets with test currencies being grouped with real currencies bets ([e8f660f](https://git3.nexdev.net/sc-packages/sc-pool-betting-game-base/commit/e8f660fb3592337f5e778eee96352c1c459ceae9))
+
 ## [2.4.6](https://git3.nexdev.net/sc-packages/sc-pool-betting-game-base/compare/v2.4.5...v2.4.6) (2022-10-04)
 
 
