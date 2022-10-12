@@ -1,3 +1,27 @@
+# [2.5.0](https://git3.nexdev.net/sc-packages/sc-pool-betting-game-base/compare/v2.4.7...v2.5.0) (2022-10-12)
+
+
+### Bug Fixes
+
+* add enabledBoostedOdds config ([70bda80](https://git3.nexdev.net/sc-packages/sc-pool-betting-game-base/commit/70bda80f8969ad8e969a16cac91693dc4d20f22d))
+* add originalOdds ([f69ed8b](https://git3.nexdev.net/sc-packages/sc-pool-betting-game-base/commit/f69ed8bced88a7c5ccc9f6dc1b8fd7a9ccc9edc8))
+* always publish boosted odds at start placing bet time ([240de19](https://git3.nexdev.net/sc-packages/sc-pool-betting-game-base/commit/240de19b651daf0e60268869ee6794f1a911d623))
+* publish boosed odds when starting time ([63ad6df](https://git3.nexdev.net/sc-packages/sc-pool-betting-game-base/commit/63ad6dfa0276ac00aec4abfaca8f7d0541dabac8))
+* publish more events ([85542c0](https://git3.nexdev.net/sc-packages/sc-pool-betting-game-base/commit/85542c0d6489a3831097a6e9fb11e47f75f9da5a))
+* reset odds before apply promotion ([e60a07e](https://git3.nexdev.net/sc-packages/sc-pool-betting-game-base/commit/e60a07e672b8329e4fb408a054109605b4849947))
+* save current boosted odds for joining game at settled time ([0a1ad8c](https://git3.nexdev.net/sc-packages/sc-pool-betting-game-base/commit/0a1ad8c6b5f859989db2808957724e4c90d049e5))
+* update all odds when having promotion ([e1ee1f1](https://git3.nexdev.net/sc-packages/sc-pool-betting-game-base/commit/e1ee1f1cebebeec2953e8d1cbc7a9b29c7e89ee5))
+* update boosed odds when starting time ([5e8e30f](https://git3.nexdev.net/sc-packages/sc-pool-betting-game-base/commit/5e8e30faa407d13c2751f07f96eb42b0cb78e8bc))
+* update finish promotion message and publish odds when starting round ([fb12118](https://git3.nexdev.net/sc-packages/sc-pool-betting-game-base/commit/fb121182ce0dd3a0429d520449989785e8fbf84f))
+* update sc-game-base after rebase ([39adb18](https://git3.nexdev.net/sc-packages/sc-pool-betting-game-base/commit/39adb184fa981b04b883f61f6357e71be3d30094))
+* update sc-game-base version ([5d7ac6e](https://git3.nexdev.net/sc-packages/sc-pool-betting-game-base/commit/5d7ac6ed3ee756c76cbafc4ce755e3809e83a274))
+* upgrade sc-game-base ([e679bf5](https://git3.nexdev.net/sc-packages/sc-pool-betting-game-base/commit/e679bf50d9eedf5c02d33555a771d9d43cd9a97f))
+
+
+### Features
+
+* apply boosted odds ([93c6711](https://git3.nexdev.net/sc-packages/sc-pool-betting-game-base/commit/93c6711d77966ff5c35debb4c8a1af372946a346))
+
 ## [2.4.7](https://git3.nexdev.net/sc-packages/sc-pool-betting-game-base/compare/v2.4.6...v2.4.7) (2022-10-07)
 
 
