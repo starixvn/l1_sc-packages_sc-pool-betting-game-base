@@ -1,7 +1,7 @@
 import { asClass } from "awilix";
 import { Core } from "sc-game-base";
 
-import { Bot, GameCron, ProcessBetQueue } from "./crons";
+import { Bot, GameCron, ProcessBetQueue, BalancedBot } from "./crons";
 import { PlaceBetConsumer, SettleGameRoundConsumer } from "./event-consumers";
 import { RunningRoundInfoPublisher } from "./event-publishers";
 import { RoundQuery } from "./query-apis";
@@ -39,6 +39,7 @@ export class ContainerRegistry extends Core.ContainerRegistry {
             bot: asClass(Bot).singleton(),
             gameCron: asClass(GameCron).singleton().proxy(),
             processBetQueue: asClass(ProcessBetQueue).singleton().proxy(),
+            balancedBot: asClass(BalancedBot).singleton(),
         });
     }
 

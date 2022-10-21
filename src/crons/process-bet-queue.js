@@ -1,6 +1,27 @@
 import { Core } from "sc-game-base";
 
 export class ProcessBetQueue extends Core.Crons.ProcessBetQueue {
+    constructor({
+        definition,
+        gameData,
+        placeBetPublisher,
+        placeBet,
+        logService,
+        betsRepository,
+        betLogsRepository,
+        userInfosRepository,
+        baseMetrics,
+        balancedBot,
+    }) {
+        super({ definition, gameData, placeBetPublisher, placeBet, logService, betsRepository, betLogsRepository, userInfosRepository, baseMetrics });
+        this.balancedBot = balancedBot;
+    }
+
+    async proceedBet(player, payload) {
+        await super.proceedBet(player, payload);
+        this.gameData.gameConfigs?.smartBotGroupRatio && (await this.balancedBot.run(payload));
+    }
+
     async upsertBet(player, roundId, bet, rate) {
         const configs = this.gameData.gameConfigs;
         const existingBetFilter = { uid: player.UID, roundId };
