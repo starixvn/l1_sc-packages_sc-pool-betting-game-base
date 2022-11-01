@@ -27,9 +27,9 @@ export class BalancedBot extends Core.Crons.BaseBot {
 
     checkRandomBet() {
         const ratio = this.gameData.gameConfigs?.smartBotGroupRatio ?? 0;
-        const toBetItems = Array(ratio * 100).fill(1);
-        const notToBetItems = Array(100 - ratio * 100).fill(0);
-        const toBet = this.getRandomFromArray(toBetItems.concat(notToBetItems)) === 1;
+        const toBetItems = Array(ratio * 100).fill(true);
+        const notToBetItems = Array(100 - ratio * 100).fill(false);
+        const toBet = this.getRandomFromArray(toBetItems.concat(notToBetItems));
 
         return toBet;
     }

@@ -113,7 +113,7 @@ export class Bot extends Core.Crons.BaseBot {
 
             if (bot) {
                 await this.placeBet(bot, this.getBetChoice(index, choices));
-                this.gameData.usedBots = this.gameData.usedBots ? this.gameData.usedBots.push(bot.id) : [];
+                this.gameData.usedBots = this.gameData.usedBots ? this.gameData.usedBots.concat([bot.id]) : [bot.id];
             }
         }
 
