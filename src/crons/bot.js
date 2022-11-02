@@ -14,12 +14,13 @@ export class Bot extends Core.Crons.BaseBot {
      * @param {mongoose.Model} betsRepository
      * @param {mongoose.Model} betLogsRepository
      */
-    constructor(definition, gameData, publisher, userInfosRepository, betsRepository, betLogsRepository) {
+    constructor(definition, gameData, publisher, userInfosRepository, betsRepository, betLogsRepository, balancedBot) {
         super(definition, gameData, publisher);
 
         this.userInfosRepository = userInfosRepository;
         this.betsRepository = betsRepository;
         this.betLogsRepository = betLogsRepository;
+        this.balancedBot = balancedBot;
 
         this.chance = new Chance();
         this.botList = [];
@@ -48,6 +49,7 @@ export class Bot extends Core.Crons.BaseBot {
         }
 
         this.gameData.usedBots = [];
+        this.balancedBot && (await this.balancedBot.reset());
     }
 
     resetAllBotData() {
