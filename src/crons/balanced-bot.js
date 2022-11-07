@@ -86,13 +86,7 @@ export class BalancedBot extends Core.Crons.BaseBot {
             const oppositeChoice = betChoice === choices[0] ? choices[1] : choices[0];
             const totalBetOnOpposite = totalBets[oppositeChoice] || 0;
 
-            if (
-                this.botList.length &&
-                remainingTime >= durations.lockingBet &&
-                remainingTime < bettingTime &&
-                totalBets[betChoice] > totalBetOnOpposite &&
-                this.checkRandomBet()
-            ) {
+            if (this.botList.length && remainingTime < bettingTime && totalBets[betChoice] > totalBetOnOpposite && this.checkRandomBet()) {
                 const betOnSimilarChoiceAmount = this.getExtraAmount();
                 const betOnOppositeChoiceAmount = totalBets[betChoice] - totalBetOnOpposite + this.getExtraAmount();
                 await this.placeBet(oppositeChoice, betOnOppositeChoiceAmount);
