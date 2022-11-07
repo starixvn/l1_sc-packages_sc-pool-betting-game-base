@@ -19,7 +19,7 @@ export class ProcessBetQueue extends Core.Crons.ProcessBetQueue {
 
     async proceedBet(player, payload) {
         await super.proceedBet(player, payload);
-        this.gameData.gameConfigs?.smartBotGroupRatio && (await this.balancedBot.run(payload));
+        this.gameData.gameConfigs?.botenabled && this.gameData.gameConfigs?.smartBotGroupRatio && (await this.balancedBot.run(payload));
     }
 
     async upsertBet(player, roundId, bet, rate) {

@@ -44,12 +44,12 @@ export class Bot extends Core.Crons.BaseBot {
             const maxBot = Math.floor(bots.length * helpers.configHelper.getMaxBotForCurrentHour(configs));
 
             this.botList = this.chance.shuffle(bots).slice(0, maxBot);
+            this.balancedBot && (await this.balancedBot.reset());
         } else {
             this.botList = [];
         }
 
         this.gameData.usedBots = [];
-        this.balancedBot && (await this.balancedBot.reset());
     }
 
     resetAllBotData() {

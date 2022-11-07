@@ -81,7 +81,7 @@ export class BalancedBot extends Core.Crons.BaseBot {
         try {
             const bettingTime = this.appConfigs?.balancedBotBettingTime ?? 10;
             const { remainingTime, totalBets } = this.gameData;
-            const { durations, choices } = this.definition;
+            const { choices } = this.definition;
             const { betChoice } = userBet;
             const oppositeChoice = betChoice === choices[0] ? choices[1] : choices[0];
             const totalBetOnOpposite = totalBets[oppositeChoice] || 0;
