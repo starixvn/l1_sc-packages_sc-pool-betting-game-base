@@ -40,7 +40,7 @@ export class BalancedBot extends Core.Crons.BaseBot {
         }
 
         let minBet = Math.round(totalAmount / 3);
-        let maxBet = this.gameData.gameConfigs?.bot_maxbet ?? 10;
+        let maxBet = this.gameData.gameConfigs?.maxbet ?? 10;
 
         if (minBet > remainingAmount) {
             minBet = remainingAmount;
