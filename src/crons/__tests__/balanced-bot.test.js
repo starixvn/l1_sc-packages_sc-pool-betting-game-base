@@ -28,16 +28,17 @@ describe("checkRandomBet", () => {
 });
 
 describe("getRandomBetAmount", () => {
-    describe("when remainingAmount < 10", () => {
+    describe("when remainingAmount < configMinBet", () => {
         it("should return remainingAmount", () => {
             // Arrange
             const balancedBot = new BalancedBot();
+            balancedBot.getMinBet = jest.fn(() => 10);
 
             // Act
             const result = balancedBot.getRandomBetAmount(9, 100);
 
             // Assert
-            expect(result).toBe(9);
+            expect(result).toBe(10);
         });
     });
 
@@ -45,9 +46,10 @@ describe("getRandomBetAmount", () => {
         it("should return at least totalAmount/3", () => {
             // Arrange
             const balancedBot = new BalancedBot();
+            balancedBot.getMinBet = jest.fn(() => 10);
             balancedBot.gameData = {
                 gameConfigs: {
-                    bot_maxbet: 2000,
+                    maxbet: 2000,
                 },
             };
 
@@ -55,7 +57,8 @@ describe("getRandomBetAmount", () => {
             const result = balancedBot.getRandomBetAmount(1000, 1000);
 
             // Assert
-            expect(result).toBeGreaterThanOrEqual(Math.round(1000 / 3));
+            const roundValue = Math.floor(1000 / 30) * 10;
+            expect(result).toBeGreaterThanOrEqual(roundValue);
             expect(result).toBeLessThanOrEqual(1000);
         });
     });
@@ -64,9 +67,10 @@ describe("getRandomBetAmount", () => {
         it("should return remainingAmount", () => {
             // Arrange
             const balancedBot = new BalancedBot();
+            balancedBot.getMinBet = jest.fn(() => 10);
             balancedBot.gameData = {
                 gameConfigs: {
-                    bot_maxbet: 2000,
+                    maxbet: 2000,
                 },
             };
 
@@ -78,13 +82,14 @@ describe("getRandomBetAmount", () => {
         });
     });
 
-    describe("when remainingAmount > bot_maxbet", () => {
-        it("should return bot_maxbet", () => {
+    describe("when remainingAmount > bot maxbet", () => {
+        it("should return bot maxbet", () => {
             // Arrange
             const balancedBot = new BalancedBot();
+            balancedBot.getMinBet = jest.fn(() => 10);
             balancedBot.gameData = {
                 gameConfigs: {
-                    bot_maxbet: 200,
+                    maxbet: 200,
                 },
             };
 
