@@ -35,12 +35,13 @@ export class BalancedBot extends Core.Crons.BaseBot {
     }
 
     getRandomBetAmount(remainingAmount, totalAmount) {
-        if (remainingAmount <= 10) {
-            return remainingAmount;
+        const configMinBet = this.getMinBet();
+        if (remainingAmount <= configMinBet) {
+            return configMinBet;
         }
 
         let minBet = Math.round(totalAmount / 3);
-        let maxBet = this.gameData.gameConfigs?.maxbet ?? 10;
+        let maxBet = this.gameData.gameConfigs?.maxbet ?? configMinBet;
 
         if (minBet > remainingAmount) {
             minBet = remainingAmount;
@@ -52,7 +53,7 @@ export class BalancedBot extends Core.Crons.BaseBot {
             minBet = maxBet;
         }
 
-        return this.chance.integer({ min: minBet, max: maxBet });
+        return Math.floor(this.chance.integer({ min: minBet, max: maxBet }) / configMinBet) * configMinBet;
     }
 
     getExtraAmount() {
