@@ -1,3 +1,18 @@
+## [2.5.1](https://git3.nexdev.net/sc-packages/sc-pool-betting-game-base/compare/v2.5.0...v2.5.1) (2022-11-18)
+
+
+### Bug Fixes
+
+* add balanced bot ([2654039](https://git3.nexdev.net/sc-packages/sc-pool-betting-game-base/commit/26540392f633b22824f2ed04c6c675829f92ac29))
+* bot maxbet ([3dccc42](https://git3.nexdev.net/sc-packages/sc-pool-betting-game-base/commit/3dccc4237acbfb00b7e4c546e5d88a5453711697))
+* check botenabled ([745e852](https://git3.nexdev.net/sc-packages/sc-pool-betting-game-base/commit/745e852910f80f4c3750a2729d7c533eccbd3477))
+* fix code smells ([2d2b4f0](https://git3.nexdev.net/sc-packages/sc-pool-betting-game-base/commit/2d2b4f05f85ef52f060a3242897f2a01105db35c))
+* fix usedBots ([77deb93](https://git3.nexdev.net/sc-packages/sc-pool-betting-game-base/commit/77deb93f82b823a603e4ebba107066221a12d053))
+* update balancedBot reset ([d085f35](https://git3.nexdev.net/sc-packages/sc-pool-betting-game-base/commit/d085f354c7ff4cd72c5130b9feacc6158d66bf4e))
+* update bet amount regarding minBet ([f865671](https://git3.nexdev.net/sc-packages/sc-pool-betting-game-base/commit/f8656713c81566e5abaf554ae18f304fbdd08e51))
+* update remainingTime check ([b937a38](https://git3.nexdev.net/sc-packages/sc-pool-betting-game-base/commit/b937a381601dd66ffa8c2e788347ee22f8b2111c))
+* update unit test getRandomBetAmount ([12b2392](https://git3.nexdev.net/sc-packages/sc-pool-betting-game-base/commit/12b23922634244191919afba6d23b0cf5167ac41))
+
 # [2.5.0](https://git3.nexdev.net/sc-packages/sc-pool-betting-game-base/compare/v2.4.7...v2.5.0) (2022-10-12)
 
 
