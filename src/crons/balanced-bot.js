@@ -2,7 +2,7 @@ import Chance from "chance";
 import { Core } from "sc-game-base";
 
 export class BalancedBot extends Core.Crons.BaseBot {
-    constructor(definition, gameData, publisher, userInfosRepository, betsRepository, betLogsRepository, logService, appConfigs) {
+    constructor({ definition, gameData, publisher, userInfosRepository, betsRepository, betLogsRepository, logService, appConfigs }) {
         super(definition, gameData, publisher);
 
         this.userInfosRepository = userInfosRepository;
@@ -29,9 +29,8 @@ export class BalancedBot extends Core.Crons.BaseBot {
         const ratio = this.gameData.gameConfigs?.smartBotGroupRatio ?? 0;
         const toBetItems = Array(ratio * 100).fill(true);
         const notToBetItems = Array(100 - ratio * 100).fill(false);
-        const toBet = this.getRandomFromArray(toBetItems.concat(notToBetItems));
 
-        return toBet;
+        return this.getRandomFromArray(toBetItems.concat(notToBetItems));
     }
 
     getRandomBetAmount(remainingAmount, totalAmount) {
@@ -65,8 +64,7 @@ export class BalancedBot extends Core.Crons.BaseBot {
     getRandomBot() {
         this.botList = this.botList.filter((bot) => !this.gameData.usedBots.includes(bot.id));
         if (this.botList.length) {
-            const bot = this.botList.shift();
-            return bot;
+            return this.botList.shift();
         } else {
             this.logService.logError("no available balanced bot!");
             return null;

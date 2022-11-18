@@ -39,7 +39,7 @@ export class ContainerRegistry extends Core.ContainerRegistry {
             bot: asClass(Bot).singleton(),
             gameCron: asClass(GameCron).singleton().proxy(),
             processBetQueue: asClass(ProcessBetQueue).singleton().proxy(),
-            balancedBot: asClass(BalancedBot).singleton(),
+            balancedBot: asClass(BalancedBot).singleton().proxy(),
         });
     }
 

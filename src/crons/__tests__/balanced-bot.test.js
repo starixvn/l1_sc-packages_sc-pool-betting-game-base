@@ -4,7 +4,7 @@ describe("checkRandomBet", () => {
     describe("when smartBotGroupRatio is 0.33", () => {
         it("should return about 30% true", () => {
             // Arrange
-            const balancedBot = new BalancedBot();
+            const balancedBot = new BalancedBot({});
             balancedBot.gameData = {
                 gameConfigs: {
                     smartBotGroupRatio: 0.33,
@@ -31,7 +31,7 @@ describe("getRandomBetAmount", () => {
     describe("when remainingAmount < configMinBet", () => {
         it("should return remainingAmount", () => {
             // Arrange
-            const balancedBot = new BalancedBot();
+            const balancedBot = new BalancedBot({});
             balancedBot.getMinBet = jest.fn(() => 10);
 
             // Act
@@ -45,7 +45,7 @@ describe("getRandomBetAmount", () => {
     describe("when remainingAmount >= totalAmount/3", () => {
         it("should return at least totalAmount/3", () => {
             // Arrange
-            const balancedBot = new BalancedBot();
+            const balancedBot = new BalancedBot({});
             balancedBot.getMinBet = jest.fn(() => 10);
             balancedBot.gameData = {
                 gameConfigs: {
@@ -66,7 +66,7 @@ describe("getRandomBetAmount", () => {
     describe("when remainingAmount < totalAmount/3", () => {
         it("should return remainingAmount", () => {
             // Arrange
-            const balancedBot = new BalancedBot();
+            const balancedBot = new BalancedBot({});
             balancedBot.getMinBet = jest.fn(() => 10);
             balancedBot.gameData = {
                 gameConfigs: {
@@ -85,7 +85,7 @@ describe("getRandomBetAmount", () => {
     describe("when remainingAmount > bot maxbet", () => {
         it("should return bot maxbet", () => {
             // Arrange
-            const balancedBot = new BalancedBot();
+            const balancedBot = new BalancedBot({});
             balancedBot.getMinBet = jest.fn(() => 10);
             balancedBot.gameData = {
                 gameConfigs: {
@@ -105,7 +105,7 @@ describe("getRandomBetAmount", () => {
 describe("getExtraAmount", () => {
     it("should return between (0-10)*minBet", () => {
         // Arrange
-        const balancedBot = new BalancedBot();
+        const balancedBot = new BalancedBot({});
         balancedBot.getMinBet = jest.fn(() => 10);
 
         // Act
@@ -121,7 +121,7 @@ describe("getRandomBot", () => {
     describe("when having unused bots", () => {
         it("should return first bot from botList", () => {
             // Arrange
-            const balancedBot = new BalancedBot();
+            const balancedBot = new BalancedBot({});
             balancedBot.botList = [{ id: 1 }, { id: 2 }, { id: 3 }];
             balancedBot.gameData = {
                 usedBots: [1],
@@ -136,7 +136,7 @@ describe("getRandomBot", () => {
 
         it("should update remaning botList", () => {
             // Arrange
-            const balancedBot = new BalancedBot();
+            const balancedBot = new BalancedBot({});
             balancedBot.botList = [{ id: 1 }, { id: 2 }, { id: 3 }];
             balancedBot.gameData = {
                 usedBots: [1],
@@ -154,7 +154,7 @@ describe("getRandomBot", () => {
     describe("when not having unused bots", () => {
         it("should return null", () => {
             // Arrange
-            const balancedBot = new BalancedBot();
+            const balancedBot = new BalancedBot({});
             balancedBot.botList = [{ id: 1 }, { id: 2 }, { id: 3 }];
             balancedBot.gameData = {
                 usedBots: [1, 2, 3],
@@ -177,7 +177,7 @@ describe("run", () => {
     describe("when botList empty", () => {
         it("should do nothing", async () => {
             // Arrange
-            const balancedBot = new BalancedBot();
+            const balancedBot = new BalancedBot({});
             const userBet = { betChoice: "big" };
             balancedBot.placeBet = jest.fn();
             balancedBot.appConfigs = {
@@ -197,7 +197,7 @@ describe("run", () => {
     describe("remainingTime > balancedBotBettingTime", () => {
         it("should do nothing", async () => {
             // Arrange
-            const balancedBot = new BalancedBot();
+            const balancedBot = new BalancedBot({});
             const userBet = { betChoice: "big" };
             balancedBot.placeBet = jest.fn();
             balancedBot.appConfigs = {
@@ -218,7 +218,7 @@ describe("run", () => {
     describe("total bet on player choice <= opposite total bet", () => {
         it("should do nothing", async () => {
             // Arrange
-            const balancedBot = new BalancedBot();
+            const balancedBot = new BalancedBot({});
             const userBet = { betChoice: "big" };
             balancedBot.placeBet = jest.fn();
             balancedBot.appConfigs = {
@@ -239,7 +239,7 @@ describe("run", () => {
     describe("when conditions are meet", () => {
         it("place balaced bets", async () => {
             // Arrange
-            const balancedBot = new BalancedBot();
+            const balancedBot = new BalancedBot({});
             const userBet = { betChoice: "big" };
             balancedBot.placeBet = jest.fn();
             balancedBot.appConfigs = {
@@ -264,7 +264,7 @@ describe("run", () => {
 describe("placeBet", () => {
     it("should get bot and update bet", async () => {
         // Arrange
-        const balancedBot = new BalancedBot();
+        const balancedBot = new BalancedBot({});
         balancedBot.getRandomBetAmount = jest.fn(() => 300);
         balancedBot.gameData = {
             totalBets: {},
