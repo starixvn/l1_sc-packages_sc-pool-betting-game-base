@@ -1,9 +1,9 @@
 import Chance from "chance";
-import { Core } from "sc-game-base";
+import { Bot } from "./bot";
 
-export class BalancedBot extends Core.Crons.BaseBot {
+export class BalancedBot extends Bot {
     constructor({ definition, gameData, publisher, userInfosRepository, betsRepository, betLogsRepository, logService, appConfigs }) {
-        super(definition, gameData, publisher);
+        super(definition, gameData, publisher, userInfosRepository, betsRepository, betLogsRepository);
 
         this.userInfosRepository = userInfosRepository;
         this.betsRepository = betsRepository;
@@ -16,7 +16,7 @@ export class BalancedBot extends Core.Crons.BaseBot {
 
     async reset() {
         try {
-            if (this.gameData.gameConfigs?.smartBotGroupRatio > 0) {
+            if (this.gameData.gameConfigs?.botenabled && this.gameData.gameConfigs?.smartBotGroupRatio > 0) {
                 const bots = await this.userInfosRepository.find({ type: true, disabled: false, banned: false }, "id name").lean().exec();
                 this.botList = this.chance.shuffle(bots).slice(0, 200);
             }
@@ -133,18 +133,5 @@ export class BalancedBot extends Core.Crons.BaseBot {
             operatorId: " ",
             currency: " ",
         });
-    }
-
-    async upsertBet(bot, choice, betAmount) {
-        const { roundId } = this.gameData;
-
-        const update = { amount: betAmount, baseAmount: betAmount * this.botRate };
-        const create = { uid: bot.id, choice: choice, time: new Date(), rate: this.botRate, roundId, operatorId: " ", currency: " " };
-
-        await this.betsRepository.updateOne(
-            { uid: bot.id, roundId },
-            { $inc: update, $setOnInsert: create },
-            { upsert: true, setDefaultsOnInsert: true }
-        );
     }
 }
