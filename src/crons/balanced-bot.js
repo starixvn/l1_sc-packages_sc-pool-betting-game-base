@@ -76,13 +76,19 @@ export class BalancedBot extends Core.Crons.BaseBot {
         return array[randomIndex];
     }
 
+    getOppositeChoice(betChoice) {
+        const { choices, hedgeBetGroups } = this.definition;
+        const hedgeBetGroup = hedgeBetGroups && hedgeBetGroups.length > 0 ? hedgeBetGroups.find((group) => group.includes(betChoice)) : choices;
+
+        return betChoice === hedgeBetGroup[0] ? hedgeBetGroup[1] : hedgeBetGroup[0];
+    }
+
     async run(userBet) {
         try {
             const bettingTime = this.appConfigs?.balancedBotBettingTime ?? 10;
             const { remainingTime, totalBets } = this.gameData;
-            const { choices } = this.definition;
             const { betChoice } = userBet;
-            const oppositeChoice = betChoice === choices[0] ? choices[1] : choices[0];
+            const oppositeChoice = this.getOppositeChoice(betChoice);
             const totalBetOnOpposite = totalBets[oppositeChoice] || 0;
 
             if (this.botList.length && remainingTime < bettingTime && totalBets[betChoice] > totalBetOnOpposite && this.checkRandomBet()) {
@@ -124,6 +130,8 @@ export class BalancedBot extends Core.Crons.BaseBot {
             choice: choice,
             time: new Date(),
             roundId,
+            operatorId: " ",
+            currency: " ",
         });
     }
 
@@ -131,7 +139,7 @@ export class BalancedBot extends Core.Crons.BaseBot {
         const { roundId } = this.gameData;
 
         const update = { amount: betAmount, baseAmount: betAmount * this.botRate };
-        const create = { uid: bot.id, choice: choice, time: new Date(), rate: this.botRate, roundId };
+        const create = { uid: bot.id, choice: choice, time: new Date(), rate: this.botRate, roundId, operatorId: " ", currency: " " };
 
         await this.betsRepository.updateOne(
             { uid: bot.id, roundId },
