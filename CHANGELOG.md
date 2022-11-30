@@ -1,3 +1,10 @@
+## [2.5.3](https://git3.nexdev.net/sc-packages/sc-pool-betting-game-base/compare/v2.5.2...v2.5.3) (2022-11-30)
+
+
+### Bug Fixes
+
+* update balanced-bot to extend bot ([46298f4](https://git3.nexdev.net/sc-packages/sc-pool-betting-game-base/commit/46298f4a7de1ce3052e2a9178ac8f8993400cfdd))
+
 ## [2.5.1](https://git3.nexdev.net/sc-packages/sc-pool-betting-game-base/compare/v2.5.0...v2.5.1) (2022-11-18)
 
 
