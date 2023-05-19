@@ -128,7 +128,7 @@ export class Bot extends Core.Crons.BaseBot {
         const { roundId } = this.gameData;
 
         this.gameData.totalBets[choice] = (this.gameData.totalBets[choice] || 0) + betAmount;
-        this.gameData.betCount[choice] = (this.gameData.totalBets[choice] || 0) + 1;
+        this.gameData.betCount[choice] = (this.gameData.betCount[choice] || 0) + 1;
 
         await this.betLogsRepository.create({
             uid: bot.id,
