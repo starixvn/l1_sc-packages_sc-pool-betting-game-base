@@ -1,3 +1,10 @@
+## [2.6.1](https://git3.nexdev.net/sc-packages/sc-pool-betting-game-base/compare/v2.6.0...v2.6.1) (2023-05-19)
+
+
+### Bug Fixes
+
+* bot's bet count to gameData.betCount ([f0225c2](https://git3.nexdev.net/sc-packages/sc-pool-betting-game-base/commit/f0225c240d9855fb5bfda8fcac5a5473f1252f9b))
+
 # [2.6.0](https://git3.nexdev.net/sc-packages/sc-pool-betting-game-base/compare/v2.5.3...v2.6.0) (2023-02-24)
 
 
