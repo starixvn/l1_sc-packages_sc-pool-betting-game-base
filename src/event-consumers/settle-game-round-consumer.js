@@ -51,8 +51,6 @@ export class SettleGameRoundConsumer extends Core.BaseEventConsumers.SettleGameR
                 })
             );
         }
-
-        this.roundResultPublisher.publishRoundResult(this.collectRoundResult(result, settlementResult, roundId));
     }
 
     calculateBetResult(bet) {
