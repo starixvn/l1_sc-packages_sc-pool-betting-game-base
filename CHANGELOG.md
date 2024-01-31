@@ -1,3 +1,10 @@
+## [3.0.1](https://git3.nexdev.net/sc-packages/sc-pool-betting-game-base/compare/v3.0.0...v3.0.1) (2024-01-31)
+
+
+### Bug Fixes
+
+* remove duplicated finish ([42d9ff8](https://git3.nexdev.net/sc-packages/sc-pool-betting-game-base/commit/42d9ff8635531158c354c47c0efbd66a5bca6e96))
+
 # [3.0.0](https://git3.nexdev.net/sc-packages/sc-pool-betting-game-base/compare/v2.6.1...v3.0.0) (2024-01-31)
 
 
